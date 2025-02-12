@@ -15,10 +15,7 @@ test success:
   script:
     - echo "No changes to the slides or website"
   rules:
-    - changes:
-      - slides/**
-      - website/**  
-      when: never
+    - if: $CI_JOB_NAME == "slides acs_cc" && $CI_JOB_STATUS == "skipped" || $CI_JOB_NAME == "slides file_en" && $CI_JOB_STATUS == "skipped"
 
 test slides acs_cc:
   stage: test

@@ -13,9 +13,7 @@ cache:
 test success:
   stage: test
   script:
-    - echo "No changes to the slides or website"
-  rules:
-    - if: $CI_JOB_NAME == "slides acs_cc" && $CI_JOB_STATUS == "skipped" || $CI_JOB_NAME == "slides file_en" && $CI_JOB_STATUS == "skipped"
+    - echo "Empty job"
 
 test slides acs_cc:
   stage: test

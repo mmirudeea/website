@@ -14,6 +14,8 @@ test success:
   stage: test
   script:
     - echo "Empty job"
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
 test slides acs_cc:
   stage: test
@@ -26,7 +28,7 @@ test slides acs_cc:
     - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh acs_cc 
   artifacts:
     paths:
-      - website/static/slides/acs_cc/**
+      - website/static/slides/acs_cc/**/*
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
       # changes:
@@ -44,7 +46,7 @@ test slides fils_en:
     - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh fils_en 
   artifacts:
     paths:
-      - website/static/slides/fils_en/**
+      - website/static/slides/fils_en/**/*
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
       # changes:

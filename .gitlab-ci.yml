@@ -24,12 +24,15 @@ test slides acs_cc:
     - npm ci
     - chmod a+x build.sh
     - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh acs_cc 
+  artifacts:
+    paths:
+      - website/static/slides/acs_cc/**
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-      changes:
-        - slides/lectures/acs_cc/**
-        - slides/lectures/resources/**
-        - slides/lectures/assets/**
+      # changes:
+      #   - slides/lectures/acs_cc/**
+      #   - slides/lectures/resources/**
+      #   - slides/lectures/assets/**
 
 test slides fils_en:
   stage: test
@@ -39,15 +42,15 @@ test slides fils_en:
     - npx playwright install-deps
     - npm ci
     - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh fils_en 
-    - cd ../website
-    - npm ci
-    - npm run build
+  artifacts:
+    paths:
+      - website/static/slides/fils_en/**
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-      changes:
-        - slides/lectures/fils_en/**
-        - slides/lectures/resources/**
-        - slides/lectures/assets/**
+      # changes:
+      #   - slides/lectures/fils_en/**
+      #   - slides/lectures/resources/**
+      #   - slides/lectures/assets/**
 
 test website:
   stage: test
@@ -58,7 +61,6 @@ test website:
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
       changes:
-        - slides/**
         - website/**
   dependencies:
     - test slides acs_cc

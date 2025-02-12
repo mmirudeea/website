@@ -64,7 +64,7 @@ test website:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
       # changes:
       #   - website/**
-  dependencies:
+  needs:
     - test slides acs_cc
     - test slides fils_en
 

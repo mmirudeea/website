@@ -10,7 +10,7 @@ cache:
     - website/node_modules/
     - slides/node_modules/
 
-test:
+test slides install:
   stage: test
   script:
     - cd slides
@@ -18,13 +18,56 @@ test:
     - npx playwright install-deps
     - npm ci
     - chmod a+x build.sh
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+      changes:
+        - slides/**
+
+test slides acs_cc:
+  stage: test
+  script:
     - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh acs_cc 
+    - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh fils_en 
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+      changes:
+        - slides/lectures/acs_cc/**
+        - slides/lectures/resources/**
+        - slides/lectures/assets/**
+  dependencies:
+    - test slides install
+
+test slides fils_en:
+  stage: test
+  script:
     - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh fils_en 
     - cd ../website
     - npm ci
     - npm run build
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+      changes:
+        - slides/lectures/fils_en/**
+        - slides/lectures/resources/**
+        - slides/lectures/assets/**
+  dependencies:
+    - test slides install
+
+test website:
+  stage: test
+  script:
+    - SLIDES_OUTPUT_FOLDER=../website/static/slides ./build.sh fils_en 
+    - cd ../website
+    - npm ci
+    - npm run build
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+      changes:
+        - slides/**
+        - website/**
+  dependencies:
+    - test slides acs_cc
+    - test slides fils_en
 
 pages:
   stage: deploy

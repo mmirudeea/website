@@ -25,8 +25,6 @@ test slides acs_cc:
         - slides/lectures/acs_cc/**
         - slides/lectures/resources/**
         - slides/lectures/assets/**
-  dependencies:
-    - test slides install
 
 test slides fils_en:
   stage: test
@@ -45,8 +43,6 @@ test slides fils_en:
         - slides/lectures/fils_en/**
         - slides/lectures/resources/**
         - slides/lectures/assets/**
-  dependencies:
-    - test slides install
 
 test website:
   stage: test

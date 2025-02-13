@@ -10,8 +10,8 @@ Welcome to the *Microprocessor Architecture* class.
 During the class you will learn how to design and implement a hardware device. 
 
 You takeaways from the course are:
+  - learn how computer hardware works;
   - learning how a microprocessor (*MCU*) works, using as an example the RP2040 MCU from the [Raspberry Pi Pico W](https://www.raspberrypi.com/products/raspberry-pi-pico/);
-  - learning how to design your hardware schematics using [KiCad](https://www.kicad.org/) and how to create the bill of materials (*BOM*) for it;
   - building the hardware device either using a breadboard, a prototyping board or a printed circuit board (*PCB*);
   - learning how to develop the software that controls hardware in [Rust](https://www.rust-lang.org/);
   - presenting the hardware device at the *PM Fair* show.
@@ -44,8 +44,8 @@ irina.nita@oxidos.io
 ![Irina Bradu](images/irina_bradu.jpg)
  
 Lab Professor \
-GitHub: [Irina Bradu](https://github.com/irina-b-dev) \
-irina.bradu@wyliodrin.com
+GitHub: [irina-b-dev](https://github.com/irina-b-dev) \
+irina.bradu@upb.ro
 </td>
 </tr>
 
@@ -56,7 +56,7 @@ irina.bradu@wyliodrin.com
  
 Lab Professor \
 GitHub: [danutaldea](https://github.com/danutaldea) \
-george_danut.aldea@stud.acs.upb.ro
+danut.aldea@oxidos.io
 </td>
 
 <td>
@@ -82,16 +82,50 @@ teodor.dicu@wyliodrin.com
 
 <tr valign="top">
 <td>
-**Teodora Miu**
-![Teodora Miu](images/teodora_miu.jpg)
+**Alexandru Ungureanu**
+![Alexandru Ungureanu](images/alexandru_ungureanu.jpg)
 
 Lab Professor \
-Responsible for labs\
-GitHub: [TeodoraMiu](https://github.com/TeodoraMiu) \
-teodora.miu@stud.fils.upb.ro
+GitHub: [AlexU01](https://github.com/AlexU01) \
+alexagungureanu@gmail.com
 </td>
 
 <td>
+**Layla El-Ghoul**
+![Layla El-Ghoul](images/layla_elghoul.jpg)
+
+Lab Professor \
+GitHub: [ScarletWtc](https://github.com/ScarletWtc) \
+layla.el@stud.fils.upb.ro
+</td>
+
+<td>
+**Cristiana Precup**
+![Cristiana Precup](images/cristiana_precup.png)
+
+Lab Professor \
+GitHub: [cristianaprecup](https://github.com/cristianaprecup) \
+cristiana.precup@wyliodrin.com
+</td>
+</tr>
+
+<tr valign="top">
+<td>
+**Gabriel Păvăloiu**
+![Gabriel Păvăloiu](images/gabriel_pavaloiu.jpg)
+ 
+Lab Professor \
+GitHub: [GabrielPavaloiu](https://github.com/GabrielPavaloiu) \
+gabriel.pavaloiu@upb.ro
+</td>
+
+<td>
+**Andrei Batasev**
+![Andrei Batasev](images/andrei_batasev.jpg)
+
+Lab Professor \
+GitHub: [Pfat8equalsD](https://github.com/Pfat8equalsD) \
+andrei.batasev@stud.acs.upb.ro
 </td>
 
 <td>
@@ -104,12 +138,15 @@ teodora.miu@stud.fils.upb.ro
 | Activity | Group | Day | Hour | Room | Professor |
 |----------|-------|-----|------|-------|----------|
 | Lecture | *all students* | Friday | 10 - 12 | AN024 | Alexandru Radovici |
-| Lab | 1221A - first half | Thursday | 8 - 10 | ED 218 | Dănuț Aldea |
-| Lab | 1221A - second half | Thursday | 8 - 10 | ED 217 | Andrei Zamfir |
-| Lab | 1221B - first half | Thursday | 10 - 12 | ED 218 | Irina Niță |
-| Lab | 1221B - second half | Thursday | 14 - 16 | ED 217 | Teodora Miu |
-| Lab | 1222A | Thursday | 14 - 16 | ED 218 | Irina Bradu |
-| Lab | 1222B | Thursday | 12 - 14 | ED 218 | Teodor Dicu |
+| Lab | 1221Aa - first half | Thursday | 8 - 10 | ED 218 | |
+| Lab | 1221Ab - second half | Thursday | 12 - 14 | ED 217 | |
+| Lab | 1221Ba - first half | Thursday | 10 - 12 | ED 218 | Cristiana Precup |
+| Lab | 1221Bb - second half | Thursday | 14 - 16 | ED 217 | |
+| Lab | 1221Ca - first half | Friday | 14 - 16 | ED 218 | |
+| Lab | 1221Cb - second half | Thursday | 8 - 10 | ED 217 | |
+| Lab | 1221D | Thursday | 10 - 12 | ED 217 | Layla El-Ghoul |
+| Lab | 1222EEA | Thursday | 14 - 16 | ED 218 | |
+| Lab | 1222EEB | Thursday | 12 - 14 | ED 218 | |
 
 ## Grading
 
@@ -117,8 +154,8 @@ teodora.miu@stud.fils.upb.ro
 |--------|-------------|--------|
 | [Lecture](./category/lecture) tests | You will have a test at every class with subjects from the previous class. | 2p |
 | [Lab](./category/lab) | Your work at every lab will be graded. | 2p |
-| [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 5p |
-| Exam | You will have to take an exam during the session. | 2p |
+| [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 3p |
+| Exam | You will have to take an exam during the session. | 4p |
 | **Total** | *You will need at least 4.5 points to pass the subject.* | **11p** |
 
 ## Rules

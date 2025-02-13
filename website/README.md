@@ -47,3 +47,4 @@ cd slides
 ```
 
 This command generates static content into the `build/slides` directory and can be served using any static contents hosting service.
+

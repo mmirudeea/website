@@ -24,7 +24,7 @@ You takeaways from the course are:
 <tr valign="top">
 <td>
 **Daniel Rosner**
-<!--  ![Alexandru Radovici](images/alexandru_radovici.jpg) -->
+![Daniel Rosner](images/daniel_rosner.png)
 
 Course Professor \
 daniel.rosner[at]upb.ro

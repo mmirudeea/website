@@ -146,7 +146,7 @@ const config: Config = {
         },
         {
           href: "https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro",
-          label: "GitHub",
+          label: "GitLab",
           position: "right",
         },
       ],

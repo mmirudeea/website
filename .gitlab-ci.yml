@@ -94,6 +94,7 @@ pages:
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
       changes:
+        - build.sh
         - slides/**
         - website/**
   

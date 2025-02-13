@@ -65,8 +65,10 @@ test website:
       changes:
         - website/**
   needs:
-    - test slides acs_cc
-    - test slides fils_en
+    - job: test slides acs_cc
+      optional: true
+    - job: test slides fils_en
+      optional: true
 
 pages:
   stage: deploy

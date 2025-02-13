@@ -10,10 +10,12 @@ cache:
     - website/node_modules/
     - slides/node_modules/
 
-test success:
+test fake slides:
   stage: test
   script:
-    - echo "Empty job"
+    - cd slides
+    - SLIDES_OUTPUT_FOLDER=../website/static/slides FAKE_SLIDES=pm ./build.sh acs_cc 
+    - SLIDES_OUTPUT_FOLDER=../website/static/slides FAKE_SLIDES=ma ./build.sh fils_en 
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
@@ -65,6 +67,7 @@ test website:
       changes:
         - website/**
   needs:
+    - job: test fake slides
     - job: test slides acs_cc
       optional: true
     - job: test slides fils_en

@@ -9,12 +9,21 @@ fi
 function build {
     series=$1
     slides=$2
-    echo "Building slides $slides"
-    ln -s ../assets/global-bottom.vue "lectures/$series/$slides/global-bottom.vue"
-    npm run build -- "lectures/$series/$slides/slides.md" --base /slides/$series/$slides --out "../../../$SLIDES_OUTPUT_FOLDER/$series/$slides"
-    fail=$?
-    rm "lectures/$series/$slides/global-bottom.vue"
-    return $fail
+    if [ -z "$FAKE_SLIDES" ];
+    then
+        echo "Building slides $slides"
+        ln -s ../assets/global-bottom.vue "lectures/$series/$slides/global-bottom.vue"
+        npm run build -- "lectures/$series/$slides/slides.md" --base /slides/$series/$slides --out "../../../$SLIDES_OUTPUT_FOLDER/$series/$slides"
+        fail=$?
+        rm "lectures/$series/$slides/global-bottom.vue"
+        return $fail
+    else
+        echo "$SLIDES_OUTPUT_FOLDER/$series/$slides"
+        mkdir -p "$SLIDES_OUTPUT_FOLDER/$series/$slides"
+        touch "$SLIDES_OUTPUT_FOLDER/$series/$slides/index.html"
+        touch "$SLIDES_OUTPUT_FOLDER/$series/$slides/$FAKE_SLIDES-$slides.pdf"
+        return 0
+    fi
 }
 
 series=$1
@@ -27,7 +36,7 @@ fi
 
 if [ "$2" != "" ];
 then
-    build $1 $2
+    build $1 $2 $3
 else
     for slides in $(basename -a $(find lectures/$series/* -maxdepth 0 -type d)); do
         if [ $slides != "assets" -a $slides != "resources" ]; then

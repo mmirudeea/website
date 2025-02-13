@@ -148,7 +148,7 @@ Examples:
 # Notes on output pins
 
 - most microcontrollers have a limit of around 10mA per output PIN
-- ! do not connect an LED without a resistor in series )to limit the current) 
+- ! do not connect an LED without a resistor in series (to limit the current) 
 - ! do not connect a motor / any type of inductive load
 
 ## Solutions:

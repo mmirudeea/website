@@ -31,10 +31,10 @@ test slides acs_cc:
       - website/static/slides/acs_cc/**/*
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-      # changes:
-      #   - slides/lectures/acs_cc/**
-      #   - slides/lectures/resources/**
-      #   - slides/lectures/assets/**
+      changes:
+        - slides/lectures/acs_cc/**
+        - slides/lectures/resources/**
+        - slides/lectures/assets/**
 
 test slides fils_en:
   stage: test
@@ -49,10 +49,10 @@ test slides fils_en:
       - website/static/slides/fils_en/**/*
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-      # changes:
-      #   - slides/lectures/fils_en/**
-      #   - slides/lectures/resources/**
-      #   - slides/lectures/assets/**
+      changes:
+        - slides/lectures/fils_en/**
+        - slides/lectures/resources/**
+        - slides/lectures/assets/**
 
 test website:
   stage: test
@@ -62,8 +62,8 @@ test website:
     - npm run build
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-      # changes:
-      #   - website/**
+      changes:
+        - website/**
   needs:
     - test slides acs_cc
     - test slides fils_en

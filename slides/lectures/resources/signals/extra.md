@@ -67,7 +67,7 @@ Examples:
 
 :: right ::
 
- <img src="./VCC1_larger_VCC2.svg" class="rounded h 80">
+ <img src="./vcc1_larger_vcc2.svg" class="rounded h 80">
  
 
 ---

@@ -97,5 +97,7 @@ pages:
       changes:
         - build.sh
         - slides/**/*
+        - slides/*
         - website/**/*
+        - website/*
   

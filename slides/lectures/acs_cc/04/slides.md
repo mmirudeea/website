@@ -43,7 +43,11 @@ src: ../../resources/timers/slides.md
 <!-- Signals -->
 
 ---
-src: ../../resources/signals/slides.md
+src: ../../resources/signals/basic.md
+---
+
+---
+src: ../../resources/signals/extra.md
 ---
 
 <!-- PWM -->

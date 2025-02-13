@@ -5,15 +5,16 @@ slug: /welcome
 
 # Welcome
 
-Welcome to the *Microprocessor Architecture* class.
+Welcome to the *Microprocessor Programming (PM)* class.
 
 During the class you will learn how to design and implement a hardware device. 
 
 You takeaways from the course are:
-  - learning how a microprocessor (*MCU*) works, using as an example the RP2040 MCU from the [Raspberry Pi Pico W](https://www.raspberrypi.com/products/raspberry-pi-pico/);
+  - learning how a microprocessor (*MCU*) works, using as an example the RP2040 MCU from the [Raspberry Pi Pico W](https://www.raspberrypi.com/products/raspberry-pi-pico/) as well as a Atmega328P;
   - learning how to design your hardware schematics using [KiCad](https://www.kicad.org/) and how to create the bill of materials (*BOM*) for it;
   - building the hardware device either using a breadboard, a prototyping board or a printed circuit board (*PCB*);
   - learning how to develop the software that controls hardware in [Rust](https://www.rust-lang.org/);
+  - learning how to develop the software that controls hardware in C;
   - presenting the hardware device at the *PM Fair* show.
 
 
@@ -22,12 +23,11 @@ You takeaways from the course are:
 <table>
 <tr valign="top">
 <td>
-**Alexandru Radovici**
-![Alexandru Radovici](images/alexandru_radovici.jpg)
+**Daniel Rosner**
+<!--  ![Alexandru Radovici](images/alexandru_radovici.jpg) -->
 
 Course Professor \
-GitHub: [alexandruradovici](https://github.com/alexandruradovici) \
-alexandru.radovici@upb.ro
+daniel.rosner[at]upb.ro
 </td>
 
 <td>
@@ -80,57 +80,34 @@ teodor.dicu@wyliodrin.com
 </td>
 </tr>
 
-<tr valign="top">
-<td>
-**Teodora Miu**
-![Teodora Miu](images/teodora_miu.jpg)
-
-Lab Professor \
-Responsible for labs\
-GitHub: [TeodoraMiu](https://github.com/TeodoraMiu) \
-teodora.miu@stud.fils.upb.ro
-</td>
-
-<td>
-</td>
-
-<td>
-</td>
-</tr>
 </table>
 
 ## Timetable
 
 | Activity | Group | Day | Hour | Room | Professor |
 |----------|-------|-----|------|-------|----------|
-| Lecture | *all students* | Friday | 10 - 12 | AN024 | Alexandru Radovici |
-| Lab | 1221A - first half | Thursday | 8 - 10 | ED 218 | Dănuț Aldea |
-| Lab | 1221A - second half | Thursday | 8 - 10 | ED 217 | Andrei Zamfir |
-| Lab | 1221B - first half | Thursday | 10 - 12 | ED 218 | Irina Niță |
-| Lab | 1221B - second half | Thursday | 14 - 16 | ED 217 | Teodora Miu |
-| Lab | 1222A | Thursday | 14 - 16 | ED 218 | Irina Bradu |
-| Lab | 1222B | Thursday | 12 - 14 | ED 218 | Teodor Dicu |
+| Lecture | *all students* | Wednesday | 08 - 10 | EC105 | Daniel Rosner|
+| Lecture | *all students* | Monday | 18 - 20 | PR001 | Daniel Rosner|
 
 ## Grading
 
 | Part | Description | Points |
 |--------|-------------|--------|
-| [Lecture](./category/lecture) tests | You will have a test at every class with subjects from the previous class. | 2p |
+| [Lecture](./category/lecture) tests | You will have a test every few classes with subjects from the previous class (will pe anounced). | 2p |
 | [Lab](./category/lab) | Your work at every lab will be graded. | 2p |
-| [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 5p |
-| Exam | You will have to take an exam during the session. | 2p |
-| **Total** | *You will need at least 4.5 points to pass the subject.* | **11p** |
+| [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 4p |
+| Exam | You will have to take an exam during the session. This will be in written format. | 4p |
+| **Total** | *You will need at least 5 points to pass the subject.* | **11p** |
 
 ## Rules
 
 1. You can be absent without motivation at a maximum of 2 labs.
-2. Labs **CANNOT BE RECOVERED**
+2. Labs **CANNOT BE RECOVERED AUTSIDE THE CURRENT WEEK**
 3. You can justify your absence from the lab (medical reasons) within a maximum of 2 weeks from the date of your absence
 4. Each student must come with their group to the lab, if there are problems you must announce in advance.
 5. You can be late for lab up to 10 minutes
 6. Students who are catching up on the subject can participate at labs only if there are free places
 7. You will need a [github](https://www.github.com) account with your full name and a real profile photo
-8. You need at least 4.5 points to pass the exam
  
 ## Bibliography
 

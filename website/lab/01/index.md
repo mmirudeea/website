@@ -1,524 +1,867 @@
 ---
-sidebar_position: 2
-slug: /01
+description: Bare metal MMIO, PAC access and embassy-rs
+slug: /lab/01
 ---
 
-# 01 - Hardware Introduction
+# 01 - Memory Mapped IO & GPIO
 
-We will use [KiCad](https://www.kicad.org/) Electronics Design Suite for the electronic schematics.
+The purpose of this lab is to understand how to start developing in [Rust](https://www.rust-lang.org/) for the
+RP2040 MCU. The lab presents three examples:
+ - **bare metal** development - writing directly to registers, actually writing a driver
+ - **platform access crate** (PAC) - using an automatically generated crate from the MCUs SVD file, actually writing a driver, but with some kind of automation
+ - **embassy-rs** - using the Rust standard [`embedded-hal`](https://docs.rs/embedded-hal/latest/embedded_hal/) implemented by the [Embassy-rs](https://embassy.dev/) framework.
+
+:::info
+The example of this lab is to blink an LED at a certain time interval.
+:::
 
 ## Resources
-1. [Getting Started in KiCad](https://docs.kicad.org/7.0/en/getting_started_in_kicad/getting_started_in_kicad.html) 
-2. **Charles Platt**, *Encyclopedia of Electronic Components*, chapters 1, 5 and 10 Volume 1, chapter 22 Volume 2 and Volume 3 
 
-## Basic electronics
+1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
+2. **Raspberry Pi Ltd**, *[Raspberry Pi Pico Datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf)*
+3. **Raspberry Pi Ltd**, *[Raspberry Pi Pico W Datasheet](https://datasheets.raspberrypi.com/picow/pico-w-datasheet.pdf)*
 
-### Definitions
+## What is GPIO?
 
-#### Electric voltage
+General-Purpose Input/Output, or GPIO, is an essential part of embedded systems that serves as a vital conduit between microcontrollers and microprocessors and the outside world. A microcontroller or microprocessor's group of pins that can each be set to operate as an input or an output is referred to as GPIO. The purpose of these pins is to interface external components, including actuators, displays, sensors, and other devices, so that the embedded system may communicate with its surroundings. Standardised communication protocols like SPI, I2C, PCM, PWM, and serial communication may be directly supported by some GPIO pins. There are two varieties of GPIO pins: digital and analog.
 
-The electric voltage represents the potential difference between two points in a circuit and it's proportional to the energy required to move an electric charge between the two points.
+## Configuring GPIO Pins
 
-$$
-V = \frac{W}{Q}
-$$
+GPIO pins can be used as outputs (LEDs, motors, buzzers) or as inputs (buttons, sensors).
 
-V = Electromotive voltage (U in romanian);  
-W = Mechanical work of the electric force (L in romanian);  
-Q = Electric charge; 
+The R02040 has three peripherals that control the GPIO pins:
+ 1. *Pads* - control the actual physical pin or pad that the processor has outside. This control the electrical parameters, like maximum current or pull up and pull down resistors
+ 2. *IO Bank0* - connects and multiplexes the peripheral's pins to the output pads. Several peripherals use the same output pad to communicate with the exterior. For example, in the image below, `GPIO0` can be used either for:
+    * `SIO` - the `GPIO` function
+    * `SPI_RX` - the receive pin for the `SPI` peripheral
+    * `I2C0_SDA` - the data pin for the `I2C0` peripheral
+    * `UART0_TX` - the transmit pin for the `UART0` (serial port 0) peripheral
+ 3. *SIO* - that controls the interior MCU's pins. This is the peripheral that developers use to read and write the value of the pins.
 
-The unit of measurement of the electric voltage in the SI[^si] is the **Volt**(V)
+![Pico Pinout](images/pico-pinout.svg)
 
-$$
-[V]_{SI} = V(Volt)
-$$
-$$
-[W]_{SI} = J(Joule)
-$$
-$$
-[Q]_{SI} = C(Coulomb)
-$$
+Every pin of the MCU can perform multiple functions. Several peripherals need to use input and output pins.
+It is the role of the *IO Bank0* to multiplex and connect the peripherals to the pins.
+
+<div align="center">
+![IO Bank0](images/gpio_mux.png)
+</div>
+
+## Hardware access
+
+There are 3 different ways in which the hardware the Raspberry Pi Pico can be used:
+
+1. Embassy-rs framework, with the Embedded HAL implementation
+2. Platform Access Crate (PAC)
+3. Bare metal
+
+## Embedded HAL Implementation
+
+The bare metal and PAC require a lot of time and effort to develop applications.
+
+The Rust [Embedded devices Working Group](https://www.rust-lang.org/governance/wgs/embedded) has designed 
+a  set of standard traits (interfaces) for interacting with an MCU. This is called the **Embedded Hardware Abstraction Layer**, or shortly Embedded HAL. The main purpose is to define a common hardware interface that
+frameworks, libraries and operating systems can build upon. Regardless of what MCUs the device is using, the upper level software should be as portable as possible.
+
+There are several crates and frameworks that implement the Embedded HAL traits for the RP2040 MCU.
+- [rp2040_hal](https://docs.rs/rp2040-hal/latest/rp2040_hal/) crate, implements just the embedded HAL traits, it is *the bare minimum* for developing RP2040 applications
+- [embassy-rp](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html) crate implements the Embedded HAL for RP2040 that is used with the [embassy-rs](https://embassy.dev/) framework
+
+### Embassy-rs framework
+
+[Embassy-rs](https://embassy.dev/) is a full fledged embedded framework for Rust embedded development.
+Besides the implementation of the embedded HAL for different MCUs (RP2040 included), embassy-rs provides
+several functions like timers, BLE and network communication.
+
+<div align="center">
+![Rust EMbedded Stack](images/rust_embedded_stack.svg)
+</div>
+
+The crates used by Embassy-rs and their mapping are shown in the table bellow.
+
+| Crate | Position |
+|-------|----------|
+| [`embassy-executor`](https://docs.embassy.dev/embassy-executor/git/cortex-m/index.html) | Framework |
+| [`smoltcp`](https://docs.rs/smoltcp/latest/smoltcp/), [`defmt`](https://docs.rs/defmt/latest/defmt/) | Libraries |
+| [`embassy-net`](https://docs.embassy.dev/embassy-net/git/default/index.html), [`embassy-time`](https://docs.embassy.dev/embassy-time/git/default/index.html), [`embassy-usb`](https://docs.embassy.dev/embassy-usb/git/default/index.html), [`embassy-usb-logger`](https://docs.embassy.dev/embassy-usb-logger/git/default/index.html) | Framework Driver |
+| [`embassy-usb-driver`](https://docs.embassy.dev/embassy-usb-driver/git/default/index.html), [`embassy-time-driver`](https://docs.embassy.dev/embassy-time-driver/git/default/index.html) | Embassy HAL (API) |
+| [`cyw43`](https://docs.embassy.dev/cyw43/git/default/index.html), [`cyw43-pio`](https://docs.embassy.dev/cyw43-pio/git/default/index.html) | Driver (WiFi) |
+| [`embedded-hal`](https://docs.rs/embedded-hal/latest/embedded_hal/), [`embedded-hal-async`](https://docs.rs/embedded-hal-async/latest/embedded_hal_async/)| **Rust Embedded HAL (Standard)** |
+| [`embassy_rp`](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html) | HAL Implementation |
+| [`cortex-m`](https://docs.rs/cortex-m/latest/cortex_m/), [`cortex-m-rt`](https://docs.rs/cortex-m-rt/latest/cortex_m_rt/) | μ-architecture crates |
+| [`rp_pac`](https://docs.embassy.dev/rp-pac/git/default/index.html) | Platform Access Crate |
 
 :::info
 
-Electric voltage is always measured between two points in a circuit. In general, voltages are measured against a reference point called circuit mass **(GND)**. Circuit mass is a convention and represents the point which potential is consider null. 
+The name *Embassy-rs* is derived form **Emb**edded **Asy**nchronous Rust.
 
 :::
 
-#### Electric resistance
+### Entry
 
-Electrical resistance is a physical quantity that expresses the property of a material to oppose the passage of electric current. The SI[^si] unit of resistance is the **Ohm**, noted &ohm;.
+Embassy-rs is a framework built on top of `cortex-m-rt` and provides its own method of defining
+the entrypoint and bootloader.
 
-$$
-[R]_{SI} = \Omega(Ohm)
-$$
+```rust
+use embassy_executor::Spawner;
 
-#### Intensity of electric current
+#[embassy_executor::main]
+async fn main(_spawner: Spawner) {
+    let peripherals = embassy_rp::init(Default::default());
+}
+```
 
-The intensity of the electric current, also called the electric current, is a scalar physical quantity equal to the variation of the electric charge that crosses the section of a conductor in the unit of time. The unit of measurement in SI[^si] is the **Ampere**(A).
+The `embassy_rp::init` function takes care of the peripheral initialization so that developers can jump
+right in and use them.
 
-$$
-[I]_{SI} = A(Ampere)
-$$
+:::note
 
-### Ohm's law
+Embassy-rs is designed to work in an asynchronous way and this is why the `main` function is defined as `async`. For the time being, just take it as a must and ignore it.
 
-The intensity(I) of the electric current passing through a resistor is directly proportional to the voltage(V) applied to the resistor and inversely proportional to its resistance value(R).
+:::
 
-<div align="center">
-![Ohm's Law](images/ohm.png)
-</div>
+### Configure GPIO Output
 
-$$
-I = \frac{V}{R};
-$$
+Embassy-rs provides one single function that returns the GPIO `Output` pin and hides the configuration
+details from developers.
 
-I = intensity of electric current(A)   
-V = electric voltage(V)   
-R = circuit's resistance(&ohm;)
+The `pin` variable implements the embadded HAL [`OutputPin`](https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.OutputPin.html) trait.
 
-### Kirchhoff's First Law
+```rust
+use gpio::{Level, Output};
 
-The sum of currents flowing into a junction is always equal to the sum of currents flowing out of the same junction.
+// initialize PIN_n (replace n with a number) and set its
+// default value to LOW (0)
+let mut pin = Output::new(peripherals.PIN_n, Level::Low);
 
-$$
-\sum_{k=1}^{n} I_k = 0
-$$
+// set the pin value to HIGH (1)
+pin.set_high();
 
-<div align="center">
-![Kirchhoff's First Law](images/kirchhoff_1.png)
-</div>
+// set the pin value to LOW (0)
+pin.set_low();
+```
 
-$$
-I_1 + I_2 = I_3 + I_4 + I_5
-$$
-$$
-I_1 + I_2 - I_3 - I_4 - I_5 = 0
-$$
+:::tip
 
-### Kirchhoff's Second Law
+While the device initialization is specific to every hardware device (the example uses the 
+`embassy_rp` crate that is for RP2040), the pin initialization and usage is portable. It
+uses the same code, regardless of the MCU used.
 
-Around any closed loop in a circuit, the directed sum of potential differences across components is zero.
+:::
 
-$$
-\sum_{k=1}^{n} V_k = 0
-$$
+### Configure GPIO Input
 
-<div align="center">
-![Kirchhoff's Second Law](images/kirchhoff_2.png)
-</div>
+Using a pin as input is very similar to using it as output.
 
-$$
--V_A - V_B - V_C + V_D + V_E = 0
-$$
+```rust
+use gpio::{Input, Pull};
 
-### Voltage divider
+let pin = Input::new(peripherals.PIN_n, Pull::Up);
 
-There are many types of voltage dividers, being named according to the type of component elements: resistive divider, capacitive divider, compensated divider, etc...   
-The **resistive voltage divider** is obtained by applying a voltage $$E$$ to a group of resistors in series and thus a fraction of the voltage applied to one of the resistors of the group can be obtained.
+if pin.is_high() {
+    // Do something if the pin value is HIGH (1)
+} else {
+    // Do something if the pin value if LOW (0)
+}
+```
 
-<div align="center">
-![Voltage divider on GND](images/voltage_divider_gnd.png)
-</div>
+:::warning 
 
-$$
-V_{out} = V_{in} * \frac{R_{2}}{R_{1} + R_{2}};
-$$
+For a correct use of the buttons, use pull-up, pull-down resistors depending on the mode of operation of the button. Check [01 - Hardware Introduction](https://embedded-rust-101.wyliodrin.com/docs/lab/01#buttons)
+
+:::
+
+### Waiting
+
+Embassy-rs provides support for suspending the execution of the software for an amount of time. It uses
+the [`Timer`](https://docs.rs/embassy-time/0.3.0/embassy_time/struct.Timer.html) structure from the
+[`embassy_time`](https://docs.rs/embassy-time/latest/embassy_time/) crate.
+
+```rust
+// suspend the execution for a period of time
+use embassy_time::Timer;
+
+Timer::after_secs(1).await;
+```
+
+:::tip
+
+If the MCU provides timers, the Embassy framework will use them to suspend the software. This is very efficient.
+
+:::
+
+## Platform Access Crate (PAC)
+
+A mid level way of developing in Rust for MCUs are the *platform access crates* 
+(PAC). These crates are automatically generated from the *System View Description* (SVD) files.
+
+Using [rust2svd](https://docs.rs/svd2rust/latest/svd2rust/), developers can automatically generate
+a crate that provides access functions to the MCUs registers. This provides a significant improvement,
+as developers do not have to write manually the register addresses.
+
+One of the PAC crates for the RP2040 MCU is [rp2040-pac](https://docs.rs/rp2040-pac/latest/rp2040_pac/).
+
+:::note
+
+The PAC crate does not provide any means of initializing the MCU, so the entry point is still
+defined by the `cortex-m-rt` crate, just as it is for bare metal. Bare metal will be discussed later in the lab.
+
+Similarly, the PAC crate does not provide any `sleep` function.
+
+This section presents only the differences between bare metal and PAC. The PAC mode of writing 
+embedded software is very similar to bare metal, just that register access is made easier.
+
+:::
+
+The RP2040 (ARM Cortex-M0+) MCU uses *Memory Mapped Input Output* (MMIO). This means that the peripheral's registers
+are mapped into the address space (in normal words, in the memory). Reading and writing data from and to these registers
+is done by memory reads and writes.
+
+Blinking an LED in PAC or bare metal programming means following these steps:
+
+ 1. Ask the rust compiler not to use the `std` library, as it depends on the operating system
+ 2. Write a `main` function and instruct the MCU to call it at startup (reset)
+ 3. Configure the Single Cycle IO (SIO) peripheral to set a pin as output
+ 4. Enable the *IO Bank0* peripheral of the RP2040
+ 5. Configure the *IO Bank0* peripheral so that it sets a certain pin as output
+ 6. Toggle the pin's value through the *SIO*'s registers
+ 7. Wait for an amount of time
+ 8. Loop through steps 6 and 7
+
+### no-std
+
+As the code written runs on an MCU without any framework or operating system,
+the Rust compiler cannot rely on the `std` library. The two macros directives
+ask the compiler not to link the `std` library and not to expect `main`
+function.
+
+```rust
+#![no_main]
+#![no_std]
+```
 
 :::warning
-The voltage divider can be considered a power source only if it operates in the empty state. It is **not recommended** to use a voltage divider to supply a circuit as the internal resistance is high and energy is lost due to heating. It can be used to provide reference points.
-:::
-#### What happens if we use the voltage divider to supply a circuit.
 
-We consider a voltage divider that provides $$3V3$$ from a $$5V$$ power source $$E$$ and a load resistance, $$R_s$$, representing the current consumption of a sensor or a circuit that needs to be supplied at $$3V3$$.
+The bare metal code has to start with these two directives.
 
-<div align="center">
-![Voltage divider with load](images/voltage_divider_rs.png)
-</div>
-
-From Kirchhoff's First Law, the current through $$R_1$$ must be equal to the sum of the current through $$R_2$$ and $$R_s$$. 
-
-$$
-I_{R_1} = I_{R_2} + I_{R_S}
-$$
-$$
-V = V_{E} * \frac{R_2 || R_S}{R_1 + R_2 || R_S};
-$$
-
-:::note
-Equivalent resistor value
-- series
-
-<div align="center">
-![R series](images/r_series.png)
-</div>
-
-$$
-R_{series} = R_1 + R_2
-$$
-
-- parallel 
-
-<div align="center">
-![R parallel](images/r_parallel.png)
-</div>
-
-$$
-R_{parallel} = R_1 || R_2
-$$
-$$
-\frac{1}{R_{parallel}} = \frac{1}{R_1} + \frac{1}{R_2} 
-$$
 :::
 
-The output voltage depends on the current intensity through $$R_s$$, on the current consumption of the circuit that needs to be supplied at $$3V3$$. This is not a viable power supply solution.
+### Bootloader
 
-Beside the instability of the voltage divider with a load, the power rating for the $$R_1$$ must be suitable.
+The RP2040 has a piece of software written in an internal ROM memory that is loaded 
+when the MCU boots. This looks at the first 256 bytes of the Flash memory
+to understand how it needs to start the MCU.
 
-$$
-P_{R_1} = V_{R_1} * I_{R_1}
-$$
+:::tip
 
-The power dissipation on the resistor is directly proportional with the current through the resistor. Resistor are fabricated with predefined power ratings, most common $$1/4W$$, $$1/2W$$, $$1W$$. 
+While the ROM bootloader is rather small, its functionality is very similar to the PC's BIOS
+boot sequence.
 
-:::note
-For a better understanding, please read the chapter 10 of *Encyclopedia of Electronic Components*, Volume 1
 :::
+
+The RP2040's datasheet explains the boot process. This is not very straight forward, and writing this
+information requires a digital signature. The `rp2040-boot` crate provides the bootloader information
+for booting with the `cortex-m-rt` crate.
+
+Adding the following code to the Rust includes the bootloader.
+
+```rust
+#[link_section = ".boot_loader"]
+#[used]
+pub static BOOT_LOADER: [u8; 256] = rp2040_boot2::BOOT_LOADER_W25Q080;
+```
+
+### Entry
+
+For this lab, we will use the `cortex-m-rt` crate. As the starting code for an MCU is usually processor
+and vendor dependent, this crate allows developers to get started a little faster. It implements the bare minimum
+initialization code and provides a macro called `entry` that developers can use to select the startup (main)
+function.
 
 :::info
-In case we want to use the voltage divider between two chosen voltage values, we can use the generalized formula:
 
-$$
-V_{out} = ( V_{1} - V_{2} ) * \frac{R_{2}}{R_{1} + R_{2}};
-$$
+The `entry` macro is used by Embassy through the `embassy_executor::main` macro that sets the `main` function as the startup point and defines the correct bootloader.
 
-<div align="center">
-![Voltage divider](images/voltage_divider.png)
-</div>
 :::
 
-## Electronic Components  
-
-### Actuators and sensors
-
-In order to interface with the external environment, various electronic components are used, serving either as actuators (modifying the state of the external environment) or as transducers/sensors (influenced by the external environment and providing information to the microcontroller about various parameters).
-
-Examples of actuators:
-- Fans    
-- Audible indicators (buzzers)
-- Light indicators
-- Heating resistors
-
-:::tip
-Sometimes, to activate an actuator, an actuating element is needed. For instance, to start a motor, the microcontroller simply sends a logical start command to a transistor that opens and allows a high current to pass through it (here, by "high current", we compare it to the maximum of a few milliamperes that a microcontroller can output).
-:::
-
-Examples of sensors:
-
-- Buttons
-- Photo resistors - their electrical resistance is influenced by the amount of light
-- Thermistors - their electrical resistance is influenced by temperature
-
-:::tip
-Depending on the type of transducers, they may require signal processing before being taken in by the microcontroller (signal conditioning). For example, a photo resistor needs to be used in a circuit with a voltage divider or a current source. Alternatively, some sensors can be connected directly to the microcontroller, such as buttons.
-:::
-
-:::note
-For a better understanding, please read *Encyclopedia of Electronic Components*, Volume 3
-:::
-
-### LEDs
-
-LEDs - Light Emitting Diode - also called electroluminescent diodes - emit light when they are directly polarized. Not to be confused with light bulbs as they have radically different methods of operation.   
-
-
-LEDs can be used as indicator lights (often used in various appliances to signal that the appliance is on and doing something), or for illumination, in which case power LEDs are used. In the lab, LEDs are used to indicate the status of a pin.
-
-#### Calculation of current limiting resistor
-
-
-To use an LED for the purpose of indicating the status of a pin (rather said to indicate the presence of voltage), the current through the LED must be limited. This can be done most simply by stringing a resistor with the LED.   
-
-An LED is designed to operate at a nominal current (ex: 10mA). The voltage drop at this current across low power indicator LEDs is given by the chemistry of the LED (this also gives the color of the LED). In the lab, since we are using such a low current LED, we can power it directly from the logic pins of the MCU.
-
-<div align="center">
-![LED](images/led.png)
-</div>
-
-$$
-R_{1} = \frac{(V_{pin} - V_{led})}{I_{led}}
-$$
-
-#### Example:
-
-If the MCU has a pin voltage of 3.3V, also noted as 3V3, to light up an LED with a nominal current of 10mA and a voltage drop of 2V we need 
-a resistance of 130 &ohm;.
-
-:::tip
-We can use a resistor with a higher resistance value. The nominal current will light up the LED at it's maximum brightness. For status LEDs we can pick a resistance even 10 times bigger and the LED will light up slightly. 
-:::
-
-:::danger
-If there is no resistor in the circuit, the resistance will be almost 0 &ohm;, the current will tend to $$\infty$$, meaning a short circuit. This will absolutely burn the LED and make it unusable, but it can also burn the MCU. Most MCUs have short circuit protection, but is safer to not rely on that.  
-:::
-
-:::note
-For a better understanding, please read the chapter 22 of *Encyclopedia of Electronic Components*, Volume 2
-:::
-
-### Buttons
-
-The simplest way for the user to interact with a MCU is through the use of buttons.
-
-There are various ways to connect a button to the MCU, but these are the most used versions:
-
-:::warning[Incorrect]
-<div align="center">
-![Floating button](images/floating_btn.png)   
-</div>
-
-It shows a button connected to the MCU pin. When the button is pressed, the MCU input pin will be connected to GND, so it will be in the logic "0" state. This way of binding is **incorrect** because when the button is not pressed, the input is in **an undefined state** (as if left in the air), not being connected to either GND or Vcc! This state is called the **increased impedance state**. In practice, if we now read the value of the pin, it will produce a result of 1 or 0 depending on the environmental conditions. For example, if we bring our finger closer to that input, the reading will be 1, and if we move our finger away, the reading will be 0. 
-:::
-
-:::tip[Correct]
-<div align="center">
-![Pulled up button](images/pullup_btn.png)   
-</div>
-
- It shows the correct way to connect the button, using a **pull-up resistor** between the input pin and Vcc. This resistance has the role of bringing the input to the logic "1" state when the button is free by "raising" the line potential to Vcc. Alternatively, a **pull-down resistor** (connected to GND) can be used, in which case the input is held in the logic "0" state while the button is not pressed.
-::: 
-
-:::info
-To save external space, in most MCUs these resistors have been included inside the integrated circuit. Initially they are disabled and their activation can be done through software.
-:::
-
-:::note
-For a better understanding, please read the chapter 5 of *Encyclopedia of Electronic Components*, Volume 1
-:::
-
-### Breadboard and jumper wires
-
-#### Breadboard
-
-A breadboard is a rectangular board with a grid of holes that allows you to create temporary electronic circuits without soldering. The board typically has metal strips underneath the surface, connecting the holes in certain patterns. These patterns follow a standard layout, facilitating circuit building. Breadboards are reusable and provide a convenient way to prototype circuits quickly and make changes easily by rearranging components.
-
-<div align="center">
-![Breadboard](images/breadboard.png)   
-![Breadboard connection](images/breadboard_connections.png)   
-Breadboard connection   
-![Small breadboard connection](images/small_breadboard.png)   
-Small breadboard connection
-</div>
-
-#### Jumper wires
-
-Jumper wires are flexible wires with connectors at each end, typically male connectors (pins) or female connectors (sockets). They are used to create electrical connections on a breadboard by plugging one end into a hole on the breadboard and the other end into another hole, forming a connection between the two points.
-
-<div align="center">
-![Jumper wires](images/jumper_wires.png)   
-Jumper wires
-</div>
-
-:::note
-For a better understanding, please read the chapter 1 of *Encyclopedia of Electronic Components*, Volume 1
-:::
-
-## Datasheets
-
-### What is a datasheet
-
-Datasheets, also referred to as data sheets or spec sheets, are documents that offer a concise overview of a product, machine, component (such as an electronic part), material, subsystem (like a power supply), or software. The purpose is to provide enough information for a buyer to understand the product and for a design engineer to grasp the component's role in the overall system.
-
-While datasheets are essential, they have limitations. Some are comprehensive, while others are brief. Certain datasheets include sample schematics as a guide for using a component, but many do not. It's important to note that datasheets typically do not go into the detailed inner workings of a component, as their primary focus is to convey essential information rather than providing in-depth explanations of functionality.
-
-### How to read a datasheet
-
-We will use a [presence sensor](https://ro.mouser.com/datasheet/2/365/GP2Y0A02YK0F_13May05_Spec_ED-05G127-1652666.pdf), a [voltage regulator](https://www.ti.com/lit/ds/symlink/tps74801-q1.pdf?ts=1709627122770&ref_url=https%253A%252F%252Fwww.mouser.at%252F) and a [microcontroller](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf?_gl=1*1xsgcfj*_ga*MTYzNjcwMTY1Ny4xNzA4MDAxNDU5*_ga_22FD70LWDS*MTcwOTY0NzM1Mi40LjEuMTcwOTY0NzM2MS4wLjAuMA..) datasheets for example.
-
-#### Pin Configuration
-
-For commonly used components, the pin configuration, or pinout, is specified directly on the board. 
-
-<div align="center">
-![C2102](images/cp2102.png)   
-C1202 USB to UART module
-</div>
-
-If the pinout is not present on the component, there is a sign, a dot on the case that indicates the perspective in which you need to look at the component.
-
-<div align="center">
-![Pinout Sharp sensor](images/pinout_sharp.png)   
-Distance sensor - Sharp
-
-![Pinout LDO](images/pinout_ldo.png)   
-Voltage regulator - Texas instruments
-
-![RP2040 pinout](images/pinout_rp2040.png)   
-RP2040 MCU - Raspberry Pi
-</div>
-
-The pin configuration diagrams are accompanied by pin descriptions. In this sections, the manufacturers present the functionality of every pin.
-
-<div align="center">
-![Pin description LDO](images/pin_description.png)   
-Voltage regulator - Texas instruments
-</div>
-
-#### Operating conditions
-
-Every electronic component has it's own characteristics and different operating conditions. The first thing tackled is the supply voltage.
-
-<div align="center">
-![Sharp supply](images/sharp_supply.png)   
-Distance sensor - Sharp
-</div>
-
-There are two sections about the operating conditions: **absolute maximum ratings** and **recommended operating conditions**. Even if they are mentioned, you should never use your component at absolute maximum ratings as it will probably burn the component or have an undefined behavior.
-
-<div align="center">
-![Absolute maximum ratings LDO](images/amr_ldo.png)
-![Recommended operating conditions LDO](images/roc_ldo.png)
-Voltage regulator - Texas Instruments
-</div>
-
-#### Output
-
-Some components, like sensors, that are used to measure a value or to determine a condition, for simplicity, use analog output. This output is usually described in a graph.
-
-<div align="center">
-![Sharp output](images/sharp_output.png)   
-Distance sensor - Sharp
-</div>
-
-## KiCad
-
-### What is KiCad
-
-KiCad is a free and open-source electronics design automation (EDA) suite. It features schematic capture, integrated circuit simulation, printed circuit board (PCB) layout, 3D rendering, and plotting/data export to numerous formats. KiCad also includes a high-quality component library featuring thousands of symbols, footprints, and 3D models. KiCad has minimal system requirements and runs on Linux, Windows, and macOS.
-
-### KiCad setup
-
-For setting up KiCad, tackle the [tutorial](../../tutorial/kicad.md).
-
-### How to use KiCad
-
-Create a new project `lab01` and open the schematic editor.
-
-To add a new symbol, use the highlighted button, or use `A` shortcut.
-
-<div align="center">
-![KiCad add symbol](images/kicad_add_symbol.png)   
-Add symbol
-</div>
-
-In the opened dialog, search for the symbol you want to use. For this lab, we will use **Raspberry Pi Pico W** and it will be out first symbol added.
-
-<div align="center">
-![Pick symbol](images/pick_component.png)   
-Pick symbol
-</div>
-
-Place your symbol inside the sheet borders.
-
-To simplify the schematic, for the most common used signals like $$V_{CC}$$(supply voltage) or $$GND$$, we use **power symbols**. Click on the highlighted button or use the `P` shortcut.
-
-<div align="center">
-![Power symbol](images/power_symbol.png)   
-Add power symbol
-</div>
-
-Pick $$GND$$ and place it inside the sheet borders. Connect the power signal to the $$GND$$ pins of the microcontroller. To connect, click on `Add a wire` or use the shortcut `W`.
-
-
-If we take a look in the development board [datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf) at the power chain section, we can see that the power supplied of the USB connector, $$V_{BUS}$$, which is at $$5V$$ as standard, is regulated by a voltage regulator at $$3V3$$. Place a power symbol for $$V_{BUS}$$, $$3V3$$ and a $$5V$$ power symbol for $$V_{SYS}$$.
+When an error occurs, Rust calls the `panic` function. When using the `std` library, the `panic` function is
+already defined. It prints the error and usually unwinds the stack. When using `core`, it is the developer's
+job to define a `panic` function. In the case of bare metal development, the simplest `panic` function is 
+one that loops indefinitely, preventing the MCU form executing code.
+
+```rust
+use core::panic::PanicInfo;
+
+use cortex_m_rt::entry;
+
+// the `entry` macro sets up this function
+// as the function that the MCU calls at
+// startup
+#[entry]
+fn main() -> ! {
+    // the `main` function is not allows to return
+    loop { }
+}
+
+// rust uses panics when an error occurs
+// as this is bare metal, we have to define
+// the panic function that rust calls
+#[panic_handler]
+fn panic(_info: &PanicInfo) -> ! {
+    // if an error occurs, we simply loop around
+    // to prevent the MCU from executing 
+    // anything
+    loop {}
+}
+```
 
 :::warning
-Even if $$V_{SYS}$$ and $$V_{BUS}$$ have the same value, between them there is a protection diode for reverse current that protects both the microcontroller and the USB port of your PC. Be careful to not connect this 2 pins as it will cancel the protection diode.
+
+In PAC or bare metal mode, the MCU does not run any framework or operating system, it just runs the developers bare metal code. This is why `main` function is not allowed to return, it loops forever. There is no system to which the function
+could return control.
+
+:::
+
+One of the first lines of the `main` function is getting a reference to all the
+peripherals.
+
+```rust
+use rp2040_pac::Peripherals;
+
+#[entry]
+fn main() -> ! {
+    // get a reference to all the peripherals
+    let peripherals = Peripherals::take().unwrap();
+
+    loop { }
+}
+```
+
+:::info
+
+In Embassy, the `main` function does not have to loop indefinitely, it is allowed to return, as it runs within the embassy-rs framework.
+
+:::
+
+### Configuring the SIO
+
+In bare metal and PAC modes, developers have to manually initialize the *IO Bank0* and *SIO* peripherals.
+
+The GPIO pins are configured using the MCU's SIO registers. Each pin is configured by setting or clearing the corresponding
+bit of several registers. Below is a table with the memory addresses of the SIO registers. 
+
+The PAC crate provides the `SIO` peripheral, which in turn provides a function for
+each one of its registers. It fully hides the actual address of the registers.
+
+<div align="center">
+![SIO Registers](images/sio_registers.png)
+</div>
+
+```rust
+let sio = peripherals.SIO;
+
+// set the `pin` pin as output
+sio.gpio_oe_set().write(|w| unsafe { w.bits(1 << pin) });
+
+// set the `pin` to value `0`
+sio.gpio_out_clr().write(|w| unsafe { w.bits(1 << pin) })
+
+// set the `pin` to value `1`
+sio.gpio_out_set().write(|w| unsafe { w.bits(1 << pin) })
+```
+
+### Configuring the IO Bank0
+
+GPIO pins can be configured for several functionalities, they can be used as GPIO pins or can also be used by certain peripherals, usually those that implement communication protocols. The RP2040's *IO Bank0* peripherals performs this multiplexing.
+
+The following table provides all the functions that each pin can have.
+
+<div align="center">
+![Pin Functions](images/pin_functions.png)
+</div>
+
+#### Enable the IO Bank0
+
+When the RP2040 starts, the *IO Bank0* peripheral is disabled. To enable it, developers have to
+use the *Reset*'s peripheral `RESET`  register.
+
+<div align="center">
+![Reset Registers](images/reset_registers.png)
+</div>
+
+The fields of the `RESET` register. To enable *IO Bank0*, developers have to write
+a `0` in the `IO_BANK0` fields. By default, this field has the value `1`, which means that
+`*IO Bank0* is disabled.
+
+<div align="center">
+![Reset Register](images/reset_reset.png)
+</div>
+
+To verify that the *IO Bank0* peripheral has been enabled, developers have to check the field
+`IO_BANK0` of the `RESET_DONE` register shown in the table bellow.
+
+<div align="center">
+![Reset Done Register](images/reset_reset_done.png)
+</div>
+
+:::warning
+
+Developers might choose not to wait until the peripheral is enabled, but any writes to the peripheral's
+registers will most probably be ignored.
+
+:::
+
+```rust
+let reset = peripherals.RESETS;
+
+reset
+    .reset()
+    .modify(|r, w| unsafe { w.bits(r.bits() & !(1 << 5)) });
+while reset.reset_done().read().bits() & (1 << 5) == 0 {}
+```
+
+#### Configure the GPIO
+
+To connect the *SIO* peripheral to the output pins, developers have to modify the `GPIOx_CTRL` register.
+
+The following table shows the fields of the `GPIOx_CTRL` register. The fields that is of interest is `FUNCSEL`.
+Depending on the value written there, the *IO Bank0* will select a function or another. For this example,
+we have to write value `5`.
+
+<div align="center">
+![MCU Pins](images/gpio_ctrl_register.png)
+</div>
+
+```rust
+let io_bank0 = peripherals.IO_BANK0;
+
+// write the value 5 to the FUNCSEL field
+// Note: This actually writes the value 5 in FUNCSEL
+//       and 0s in all the other field. While this
+//       is fine for this example, usually a
+//       read, modify, write sequence should be used
+io_bank0
+    .gpio(pin)
+    .gpio_ctrl()
+    .write(|w| unsafe { w.bits(5) });
+
+// the correct way of doing this
+io_bank0
+    .gpio(pin)
+    .gpio_ctrl()
+    // the PAC crate provides fucntions for all the 
+    // register's fields
+    .modify(|_, w| unsafe { w.funcsel().bits(5) });
+```
+
+### Configuring the Pad
+
+The Pad peripheral is responsible for the electrical setup of the pins. It can configure the
+the maximum output current, input pull up or pull down resistor.
+
+The following table shows the *Pads* peripheral registers. Each GPIO pin has a corresponding register.
+
+<div align="center">
+![Pad Registers](images/gpio_pad_registers.png)
+</div>
+
+The following tables describe the `GPIOx` register. This register allows the configuration of several
+electrical parameters.
+
+<div align="center">
+![Pad Pad Control 2](images/gpio_pad_ctrl_2.png)
+</div>
+
+<div align="center">
+![Pad Pad Control 1](images/gpio_pad_ctrl_1.png)
+</div>
+
+Looking at the default values, when the MCU starts, pins are configured:
+
+| | |
+|-|-|
+| Output Enabled | Yes |
+| Input Enabled | Yes |
+| Maximum Output Current | 4mA |
+| Pull Input Resistor | Pull Down |
+| Schmidt Trigger | Yes |
+| Slew Rate | Slow |
+
+For this lab, the default values are fine, this peripheral can be considered as being properly setup.
+
+### Wait for an amount of time
+
+When using an operating system, developers usually have a function called `sleep` which asks the operating system
+to suspend the process for a certain amount of time. In bare metal environment, with no framework or operating system,
+this is not available. The MCU timers can be used for this, but the simplest (and most inefficient) of waiting is to
+loop around while doing nothing. The Arm Cortex-M processors offer the `nop` instruction. This asks the processor
+to do nothing.
+
+```rust
+// loops around 50000 times asking the processor
+// to execute the `nop` instruction that does
+// nothing
+for _ in 0..50000 {
+    // without this `asm` here, the compiler would optimize out the loop
+    asm!("nop");
+}
+```
+
+:::warning
+
+The `asm("nop")` is necessary, as otherwise the compiler optimizes out the empty loop.
+
+:::
+
+The question is how fast does this execute. The RP2040 starts by default using an internal 12MHz clock.
+
+$$
+t_{nop} = \frac{1}{12.000.000}s = 0.83ns
+$$
+
+The `loop` itself and the range (`0..50000`) calculation take another 4 - 5 MCU cycles. The actual wait time
+of the example is:
+
+$$
+t_{wait} = 5 * 50000 * \frac{1}{12.000.000}s = 20.83\mu s
+$$
+
+:::info
+
+This approach is inefficient compared to the method used in Embassy.
+
+:::
+
+## Bare metal
+
+When using bare metal, developers interact directly with the hardware devices. They are responsible for all the
+drivers and other components that they want to use. Mostly, bare metal development means *reading* and *writing* data
+from and to the MCUs and peripheral registers.
+
+### Configuring the SIO
+
+The *SIO* peripheral has a base address, the address where its registers are mapped in the address space.
+
+Each register has an offset, that represents the registers position (offset) relative to the *SIO*'s base address. 
+
+:::tip
+
+Computing the actual address of a register means adding the base address of the peripheral with the register's offset.
+
+e.g: `GPIO_OE`'s address is `0xd000_0000 + 0x020` => `0xd000_0020`
+
 :::
 
 <div align="center">
-![Power chain](images/pico_powerchain.png)   
-Power Chain Raspberry Pi Pico
+![SIO Registers](images/sio_registers.png)
 </div>
 
-Complete the schematic by placing an LED and a resistor at any given GPIO pin.
+```rust
+use core::ptr::write_volatile;
+
+const GPIO_OE_SET: *mut u32 = 0xd000_0024 as *mut u32;
+const GPIO_OUT_SET: *mut u32 = 0xd000_0014 as *mut u32;
+const GPIO_OUT_CLR: *mut u32 = 0xd000_0018 as *mut u32;
+
+// set the `pin` pin as output
+unsafe { write_volatile(GPIO_OE_SET, 1 << pin); }
+
+// set the `pin` to value `0`
+unsafe { write_volatile(GPIO_OUT_CLR, 1 << pin); }
+
+// set the `pin` to value `1`
+unsafe { write_volatile(GPIO_OUT_SET, 1 << pin); }
+```
+
+:::info 
+
+For a better understanding, please read subchapters 2.3.1.2 and 2.3.1.7 of the [datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf).
+
+:::
+
+#### Enable the IO Bank
+
+```rust
+const RESET: u32 = 0x4000_c000;
+const CLR: u32 = 0x3000;
+
+const RESET_DONE: u32 = 0x4000_c008;
+
+unsafe {
+    // clear bit `5` of the `RESET` register by
+    // writing `1` on  bit `5` at address
+    // `RESET` + 0x3000
+    write_volatile((RESET + CLR) as *mut u32, 1 << 5);
+
+    // wait for the IO Bank0 to enable
+    while read_volatile(RESET_DONE as *const u32) & (1 << 5) == 0 {}
+}
+```
+
+:::tip
+
+There is an interesting trick that the code above is using. Normally, the code modifies only the
+bit 5 of the `RESET` register. To perform that, it should:
+1. read the register
+2. modify the value read
+3. write back the modified value
+
+The RP2040 MCU provides a trick that allows the instant modification. For each peripheral mapped at
+address A, the MCU's Bus maps three other *shadow* peripherals: 
+
+| Name | Address | Behavior |
+|------|---------|----------|
+| *Peripheral_XOR* | A+0x1000 | `REGISTER` = `REGISTER` ^ value (XORs the new value with the original register value) | 
+| *Peripheral_SET* | A+0x2000 | `REGISTER` = `REGISTER` \| value (sets all the `1` bits of value in the original register) |
+| *Peripheral_CLR* | A+0x3000 | `REGISTER` = `REGISTER` & !value (for every `1` bit in the value, clears the corresponding bit in the original register) |
+:::
+
+#### Configure the GPIO
+
+To connect the *SIO* peripheral to the output pins, developers have to modify the `GPIOx_CTRL` register.
+
+Each GPIO pin has its own control register, located at offset $40014000h + 4 + 8 * pin$.
 
 <div align="center">
-![Pico Led Schematic](images/led_schematic.png)   
-LED Schematic
+![MCU Pins](images/gpio_status_ctrl.png)
 </div>
 
-Save the file and open the PCB editor. You can use the button on the top bar of the Symbol editor.
+:::tip
 
-Use the highlighted button to update the PCB with the changes made in Schematic editor.
+For example, `GPIO25_CTRL`'s address is `0x40014000 + 4 + 8 * 25` = `0x400140CC`.
+.
+
+Pin 25 is connected to the onboard LED of the Raspberry Pi Pico.
+
+:::
+
+The following table shows the fields of the `GPIOx_CTRL` register. The fields that is of interest is `FUNCSEL`.
+Depending on the value written there, the *IO Bank0* will select a function or another. For this example,
+we have to write value `5`.
 
 <div align="center">
-![Update PCB](images/update_pcb_1.png)   
-Update PCB
+![MCU Pins](images/gpio_ctrl_register.png)
 </div>
 
-You will get an error because for the resistor $$R1$$ and LED $$D1$$ there are no footprints assigned. 
+```rust
+const GPIOX_CTRL: u32 = 0x4001_4004;
 
-<div align="center">
-![Footprint error ](images/footprint_error.png)   
-Footprint error 
-</div>
+// compute the address of the GPIOx_CTRL register
+let gpio_ctrl = (GPIOX_CTRL + 8 * LED) as *mut u32;
 
-Go back to the Schematic and assign footprints for resistor $$R1$$ and LED $$D1$$ like in the setup [tutorial](../../tutorial/kicad.md). You can pick any footprint, or just paste these on footprint field in symbol properties.
-- resistor: Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical
-- LED: LED_THT:LED_D3.0mm
+// write the value 5 to the FUNCSEL field
+// Note: This actually writes the value 5 in FUNCSEL
+//       and 0s in all the other field. While this
+//       is fine for this example, usually a
+//       read, modify, write sequence should be used
+unsafe { write_volatile(gpio_ctrl, 5); }
+```
 
-Go back to the PCB editor and try to update again.
+:::info 
 
-<div align="center">
-![Update PCB](images/update_pcb_2.png)   
-Update PCB
-</div>
+For a better understanding, please read subchapters 1.4.3, 2.1.12, 2.14, 2.19.1, 2.19.2, 2.19.15, 2.19.16 of the [datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf).
 
-Connect the components using the `Route tracks` button on the right or the shortcut `X`. The blue lines will guide you to connect the right pins.
+:::
 
-<div align="center">
-![Route tracks](images/route_tracks.png)   
-Route tracks
-</div>
+## Build and flash
 
-KiCad offers a 3D Viewer to have a preview of how the PCB will look. Click on `View` -> `3D Viewer`
+### Build
 
-<div align="center">
-![3D View](images/3D_view.png)   
-3D View
-</div>
+To build a program for the Raspberry Pi Pico, run the following command in the crate's root folder (where the `Cargo.toml` file and `src` folder are):
+
+```shell
+cargo build
+```
+
+
+This will create the binary file inside `target/thumbv6m-none-eabi/debug/`.
 
 :::note
-For a better understanding, please read [Getting Started in KiCad](https://docs.kicad.org/7.0/en/getting_started_in_kicad/getting_started_in_kicad.html) tutorial.
+
+If the crate is part of a workspace (as it is the lab template), the `target` folder is located in the workspace's root instead of the crate's root. 
+
 :::
+
+### Flash
+
+To load your program to the Raspberry Pi Pico, connect the board through USB to your computer while holding down the `BOOTSEL` button. It should appear as an external drive on your system. Afterwards, you can run the following command (also from the crate's root folder):
+
+```shell
+elf2uf2-rs -d target/thumbv6m-none-eabi/debug/<crate_name>
+```
+
+This will upload your program to the Pico.
+
+:::note
+
+If you are running this command from within a crate inside of a workspace, don't forget to navigate to the target folder by using `../../`
+Example:
+```shell
+elf2uf2-rs -d ../../target/thumbv6m-none-eabi/debug/<crate_name>
+```
+
+:::
+
+:::note
+
+If the above command doesn't work, try these steps instead:
+
+- run this command: 
+```shell
+elf2uf2-rs target/thumbv6m-none-eabi/debug/<crate_name>
+```
+
+- drag and drop the `.uf2` file located in the `target/thumbv6m-none-eabi/debug/` folder to the RP external drive
+
+:::
+
+### Serial console
+
+To see messages from the Pico over the serial port, add the `-s` argument to the flash command:
+
+```shell
+elf2uf2-rs -s -d /target/thumbv6m-none-eabi/debug/<crate_name>
+```
+
+This will allow us to see messages sent over serial from the board.
+
+### Troubleshooting
+
+#### Link error - reset vector is missing
+
+In case you get an error similar to this:
+
+<div align="center">
+![Reset Vectors Missing](images/reset_vector_missing_error.png)
+</div>
+
+That means that you most probably forgot to add the *entry point* to your program. Make sure you add `#[entry]` before your main function so that the MCU knows to call it at startup.
+
+#### Flash succeeds, the application does not start
+
+In case your code doesn't seem to get uploaded correctly or the board goes into `BOOTSEL` mode as soon as you plug it into your computer, it might be time to debug. To install required dependencies for debugging, run these commands:
+
+```shell
+rustup component add llvm-tools
+
+cargo install cargo-binutils
+```
+
+Now, you can run this command:
+
+```shell
+rust-objdump --section-headers target/thumbv6m-none-eabi/debug/<crate_name>
+```
+
+This will let us see the layout of the binary file, or the memory of the program that we are about to flash to the board.
+
+<div align="center">
+![Rust ObjDump](images/objdump.png)
+</div>
+
+We need to make sure that it contains the `.boot_loader` section, or else our program will never run.
+
+Further reading: [Embassy Tutorial](../tutorials/embassy)
 
 ## Exercises
 
-1. Complete the given exercise sheet.(**3p**)
+1. Use [KiCad](https://www.kicad.org/) to design a simple circuit that connects an LED to GPIO 0 (GP0). (**1p**)
 
-2. The microcontroller will be running these precompiled programs for [Pico W](../../../../assets/lab01/firmware/pico_w.uf2) and [Pico H](../../../../assets/lab01/firmware/pico_h.uf2). Assemble a circuit surrounding the microcontroller in order to perform the next tasks:(**3p**)
-:::info
-To flash the board, you will need to connect the boards to your PC while holding down the `BOOTSEL` button. This should *"mount"* it as a an external drive. The next step is to copy and paste the `.uf2` files in the `RPI-RP2` drive.
+:::warning 
+
+The maximum current that GPIO pins output depends on the MCU. To be sure that the LED will work normally and there is no risk of destruction, a resistor has to be added to limit the current level *below* the maximum GPIO output current.
+
 :::
-- Connect a status LED that is ON as long as the microcontroller has power supplied. The pin that determines the status of the microcontroller is GP1.
-:::warning
-Make sure you connect a resistor in series wit the LED.
+
+2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 0 (GP0). (**2p**)
+
+:::danger 
+
+Please make sure the lab professor verifies your circuit before it is powered up.
+
 :::
-- A button is used to toggle the integrated LED of the development board. Connect the button to the GP2 pin. 
+
+3. Write a program using Embassy that blinks the LED connected to GPIO pin 0 (GP0) every 300ms. (**2p**)
+
 :::note
-Make sure you use a pull-up resistor.
-:::
-- The screen displays an analog value read by the microcontroller on pin ADC0. Create a circuit and connect it to ADC0 so that the display shows the value $$1.65V$$.
-:::tip
-Use a voltage divider.
+
+For the purpose of this lab, please use `await` as is, think that for using the `Timer`, you have to add `.await` after the `after` function.
+
 :::
 
-:::danger
-Do not supply power to the microcontroller before the lab teacher checks the circuit.
+4. Write a program using `embassy-rs` that will write the message "The button was pressed" to the console every time button A is pressed. Take a look at the Pico Explorer Base's pinout to determine the pin to which button A is connected. (**2p**)
+
+<div align="center">
+![Pico Explorer Pinout](../images/explorer_pins.jpg)
+</div>
+
+:::info
+
+The Raspberry Pi Pico does not have an integrated debugger, so writing messages to the console is done
+with a simulated serial port over the USB. This implies the usage of a USB driver.
+
+```rust
+use embassy_rp::usb::{Driver, InterruptHandler};
+use embassy_rp::{bind_interrupts, peripherals::USB};
+use log::info;
+
+// Use for the serial over USB driver
+bind_interrupts!(struct Irqs {
+    USBCTRL_IRQ => InterruptHandler<USB>;
+});
+
+
+// The task used by the serial port driver 
+// over USB
+#[embassy_executor::task]
+async fn logger_task(driver: Driver<'static, USB>) {
+    embassy_usb_logger::run!(1024, log::LevelFilter::Info, driver);
+}
+
+#[embassy_executor::main]
+async fn main(spawner: Spawner) {
+    let peripherals = embassy_rp::init(Default::default());
+
+    // Start the serial port over USB driver
+    let driver = Driver::new(peripherals.USB, Irqs);
+    spawner.spawn(logger_task(driver)).unwrap();
+
+    // ...
+
+    info!("message");
+}
+```
+
+:::warning
+
+Make sure you sleep while looping to read the button's value, otherwise 
+the USB driver's task will not be able to run and the messages will 
+not be printed.
+
 :::
 
-3. Design the circuit in KiCad.(**3p**) 
+:::
 
+5. Write a Rust program using `embassy-rs` that toggles the LED every time button A is pressed. (**1p**)
 
-[^si]: The International System of Units, the world's most widely used system of measurement.
+6. Write a Rust program that sets on HIGH the LED connected to GPIO pin 0 (GP0). (**1p**)
+   1. use the `rp2040-pac` crate
+   2. use bare metal
+
+7. Write a Rust program that blinks the LED connected to GPIO pin 0 (GP0) every 300ms. (**1p**)
+   1. use the `rp2040-pac` crate - write a `PinDriver` that implements the [`OutputPin`](https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.OutputPin.html) trait
+   2. use bare metal - write a `PinDriver` that implements the [`OutputPin`](https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.OutputPin.html) trait
+
+## Advanced topics
+
+### Debouncing techniques for stable input reading.
+
+Noise is produced whenever a pushbutton or other switch is moved. Because the switch contact is made of metal and has some elasticity, there is some noise (contact). The switch literally bounces a few times once it makes contact with a metal surface when it is shifted into a new position. This contact is known as bounce. 
+
+<div align="center">
+![Button Bounce](images/button-bounce.png)
+</div>
+
+The image above shows the signal produced by a button when pressed.
+
+The most correct way to correct the bouncing problem is the hardware one, but there are also software methods to correct the problem. For more details and examples, consult the documentation from Embassy-rs and the examples provided by them.

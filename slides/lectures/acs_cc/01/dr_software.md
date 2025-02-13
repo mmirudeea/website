@@ -89,37 +89,12 @@ Extras:
     }
 </style>
 
-<table>
-    <thead>
-        <tr>
-            <th>What</th>
-            <th>ARM</th>
-            <th>AVR</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Program Load</td>
-            <td>Using an external programmer or bootloader</td>
-            <td>(same)</td>
-        </tr>
-        <tr>
-            <td>Execution launch</td>
-            <td>When the microcontroller is reset, execution starts from a preset address</td>
-            <td> (same) </td>
-        </tr>
-        <tr>
-            <td>Execution threads</td>
-            <td> Supports multiple threads, multiple values for the Program Counter PC (R15) </td>
-            <td> Single thread, controlled by PC (Program Counter)</td>
-        </tr>
-        <tr>
-            <td>In/ Out interaction</td>
-            <td>Memory mapped I/O</td>
-            <td>Port-mapped I/O</td>
-        </tr>
-    </tbody>
-</table>
+| What              | ARM                                                         | AVR                                |
+|-------------------|-------------------------------------------------------------|------------------------------------|
+| Program Load      | Using an external programmer or bootloader                  | (same)                             |
+| Execution launch  | When the microcontroller is reset, execution starts from a preset address | (same)                             |
+| Execution threads | Supports multiple threads, multiple values for the Program Counter PC (R15) | Single thread, controlled by PC (Program Counter) |
+| In/ Out interaction | Memory mapped I/O                                         | Port-mapped I/O                    |
 
 ---
 
@@ -222,44 +197,14 @@ Extras:
 </style>
 
 ## ATmega328P Memory Details
-<table>
-    <tr>
-        <th>Memory Type</th>
-        <th>Size</th>
-        <th>Purpose</th>
-    </tr>
-    <tr>
-        <td>Flash (ROM)</td>
-        <td>32 KB</td>
-        <td>Stores program instructions (non-volatile).</td>
-    </tr>
-    <tr>
-        <td>SRAM (RAM)</td>
-        <td>2 KB</td>
-        <td>Stores variables, stack, heap, and registers.</td>
-    </tr>
-    <tr>
-        <td>EEPROM</td>
-        <td>1 KB</td>
-        <td>Stores persistent data (non-volatile, writable).</td>
-    </tr>
-    <tr>
-        <td>General Purpose Registers</td>
-        <td>32 Bytes</td>
-        <td>Fast-access CPU registers.</td>
-    </tr>
-    <tr>
-        <td>I/O Registers</td>
-        <td>64 Bytes</td>
-        <td>Port-mapped peripheral control registers.</td>
-    </tr>
-    <tr>
-        <td>Extended I/O Registers</td>
-        <td>160 Bytes</td>
-        <td>Memory mapped peripheral control registers.</td>
-    </tr>
-
-</table>
+| Memory Type             | Size    | Purpose                                      |
+|-------------------------|---------|----------------------------------------------|
+| Flash (ROM)             | 32 KB   | Stores program instructions (non-volatile).  |
+| SRAM (RAM)              | 2 KB    | Stores variables, stack, heap, and registers.|
+| EEPROM                  | 1 KB    | Stores persistent data (non-volatile, writable).|
+| General Purpose Registers | 32 Bytes | Fast-access CPU registers.                  |
+| I/O Registers           | 64 Bytes| Port-mapped peripheral control registers.    |
+| Extended I/O Registers  | 160 Bytes | Memory mapped peripheral control registers. |
 
 ---
 
@@ -288,47 +233,18 @@ Extras:
     }
 </style>
 ## RP2350 Memory Breakdown
-<table>
-    <tr>
-        <th>Memory Type</th>
-        <th>Size</th>
-        <th>Purpose</th>
-    </tr>
-    <tr>
-        <td>XIP Flash  </td>
-        <td>Up to 16 MB</td>
-        <td>Stores program code (external QSPI Flash).</td>
-    </tr>
-    <tr>
-        <td>SRAM (On-chip)</td>
-        <td>520 KB</td>
-        <td>Stores stack, heap, variables, and data.</td>
-    </tr>
-    <tr>
-        <td>Boot ROM</td>
-        <td>32 KB</td>
-        <td>Stores bootloader, factory firmware.</td>
-    </tr>
-    <tr>
-        <td>OTP</td>
-        <td>8 KB</td>
-        <td>One-time-programmable (Product id, cryptographic keys). </td>
-    </tr>
-    <tr>
-        <td>Peripheral Space</td>
-        <td>Varies</td>
-        <td>Memory-mapped I/O for GPIO, UART, SPI, DMA.</td>
-    </tr>
-    <tr>
-        <td>Registers</td>
-        <td>16 + control registers</td>
-        <td>General purpose + program flow + special purpose</td>
-    </tr>
-</table>
+| Memory Type       | Size       | Purpose                                      |
+|-------------------|------------|----------------------------------------------|
+| XIP [^1] Flash         | Up to 16 MB| Stores program code (external QSPI Flash).   |
+| SRAM (On-chip)    | 520 KB     | Stores stack, heap, variables, and data.     |
+| Boot ROM          | 32 KB      | Stores bootloader, factory firmware.         |
+| OTP               | 8 KB       | One-time-programmable (Product id, cryptographic keys). |
+| Peripheral Space  | Varies     | Memory-mapped I/O for GPIO, UART, SPI, DMA.  |
+| Registers         | 16 + control registers | General purpose + program flow + special purpose |
 
 <br> 
 
-> XIP = Execute in Place (without this, the code would need to be copied in RAM first)
+[^1]: XIP = Execute in Place (without this, the code would need to be copied in RAM first)
 
 ---
 layout: two-cols

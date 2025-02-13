@@ -37,37 +37,12 @@ A microprocessor is a computer central processing unit (CPU) on a single integra
     }
 </style>
 
-<table>
-    <thead>
-        <tr>
-            <th>Charecteristic</th>
-            <th>Microcontroler</th>
-            <th>Microprocessor</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Function</td>
-            <td>Includes CPU, mem & I/O</td>
-            <td>Include only the CPU</td>
-        </tr>
-        <tr>
-            <td>Cost</td>
-            <td> >> <em> cheaper </em></td>
-            <td> >>  <em> expensive </em></td>
-        </tr>
-        <tr>
-            <td>Complexity</td>
-            <td> >> <em>simple</em></td>
-            <td> >> <em>complex</em></td>
-        </tr>
-        <tr>
-            <td>Use case</td>
-            <td><em>Incorporated devices </em></td>
-            <td><em>PCs, Servers, Laptops </em></td>
-        </tr>
-    </tbody>
-</table>
+| Characteristic | Microcontroller            | Microprocessor           |
+|----------------|----------------------------|--------------------------|
+| Function       | Includes CPU, mem & I/O    | Includes only the CPU    |
+| Cost           | >> *cheaper*               | >> *expensive*           |
+| Complexity     | >> *simple*                | >> *complex*             |
+| Use case       | *Incorporated devices*     | *PCs, Servers, Laptops*  |
 
 ---
 

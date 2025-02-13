@@ -14,8 +14,12 @@ test fake slides:
   stage: test
   script:
     - cd slides
-    - SLIDES_OUTPUT_FOLDER=../website/static/slides FAKE_SLIDES=pm ./build.sh acs_cc 
+    - SLIDES_OUTPUT_FOLDER=../website/static/slides FAKE_SLIDES=pm_cc ./build.sh acs_cc 
     - SLIDES_OUTPUT_FOLDER=../website/static/slides FAKE_SLIDES=ma ./build.sh fils_en 
+  artifacts:
+    paths:
+      - website/static/slides/acs_cc/**/*
+      - website/static/slides/fils_en/**/*
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 

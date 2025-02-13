@@ -1,6 +1,3 @@
----
----
-
 # Why is the output not ideal?
 
 <div grid="~ cols-2 gap-2" m="t-2">
@@ -103,7 +100,6 @@ Examples:
 
 
 ---
----
 
 # Why Pull-Down R
 
@@ -117,11 +113,12 @@ Examples:
 
 </div>
 
- <img src="./pull_down.png" class="rounded" h="90">
+<div align="center">
+ <img src="./pull_down.png" class="rounded" h="100">
+</div>
 
  </div>
 
----
 ---
 
 # Why Pull-Up R
@@ -140,7 +137,9 @@ Examples:
 
 </div>
 
+<div align="center">
 <img src="./pull_up.png" class="rounded" h="50">
+</div>
 
 </div>
 

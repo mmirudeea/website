@@ -102,7 +102,7 @@ teodor.dicu@wyliodrin.com
 ## Rules
 
 1. You can be absent without motivation at a maximum of 2 labs.
-2. Labs **CANNOT BE RECOVERED AUTSIDE THE CURRENT WEEK**
+2. Labs **CANNOT BE RECOVERED OUTSIDE THE CURRENT WEEK**
 3. You can justify your absence from the lab (medical reasons) within a maximum of 2 weeks from the date of your absence
 4. Each student must come with their group to the lab, if there are problems you must announce in advance.
 5. You can be late for lab up to 10 minutes

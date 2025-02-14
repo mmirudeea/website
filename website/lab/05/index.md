@@ -3,7 +3,7 @@ description: Inter-Integrated Circuit
 slug: /lab/05
 ---
 
-# 07 - Inter-Integrated Circuit
+# 05 - Inter-Integrated Circuit
 
 This lab will teach you how to communicate with hardware devices using the Inter-Integrated Circuit (I2C) protocol, in Embassy.
 

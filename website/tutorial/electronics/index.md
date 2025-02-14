@@ -4,11 +4,10 @@ sidebar_position: 2
 
 # Electronics
 
-We will use [KiCad](https://www.kicad.org/) Electronics Design Suite for the electronic schematics.
+This page offers a brief introduction to basic electronics and harwdare related concepts. We'll cover a few relevant laws of physics, some examples of simple components and how they're used, as well an overview of datasheets and what to look out for when reading one.
 
 ## Resources
-1. [Getting Started in KiCad](https://docs.kicad.org/7.0/en/getting_started_in_kicad/getting_started_in_kicad.html) 
-2. **Charles Platt**, *Encyclopedia of Electronic Components*, chapters 1, 5 and 10 Volume 1, chapter 22 Volume 2 and Volume 3 
+**Charles Platt**, *Encyclopedia of Electronic Components*, chapters 1, 5 and 10 Volume 1, chapter 22 Volume 2 and Volume 3 
 
 ## Basic electronics
 
@@ -44,7 +43,7 @@ Electric voltage is always measured between two points in a circuit. In general,
 
 :::
 
-#### Electric resistance
+#### Electrical resistance
 
 Electrical resistance is a physical quantity that expresses the property of a material to oppose the passage of electric current. The SI[^si] unit of resistance is the **Ohm**, noted &ohm;.
 
@@ -276,7 +275,7 @@ There are various ways to connect a button to the MCU, but these are the most us
 ![Floating button](images/floating_btn.png)   
 </div>
 
-It shows a button connected to the MCU pin. When the button is pressed, the MCU input pin will be connected to GND, so it will be in the logic "0" state. This way of binding is **incorrect** because when the button is not pressed, the input is in **an undefined state** (as if left in the air), not being connected to either GND or Vcc! This state is called the **increased impedance state**. In practice, if we now read the value of the pin, it will produce a result of 1 or 0 depending on the environmental conditions. For example, if we bring our finger closer to that input, the reading will be 1, and if we move our finger away, the reading will be 0. 
+This diagram shows a button connected to the MCU pin. When the button is pressed, the MCU input pin will be connected to GND, so it will be in the logic "0" state. This way of binding is **incorrect** because when the button is not pressed, the input is in **an undefined state** (as if left in the air), not being connected to either GND or Vcc! This state is called the **increased impedance state**. In practice, if we now read the value of the pin, it will produce a result of 1 or 0 depending on the environmental conditions. For example, if we bring our finger closer to that input, the reading will be 1, and if we move our finger away, the reading will be 0. 
 :::
 
 :::tip[Correct]
@@ -284,7 +283,7 @@ It shows a button connected to the MCU pin. When the button is pressed, the MCU 
 ![Pulled up button](images/pullup_btn.png)   
 </div>
 
- It shows the correct way to connect the button, using a **pull-up resistor** between the input pin and Vcc. This resistance has the role of bringing the input to the logic "1" state when the button is free by "raising" the line potential to Vcc. Alternatively, a **pull-down resistor** (connected to GND) can be used, in which case the input is held in the logic "0" state while the button is not pressed.
+ This is the correct way to connect the button, using a **pull-up resistor** between the input pin and Vcc. This resistance has the role of bringing the input to the logic "1" state when the button is free by "raising" the line potential to Vcc. Alternatively, a **pull-down resistor** (connected to GND) can be used, in which case the input is held in the logic "0" state while the button is not pressed.
 ::: 
 
 :::info
@@ -388,136 +387,5 @@ Some components, like sensors, that are used to measure a value or to determine 
 ![Sharp output](images/sharp_output.png)   
 Distance sensor - Sharp
 </div>
-
-## KiCad
-
-### What is KiCad
-
-KiCad is a free and open-source electronics design automation (EDA) suite. It features schematic capture, integrated circuit simulation, printed circuit board (PCB) layout, 3D rendering, and plotting/data export to numerous formats. KiCad also includes a high-quality component library featuring thousands of symbols, footprints, and 3D models. KiCad has minimal system requirements and runs on Linux, Windows, and macOS.
-
-### KiCad setup
-
-For setting up KiCad, tackle the [tutorial](../../tutorial/kicad.md).
-
-### How to use KiCad
-
-Create a new project `lab01` and open the schematic editor.
-
-To add a new symbol, use the highlighted button, or use `A` shortcut.
-
-<div align="center">
-![KiCad add symbol](images/kicad_add_symbol.png)   
-Add symbol
-</div>
-
-In the opened dialog, search for the symbol you want to use. For this lab, we will use **Raspberry Pi Pico W** and it will be out first symbol added.
-
-<div align="center">
-![Pick symbol](images/pick_component.png)   
-Pick symbol
-</div>
-
-Place your symbol inside the sheet borders.
-
-To simplify the schematic, for the most common used signals like $$V_{CC}$$(supply voltage) or $$GND$$, we use **power symbols**. Click on the highlighted button or use the `P` shortcut.
-
-<div align="center">
-![Power symbol](images/power_symbol.png)   
-Add power symbol
-</div>
-
-Pick $$GND$$ and place it inside the sheet borders. Connect the power signal to the $$GND$$ pins of the microcontroller. To connect, click on `Add a wire` or use the shortcut `W`.
-
-
-If we take a look in the development board [datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf) at the power chain section, we can see that the power supplied of the USB connector, $$V_{BUS}$$, which is at $$5V$$ as standard, is regulated by a voltage regulator at $$3V3$$. Place a power symbol for $$V_{BUS}$$, $$3V3$$ and a $$5V$$ power symbol for $$V_{SYS}$$.
-
-:::warning
-Even if $$V_{SYS}$$ and $$V_{BUS}$$ have the same value, between them there is a protection diode for reverse current that protects both the microcontroller and the USB port of your PC. Be careful to not connect this 2 pins as it will cancel the protection diode.
-:::
-
-<div align="center">
-![Power chain](images/pico_powerchain.png)   
-Power Chain Raspberry Pi Pico
-</div>
-
-Complete the schematic by placing an LED and a resistor at any given GPIO pin.
-
-<div align="center">
-![Pico Led Schematic](images/led_schematic.png)   
-LED Schematic
-</div>
-
-Save the file and open the PCB editor. You can use the button on the top bar of the Symbol editor.
-
-Use the highlighted button to update the PCB with the changes made in Schematic editor.
-
-<div align="center">
-![Update PCB](images/update_pcb_1.png)   
-Update PCB
-</div>
-
-You will get an error because for the resistor $$R1$$ and LED $$D1$$ there are no footprints assigned. 
-
-<div align="center">
-![Footprint error ](images/footprint_error.png)   
-Footprint error 
-</div>
-
-Go back to the Schematic and assign footprints for resistor $$R1$$ and LED $$D1$$ like in the setup [tutorial](../../tutorial/kicad.md). You can pick any footprint, or just paste these on footprint field in symbol properties.
-- resistor: Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical
-- LED: LED_THT:LED_D3.0mm
-
-Go back to the PCB editor and try to update again.
-
-<div align="center">
-![Update PCB](images/update_pcb_2.png)   
-Update PCB
-</div>
-
-Connect the components using the `Route tracks` button on the right or the shortcut `X`. The blue lines will guide you to connect the right pins.
-
-<div align="center">
-![Route tracks](images/route_tracks.png)   
-Route tracks
-</div>
-
-KiCad offers a 3D Viewer to have a preview of how the PCB will look. Click on `View` -> `3D Viewer`
-
-<div align="center">
-![3D View](images/3D_view.png)   
-3D View
-</div>
-
-:::note
-For a better understanding, please read [Getting Started in KiCad](https://docs.kicad.org/7.0/en/getting_started_in_kicad/getting_started_in_kicad.html) tutorial.
-:::
-
-## Exercises
-
-1. Complete the given exercise sheet.(**3p**)
-
-2. The microcontroller will be running these precompiled programs for [Pico W](../../../../assets/lab01/firmware/pico_w.uf2) and [Pico H](../../../../assets/lab01/firmware/pico_h.uf2). Assemble a circuit surrounding the microcontroller in order to perform the next tasks:(**3p**)
-:::info
-To flash the board, you will need to connect the boards to your PC while holding down the `BOOTSEL` button. This should *"mount"* it as a an external drive. The next step is to copy and paste the `.uf2` files in the `RPI-RP2` drive.
-:::
-- Connect a status LED that is ON as long as the microcontroller has power supplied. The pin that determines the status of the microcontroller is GP1.
-:::warning
-Make sure you connect a resistor in series wit the LED.
-:::
-- A button is used to toggle the integrated LED of the development board. Connect the button to the GP2 pin. 
-:::note
-Make sure you use a pull-up resistor.
-:::
-- The screen displays an analog value read by the microcontroller on pin ADC0. Create a circuit and connect it to ADC0 so that the display shows the value $$1.65V$$.
-:::tip
-Use a voltage divider.
-:::
-
-:::danger
-Do not supply power to the microcontroller before the lab teacher checks the circuit.
-:::
-
-3. Design the circuit in KiCad.(**3p**) 
-
 
 [^si]: The International System of Units, the world's most widely used system of measurement.

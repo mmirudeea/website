@@ -168,3 +168,96 @@ The project files all share the name of your project.
 :::info
 A project uses the state of symbol, footprint and 3D model libraries at its creation. If you want to add new components in an existing project, in `Schematic Editor` and `PCB Editor` click on `Preferences` -> `Manage Symbol libraries...` / `Manage Footprint libraries...` and do the same steps as shown above.
 :::
+
+## Making your first schematic and PCB design
+
+Now that you've finished setting up the development board files, you can try creating a very simple PCB design. Create a new project `example` and open the schematic editor.
+
+To add a new symbol, use the highlighted button, or use `A` shortcut.
+
+<div align="center">
+![KiCad add symbol](images/kicad_add_symbol.png)   
+Add symbol
+</div>
+
+In the opened dialog, search for the symbol you want to use. For this project, we will use **Raspberry Pi Pico W** and it will the symbol we just added.
+
+<div align="center">
+![Pick symbol](images/pick_component.png)   
+Pick symbol
+</div>
+
+Place your symbol inside the sheet borders.
+
+To simplify the schematic, for the most common used signals like $$V_{CC}$$(supply voltage) or $$GND$$, we use **power symbols**. Click on the highlighted button or use the `P` shortcut.
+
+<div align="center">
+![Power symbol](images/power_symbol.png)   
+Add power symbol
+</div>
+
+Pick $$GND$$ and place it inside the sheet borders. Connect the power signal to the $$GND$$ pins of the microcontroller. To connect, click on `Add a wire` or use the shortcut `W`.
+
+
+If we take a look in the development board [datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf) at the power chain section, we can see that the power supplied of the USB connector, $$V_{BUS}$$, which is at $$5V$$ as standard, is regulated by a voltage regulator at $$3V3$$. Place a power symbol for $$V_{BUS}$$, $$3V3$$ and a $$5V$$ power symbol for $$V_{SYS}$$.
+
+:::warning
+Even if $$V_{SYS}$$ and $$V_{BUS}$$ have the same value, between them there is a protection diode for reverse current that protects both the microcontroller and the USB port of your PC. Be careful to not connect this 2 pins as it will cancel the protection diode.
+:::
+
+<div align="center">
+![Power chain](images/pico_powerchain.png)   
+Power Chain Raspberry Pi Pico
+</div>
+
+Complete the schematic by placing an LED and a resistor at any given GPIO pin.
+
+<div align="center">
+![Pico Led Schematic](images/led_schematic.png)   
+LED Schematic
+</div>
+
+Save the file and open the PCB editor. You can use the button on the top bar of the Symbol editor.
+
+Use the highlighted button to update the PCB with the changes made in Schematic editor.
+
+<div align="center">
+![Update PCB](images/update_pcb_1.png)   
+Update PCB
+</div>
+
+You will get an error because for the resistor $$R1$$ and LED $$D1$$ there are no footprints assigned. 
+
+<div align="center">
+![Footprint error ](images/footprint_error.png)   
+Footprint error 
+</div>
+
+Go back to the Schematic and assign footprints for resistor $$R1$$ and LED $$D1$$ like in the setup tutorial. You can pick any footprint, or just paste these on footprint field in symbol properties.
+- resistor: Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical
+- LED: LED_THT:LED_D3.0mm
+
+Go back to the PCB editor and try to update again.
+
+<div align="center">
+![Update PCB](images/update_pcb_2.png)   
+Update PCB
+</div>
+
+Connect the components using the `Route tracks` button on the right or the shortcut `X`. The blue lines will guide you to connect the right pins.
+
+<div align="center">
+![Route tracks](images/route_tracks.png)   
+Route tracks
+</div>
+
+KiCad offers a 3D Viewer to have a preview of how the PCB will look. Click on `View` -> `3D Viewer`
+
+<div align="center">
+![3D View](images/3D_view.png)   
+3D View
+</div>
+
+:::note
+For a better understanding, please read [Getting Started in KiCad](https://docs.kicad.org/7.0/en/getting_started_in_kicad/getting_started_in_kicad.html) tutorial.
+:::

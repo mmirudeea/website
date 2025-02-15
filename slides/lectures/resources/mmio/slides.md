@@ -10,6 +10,51 @@ Memory Mapped Input Output
 a simple 8 bit processor with a text display
 
 ![8 Bit Processor](./8-bit-processor.svg)
+
+---
+layout: two-cols
+---
+
+# The Bus
+example for RP2
+
+<style>
+.two-columns {
+    grid-template-columns: 2fr 5fr;
+}
+</style>
+
+<v-clicks>
+
+1. **Memory Controller** asks for data transfer
+2. **Internal Bus Routes** the request
+   - to the *External Bus* **or**
+   - to the *Internal Peripherals*
+3. **External Bus Routes** the request based on the *Address Mapping Table*
+   1. to **RAM**
+   2. to **Flash**
+   3. to an **External Peripheral**
+
+</v-clicks>
+
+:: right ::
+
+<v-switch>
+
+<template #-3>
+
+![Bus](./internal_bus.svg)
+
+</template>
+
+<template #0>
+
+![Bus](./bus.svg)
+
+</template>
+
+</v-switch>
+
 ---
 layout: two-cols
 ---
@@ -34,12 +79,12 @@ layout: two-cols
 ---
 
 # System Control Registers
-@0xe000_0000
+Cortex-M SCR Peripheral @0xe000_0000
 
 Compute the actual address 
 - 0xe000_0000 + Offset
 
-Examples:
+Register Examples:
 - SYST_CSR: **0xe000_e010** (*0xe000_0000 + 0xe010*)
 - CPUID: **0xe000_ed00** (*0xe000_0000 + 0xed00*)
 
@@ -61,9 +106,8 @@ let cpuid_value = unsafe { cpuid_reg.read() };
 
 ![SysCtrl Registers](./sysctrl_registers.png)
 
+---
 
----
----
 # Compiler Optimization
 compilers optimize code
 
@@ -71,7 +115,7 @@ Write bytes to the `UART` (serial port) data register
 
 ```rust {1,2|3,4,7|5,6|all}
 // we use mut as we need to write to it
-const UART_TX: *mut u8 = 0x400_3400;
+const UART_TX: *mut u8 = 0x4003_4000;
 // b".." means ASCII string (Rust uses UTF-8 strings by default)
 for character in b"Hello, World".iter() {
 	// character is &char, so we use *character to get the value
@@ -90,7 +134,7 @@ for character in b"Hello, World".iter() {
 <v-after>
 
 ```rust
-const UART_TX: *mut u8 = 0x400_3400;
+const UART_TX: *mut u8 = 0x4003_4000;
 unsafe { UART_TX.write(b'd'); }
 ```
 
@@ -104,7 +148,7 @@ layout: two-cols
 
 CPUID: **0xe000_ed00** (*0xe000_0000 + 0xed00*)
 
-```rust{all|1|3-4|6|7-9}
+```rust{all|1|3-4|6|7-10}
 use core::ptr::read_volatile;
     
 const SYS_CTRL: usize = 0xe000_0000;
@@ -112,7 +156,8 @@ const CPUID: usize = 0xed00;
 
 let cpuid_reg = (SYS_CTRL + CPUID) as *const u32;
 unsafe {
-    read_volatile(cpuid_reg) // avoid cache
+	// avoid compiler optimization
+	read_volatile(cpuid_reg) 
 }
 ```
 
@@ -126,7 +171,7 @@ unsafe {
 ![SysCtrl Registers](./sysctrl_registers.png)
 
 ---
----
+
 # No Compiler Optimization
 
 Write bytes to the `UART` (serial port) data register
@@ -135,7 +180,7 @@ Write bytes to the `UART` (serial port) data register
 use core::ptr::write_volatile;
 
 // we use mut as we need to write to it
-const UART_TX: *mut u8 = 0x400_3400;
+const UART_TX: *mut u8 = 0x4003_4000;
 // b".." means ASCII string (Rust uses UTF-8 strings by default)
 for character in b"Hello, World".iter() {
 	// character is &char, so we use *character to get the value
@@ -148,7 +193,6 @@ for character in b"Hello, World".iter() {
 The compiler **knows** that `UART_TX` **must be written** every time.
 
 </v-clicks>
-
 
 ---
 ---
@@ -232,7 +276,7 @@ let mut aircr_value = unsafe {
     read_volatile(aircr_register) 
 };
 
-aircr_value = aircr_value & ~(0x1111 << VECTKEY); 
+aircr_value = aircr_value & ~(0xffff << VECTKEY); 
 aircr_value = aircr_value | (0x05fa << VECTKEY);
 aircr_value = aircr_value | (1 << SYSRESETREQ);
 
@@ -249,7 +293,6 @@ Offset: 0xed0c
 
 ![AIRCR Register 1](./aircr_register_1.png)
 ![AIRCR Register 2](./aircr_register_2.png)
-
 
 ---
 layout: two-cols

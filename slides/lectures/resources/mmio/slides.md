@@ -249,7 +249,7 @@ let revision = (cpuid_value >> 0) & 0b1111;
 ::right::
 
 ## CPUID Register
-Offset: 0xed04
+Offset: 0xed00
 
 ![CPUID Register](./cpuid_register.png)
 

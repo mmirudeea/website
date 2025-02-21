@@ -46,7 +46,7 @@ info: The currently active `rustc` version is `rustc 1.83.0 (90b35a623 2024-11-2
 
 ### `elf2uf2-rs`
 
-This tool is needed to be able to program the board over USB. In order to install it, run the following in your terminal:
+This is one of the tools we will need in order to program the board over USB. In order to install it, run the following in your terminal:
 
 ```shell
 cargo install elf2uf2-rs
@@ -72,6 +72,8 @@ Options:
 
 This tool is an embedded debugging and target interaction toolkit. It enables its user to program and debug microcontrollers via a debug probe.
 
+#### Linux
+
 :::info 
 
 Before installing probe-rs, you need to install  `pkg-config`, `libudev`, `cmake` and `git`. You can get them by running the following in your terminal. If any of these programs are already installed on your machine, you can omit them from the command.
@@ -85,7 +87,7 @@ sudo apt-get install pkg-config libudev-dev cmake git
 cargo install probe-rs-tools --locked
 ```
 
-If you are on **Linux** you will also need to add this [`udev`](https://probe.rs/files/69-probe-rs.rules) file in `/etc/udev/rules.d`. Then, run:
+You will also need to add this [`udev`](https://probe.rs/files/69-probe-rs.rules) file in `/etc/udev/rules.d`. Then, run:
 
 ```shell
 udevadm control --reload # to ensure the new rules are used.
@@ -93,24 +95,43 @@ udevadm control --reload # to ensure the new rules are used.
 udevadm trigger # to ensure the new rules are applied to already added devices.
 ```
 
+#### Windows
+
+:::info
+You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`.
+:::
+
+Once `cmake` is set up, you can run
+```shell
+cargo install probe-rs-tools --locked
+```
+and no further configuration is required.
+
 ### VSCode Extension
 
 For a better experience, go ahead and install the **Debugger for probe-rs** extension in the Microsoft Extension Marketplace. This will allow us to build and upload a program to the RP2040 directly from VSCode and it will make debugging the program while running on the MCU as easy as debugging a Rust program running on your host machine.
 
 ## Flashing over USB
 
+This section demonstrates some of the various ways you can build your code and flash it to the board. If you wish to try them out and see how they work, you should first head over to the [Building your first Embassy-rs project](#building-your-first-embassy-rs-project) section, follow the instructions and then come back. You will also find an [example](#mainrs) of code that you can use as your `main.rs` file.
+
+### Configuring Cargo
+
+You will notice that some of the options will suggest creating and modifying a `config.toml` file. It is not strictly necessary for flashing, but it is highly recommended, especially since you will need it for debugging anyway.
+
+In order to add the configuration file, you will first have to create a `.cargo/` directory in your project's root folder. Inside it, create the `config.toml` file. You cand find a complete configuration example [here](#configtoml). For more information on this type of file, follow the official [Cargo Book](https://doc.rust-lang.org/cargo/reference/config.html).
+
 ### Compiling
 
-You will need to compile your executable specifically for the RP2040 chip. This chip is based on the **ARM Cortex M0+** architecture, so we will need to specify our target when compiling. We can do that in multiple ways:
+You will need to compile your executable specifically for the RP2040 chip. This chip is based on the **ARM Cortex M0+** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv6-M target (thumbv6m-none-eabi):
 
-* using a `.cargo/config.toml` file:
-
-```toml
-[build]
-target = "thumbv6m-none-eabi"
+```shell
+rustup target add thumbv6m-none-eabi
 ```
 
-* passing it as a parameter to Cargo:
+Now you can build by:
+
+#### 1. Passing the target as a parameter to Cargo:
 
 ```shell
 cargo build --release --target thumbv6m-none-eabi
@@ -121,6 +142,21 @@ cargo build --release --target thumbv6m-none-eabi
 You can also use `build` without the `--release` option. This way, the rust compiler will not apply any optimisations to your code and a `debug` build will be generated. 
 
 :::
+
+#### 2. Using a `.cargo/config.toml` file:
+
+```toml
+[build]
+target = "thumbv6m-none-eabi"
+```
+
+This allows us to simply run
+
+```shell
+cargo build
+```
+
+without having to specify the target every time. 
 
 ### Flashing
 
@@ -153,7 +189,7 @@ probe-rs run --chip RP2040 --protocol swd --speed 16000 /path/to/your/binary
 
 This will flash the board without starting `probe-rs`' debugging functionality.
 
-#### 3. Configuring `cargo run` to do it
+#### 3. Configuring Cargo to do it
 
 If you've already created a `.cargo/config.toml` with a build target, you can add these lines to the file:
 
@@ -162,9 +198,15 @@ If you've already created a `.cargo/config.toml` with a build target, you can ad
 runner = "probe-rs run --chip RP2040 --protocol swd --speed 16000"
 ```
 
-Now, `cargo run` will automatically call the command from option 2, without having to specify the path to the binary.
+Now, 
 
-:::note
+```shell
+cargo run 
+```
+
+will automatically call the command from option 2, without having to specify the path to the binary.
+
+:::tip
 As it will be required later in the tutorial, you should also add
 
 ```toml
@@ -172,14 +214,26 @@ As it will be required later in the tutorial, you should also add
 DEFMT_LOG = "debug"
 ```
 
-which tells cargo that your program will use **deferred formatting** to more efficiently send logs to the host machine via a serial interface. You can learn more about `defmt` [here](https://defmt.ferrous-systems.com/).
+which tells cargo that your program will use **deferred formatting** to more efficiently send logs to the host machine via a serial interface. You can learn more about `defmt` [here](https://defmt.ferrous-systems.com/). At this point, your configuration file should look like this:
+##### config.toml
+```toml
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-rs run --chip RP2040 --protocol swd --speed 16000"
+
+[build]
+target = "thumbv6m-none-eabi"
+
+[env]
+DEFMT_LOG = "debug"
+```
 :::
 
 #### 4. Using the **Debugger for probe-rs** extension
 
 This method can be used from VSCode's **Run and Debug** view. The binary will be flashed to the board by `probe-rs` and the debugging mode will be running by default. However, this option requires further configuration of the project which will be detailed in the next section of this tutorial. 
 
-## Debugging using Raspberry Pi Debug Probe
+## Debugging
+### With the Raspberry Pi Debug Probe
 
 In order to be able to debug the program running on the board, we will need to connect the **Raspberry Pi Debug Probe** to our **Raspberry Pi Pico W**. Below, you have a picture of the debug kit provided:
 
@@ -201,7 +255,14 @@ The connections must be:
 Do not forget to connect both the Debug Probe and Pico to your PC.
 :::
 
-The simplest way to start debugging is to use the **Run and Debug** view in Visual Studio Code. First, you will need to create a `.vscode/launch.json`. VSCode will give you the option to create one when entering the **Run and Debug** menu:
+The simplest way to start debugging is to use the **Run and Debug** view in Visual Studio Code. If you already have a `.cargo/config.toml` file, make sure the following lines are included. If this file doesn't exist yet, create it and add these lines: 
+
+```toml
+[env]
+DEFMT_LOG = "debug"
+```
+
+Then, you will need to create `.vscode/launch.json`. VSCode should give you this option when entering the **Run and Debug** menu:
 
 ![Run and Debug menu](assets/run_and_debug.png)
 
@@ -234,7 +295,8 @@ Here is an example of such a file:
             "coreConfigs": [
                 {
                     "coreIndex": 0,
-                    "programBinary": "target/thumbv6m-none-eabi/debug/test_rp",
+                    // Modify this path to match your project's name
+                    "programBinary": "target/thumbv6m-none-eabi/debug/project_name",
                     // Comment this line if the svd file is not present
                     "svdFile": "./.vscode/rp2040.svd",
                     "rttEnabled": true,
@@ -252,9 +314,46 @@ Here is an example of such a file:
 }
 ```
 
+:::warning
+Remember to modify the path provided to the `"programBinary"` attribute so that it matches with the one you want to debug. It will most likely have a different name and it might also be located in `release/` instead of `debug/` depending on your build options.  
+:::
+
 You can find out more about this configuration file and available options, as well as the debugging process itself from the official [probe-rs documentation](https://probe.rs/docs/tools/debugger/).
 
-A recommended step is to download the `rp2040.svd` [file](https://raw.githubusercontent.com/raspberrypi/pico-sdk/1.3.1/src/rp2040/hardware_regs/rp2040.svd) and place it in the `.vscode/` directory, as it gives `probe-rs` and VSCode additional information on the registers and memory regions used by the MCU. If you aren't using this file, the `"svdFile"` attribute should be commented out or removed from `launch.json`.
+A recommended step is to download the [`rp2040.svd`](https://raw.githubusercontent.com/raspberrypi/pico-sdk/1.3.1/src/rp2040/hardware_regs/rp2040.svd) file and place it in the `.vscode/` directory, as it gives `probe-rs` and VSCode additional information on the registers and memory regions used by the MCU. If you aren't using this file, the `"svdFile"` attribute should be commented out or removed from `launch.json`.
+
+### With another Raspberry Pi Pico
+
+Another interesting way to debug programs running on the board is to use a second Raspberry Pi Pico. In fact, the Raspberry Pi Debug Probe itself is based on the same RP2040 MCU, running custom firmware. The custom boards in the labs also use a Pi Pico as a debugger and you can, as well, since the firmware is freely available.
+
+The first step is to connect the two boards together. We will use a normal Pico (without wifi) as a debugger for this tutorial, but its pinout is almost identical to the Pico W.
+
+![Raspberry Pi Pico pinout](assets/pico-pinout.svg)
+
+We will refer to our Pico's as Pico A (the debugger) and Pico B (the one running our program). These are the connections you need to make:
+
+| Pico A | Pico B |
+|-|-|
+| GND | GND |
+| GP2 (Pin 4) | SWCLK |
+| GP3 (Pin 5) | SWDIO |
+| GP4/UART1 TX (Pin 6) | GP1/UART0 RX (Pin 2) |
+| GP5/UART1 RX (Pin 7) | GP0/UART0 TX (Pin 1) |
+| VSYS (Pin 39) | VSYS (Pin 39) |
+
+You can also try to follow the following wiring diagram if you're using a breadboard. Pico A is on the left (and connected to a host machine via USB) and Pico B is on the right.
+
+![Pico to Pico wiring](assets/pico_wiring.png)
+
+:::note
+You will be using the Pico W as the second board, unlike the one depicted here.
+:::
+
+The next step is flashing the firmware to the debugging board. Download the [`debugprobe_on_pico2.uf2`](https://github.com/raspberrypi/debugprobe/releases/tag/debugprobe-v2.2.1) file. Hold the `BOOTSEL` button down while connecting the board to your PC. It should show up as a USB drive named `RPI-RP2`. Next, simply copy the `.uf2.` file to the board to flash it. You should now be able to use the Pico you just flashed as a debugger for the Pico W. 
+
+:::info
+Only the board you are using as a debugger should be plugged into the USB port on your machine, since the other one is powered through the `VSYS` pin.
+:::
 
 ## Building your first Embassy-rs project
 
@@ -468,13 +567,7 @@ cargo add defmt-rtt
 
 ### The code
 
-Here you can find a minimally explained code that prints `"Hello World!"` over the serial interface and demonstrates how two different tasks can be run concurrently. You can run this by using
-
-```shell
-cargo run
-```
-
-or by starting the `launch request` task at the top of the **Run and Debug** menu.
+Here you can find a minimally explained code that prints `"Hello World!"` over the serial interface and demonstrates how two different tasks can be run concurrently. 
 
 #### `main.rs`
 
@@ -516,3 +609,11 @@ async fn main(spawner: Spawner) {
     }
 }
 ```
+
+You can run this by using
+
+```shell
+cargo run
+```
+
+or by starting the `launch request` task at the top of the **Run and Debug** menu.

@@ -51,15 +51,7 @@ src: ../../resources/bitwise/c.md
 src: ../../resources/mmio/slides.md
 ---
 
-<!-- bitwise -->
 
----
-src: ../../resources/bitwise/rust.md
----
-
----
-src: ../../resources/bitwise/c.md
----
 
 <!-- general obs on GPIO -->
 ---

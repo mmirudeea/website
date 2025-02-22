@@ -1,15 +1,16 @@
 ---
 layout: section
 ---
-# RP2040
-ARM Cortex-M0+, built by Raspberry Pi
+
+# RP2350
+ARM Cortex-M33, built by Raspberry Pi
 
 ---
----
+
 # Bibliography
 for this section
 
-**Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
+**Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
    - Chapter 1 - *Introduction*
    - Chapter 2 - *System Description*
      - Section 2.1 - *Bus Fabric*
@@ -18,32 +19,32 @@ for this section
 layout: two-cols
 ---
 
-# RP2040
+# RP2350
 the MCU
 
 | | |
 |-|-|
 | Vendor | Raspberry PI |
-| Variant | ARM Cortex-M0+ |
-| ISA | ARMv6-M (Thumb and some Thumb-2) |
+| Variant | ARM Cortex-M33 (/ Hazard3 RISC-V) |
+| ISA | ARMv8-M (Thumb-2) |
 | Cores | 2 |
 | Word | 32 bit |
-| Frequency | up to 133 MHz |
-| RAM | 264 KB |
+| Frequency | up to 150 MHz |
+| RAM | 520 KB |
 | Storage | N/A (external only) |
 
 ::right::
 
 # Boards
-that use RP2040
+that use RP2350
 
 ### Raspberry Pi Pico (W)
 
-<img src="../processor/pico.jpg" class="w-60 rounded" />
+<br> 
+<br> 
+<br> 
 
-### Arduino Nano RP2040 Connect
-
-<img src="./arduino_nano_rp2040_connect.jpg" class="w-60 rounded" />
+<img src="./rp2350.png" class="w-100 rounded" />
 
 ---
 layout: two-cols
@@ -52,12 +53,14 @@ layout: two-cols
 # The Chip
 
 <div align="center">
-<img src="./rp2040_chip.png" class="h-80 rounded" />
+<img src="./chip.png" class="h-80 rounded" />
 </div align="center">
 
 *GPIO*: General Purpose Input/Output\
 *SWD*: Debug Protocol\
 *DMA*: Direct Memory Access
+
+[Datasheet RP2350](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
 
 ::right::
 
@@ -77,21 +80,22 @@ layout: two-cols
 ---
 layout: two-cols
 ---
+
 # Pins
 have multiple functions
 
-<img src="./pin_functions.png" class="rounded">
+<img src="./functions.png" class="rounded">
 ...
 
 ::right::
 
-<img src="./rp2040_pins.png" class="rounded">
+<img src="./pins.png" class="rounded">
 
 ---
----
+
 # The Bus
 that interconnects the cores with the peripherals
 
 <div align="center">
-<img src="./rp2040_bus.png" class="h-100 rounded" />
+<img src="./buss.png" class="h-100 rounded" />
 </div align="center">

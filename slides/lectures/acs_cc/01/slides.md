@@ -112,28 +112,30 @@ layout: section
 
 ---
 
-# Structura Punctaj
+# Scoring Structure
 
-## 1 punct activitate laborator 
-## 1 punct lucrare laborator (colocviu final)
-<br>
 
-## 3 puncte proiect
+## 1 point for lab activity
+## 1 point for lab assignment (final lab exam)br>
+
+## 3 points PROJECT
 <br> 
 
-## 3 puncte examen final
+## 2 points lectures activity (announced tests)
 
 <br> 
 
-## 2 puncte activitate curs (teste anuntate) 
+## 3 points @ Final Exam
 
 <br> 
 
 <i>
 
 ## Bonus 
-### + 0.75 bonus top 30 de proiecte din an (top 7%)
-### + 0.75 bonus top 10 proiecte din an 
+### +0.75 bonus for top 30 projects of the year (top 7%)
+
+### +0.75 bonus for top 10 projects of the year
+ 
 
 </i>
 
@@ -141,52 +143,56 @@ layout: section
 
 # Extra
 
-## Bonus pentru rezultate la concursuri & activități
-până la 1 punct pentru rezulate in top la concursuri de profil tehnic
-până la 0,5 puncte bonus pentru implicare în activități studențesti de voluntariat
-> mail în presesiune cu Subject: [Bonus_PM] Nume_Prenume_32xCC
+## Bonus for competition & activity results
 
-## Echivalari
+Up to 1 point for results in the top at technical profile competitions
 
-Pana la 3 puncte pentru rezultate la concursuri tehnice. 
-<br> 
+Up to 0.5 bonus points for involvement in student volunteer activities
 
-Exemple:
-### ACM (top 50% la world finals);
-### Innovation Labs (SemiFinale);
-### Suceava Hard and Soft (top 50% echipe);
+
+> Email in pre-session with Subject: [Bonus_PM] FirstName_LastName_32xCC
+
+<br>
+
+## Equivalencies
+
+
+Up to 3 points for results at technical competitions:
+- ACM (top 50%);
+- Innovation Labs (SemiFinals);
+- Suceava Hard and Soft (top 50%);
 
 ---
 
 # Proiect
 
-## Structura punctaj
+## Structure
 
-### Documentatie / Hard / Soft
+### Documentation / Hard / Soft
 ### PM-fair
 
 <br> 
 
-## Alegerea temei
+## Project scope
 
-> Tema trebuie să fie aprobată de către asistentul de laborator
+> Needs to be approved by your laboratory teacher
 
 
 <br>
 
-## Nu se aprobă teme banale!
+## It can not be super-simple!
 
 <i> 
 
-(Ceas digital, termometru digital)
+(digital clock, digital thermometer)
 
 </i>
 
-## Ca reguli de referință:
-> Nu poate să fie mai simplu decât un laborator de PM 
+## A few reference points:
+> It can not be simpler than one laboratory 
 <br>
 
-> Nu poate să fie bazat pe un tutorial youtube de 15 minute
+> It can not be based on a 30 min youtube tutorial
 
 <!--
 AGC
@@ -396,7 +402,7 @@ src: ../../resources/mcu/slides.md
 <!-- RP2040 -->
 
 ---
-src: ../../resources/rp2040/slides.md
+src: ../../resources/rp2350/slides.md
 ---
 
 ---

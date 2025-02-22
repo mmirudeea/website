@@ -141,30 +141,7 @@ layout: section
 
 ---
 
-# Extra
-
-## Bonus for competition & activity results
-
-Up to 1 point for results in the top at technical profile competitions
-
-Up to 0.5 bonus points for involvement in student volunteer activities
-
-
-> Email in pre-session with Subject: [Bonus_PM] FirstName_LastName_32xCC
-
-<br>
-
-## Equivalencies
-
-
-Up to 3 points for results at technical competitions:
-- ACM (top 50%);
-- Innovation Labs (SemiFinals);
-- Suceava Hard and Soft (top 50%);
-
----
-
-# Proiect
+# Project
 
 ## Structure
 
@@ -193,6 +170,56 @@ Up to 3 points for results at technical competitions:
 <br>
 
 > It can not be based on a 30 min youtube tutorial
+
+
+---
+
+# Extra
+
+## Bonus for competition & activity results
+
+Up to 1 point for results in the top at technical profile competitions
+
+Up to 0.5 bonus points for involvement in student volunteer activities
+
+
+> Email in pre-session with Subject: [Bonus_PM] FirstName_LastName_32xCC
+
+<br>
+
+## Equivalencies
+
+
+Up to 3 points for results at technical competitions:
+- ACM (top 50%);
+- Innovation Labs (SemiFinals);
+- Suceava Hard and Soft (top 50%);
+
+---
+
+# (Example) Innovation Labs
+
+Why join:
+
+🚀 CV <br>
+🚀 Team-Work <br>
+🚀 Profesional Networking <br>
+🚀 Presentations skills <br>
+
+👾 Build your own start-up with a super support structure
+
+⁠💹 500.000 EURO Investment Prize
+
+👾 Summer Internship @ your own start-up
+
+🤖 8 - 9 March - the largest, coolest, most fun Hackathon in Romania
+
+> PS: ⏱️ Is it a good time considering how the IT market looks?
+
+> 🎢 Yes! > It's the best time: <br> 
+📋 gain practical experience & boost your CV; <br> ⁠📰 build a public profile & establish 👥 relationships with IL partner IT companies (e.g., Adobe, Keysight, NXP, UiPath, Stripe); <br>⁠🏋️‍♀️ improve your skills beyond coding (lowers the risk of being replaced by ChatGPT :) )
+
+[Register now](HTTP://innovationlabs.ro)
 
 <!--
 AGC

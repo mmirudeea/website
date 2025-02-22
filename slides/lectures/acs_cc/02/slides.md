@@ -25,16 +25,17 @@ background:
 Lecture 2
 
 ---
----
 
-# GPIO for RP2040
+# GPIO for RP2350
 
 - Memory Mapped I/O
   - GPIO Peripheral
 - Embedded Rust Stack
 - embassy-rs
 
-<!-- Bitwise -->
+<!--
+Bitwise
+-->
 
 ---
 src: ../../resources/bitwise/rust.md

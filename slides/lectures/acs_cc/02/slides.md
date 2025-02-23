@@ -33,6 +33,10 @@ Lecture 2
 - Embedded Rust Stack
 - embassy-rs
 
+---
+src: ../../resources/intro_rust/slides.md
+---
+
 <!--
 Bitwise
 -->

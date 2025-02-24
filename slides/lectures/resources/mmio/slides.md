@@ -460,10 +460,11 @@ Scr {
 ---
 layout: two-cols
 ---
+
 # Read the CPUID
 
 ```rust 
-const SCR_PERIPHERAL: *const u32 = 0xe000_0000;
+const SCR_PERIPHERAL: u32 = 0xe000_0000;
 
 let scr = unsafe { &*(SCR_PERIPHERAL as *const Scr) };
 
@@ -481,7 +482,7 @@ if part
 # Reset the MCU
 
 ```rust
-const SCR_PERIPHERAL: *const u32 = 0xe000_0000;
+const SCR_PERIPHERAL: u32 = 0xe000_0000;
 
 let scr = unsafe { &*(SCR_PERIPHERAL as *const Scr) };
 

@@ -35,6 +35,7 @@ daniel.rosner[at]upb.ro
 ![Irina Nita](images/irina_nita.jpg)
  
 Lab Professor \
+Responsible for software \
 GitHub: [irina-nita](https://github.com/irina-nita) \
 irina.nita@oxidos.io
 </td>
@@ -51,12 +52,12 @@ irina.bradu@wyliodrin.com
 
 <tr valign="top">
 <td>
-**Dănuț Aldea**
-![Danut Aldea](images/danut_aldea.jpg)
+**Gabriel Păvăloiu**
+![Gabriel Păvăloiu](images/gabriel_pavaloiu.jpg)
  
 Lab Professor \
-GitHub: [danutaldea](https://github.com/danutaldea) \
-george_danut.aldea@stud.acs.upb.ro
+GitHub: [GabrielPavaloiu](https://github.com/GabrielPavaloiu) \
+gabriel.pavaloiu@upb.ro
 </td>
 
 <td>
@@ -80,6 +81,18 @@ teodor.dicu@wyliodrin.com
 </td>
 </tr>
 
+<tr valign="top">
+<td>
+**Alexandru Ungureanu**
+![Alexandru Ungureanu](images/alexandru_ungureanu.jpg)
+
+Lab Professor \
+GitHub: [AlexU01](https://github.com/AlexU01) \
+alexagungureanu@gmail.com
+</td>
+
+</tr>
+
 </table>
 
 ## Timetable
@@ -88,6 +101,17 @@ teodor.dicu@wyliodrin.com
 |----------|-------|-----|------|-------|----------|
 | Lecture | *all students* | Wednesday | 08 - 10 | EC105 | Daniel Rosner|
 | Lecture | *all students* | Monday | 18 - 20 | PR001 | Daniel Rosner|
+| Lab | 331CC A | Tuesday | 12 - 14 | ED218 | Irina Bradu |
+| Lab | 331CC B | Tuesday | 12 - 14 | ED217 | Teodor Dicu |
+| Lab | 332CC A | Tuesday | 14 - 16 | ED218 | Irina Bradu |
+| Lab | 332CC B | Tuesday | 14 - 16 | ED217 | Irina Niță |
+| Lab | 333CC A | Wednesday | 16 - 18 | ED218 | Alexandru Ungureanu |
+| Lab | 333CC B | Wednesday | 16 - 18 | ED217 | Teodor Dicu |
+| Lab | 334CC A | Wednesday | 18 - 20 | ED218 | Alexandru Ungureanu |
+| Lab | 334CC B | Wednesday | 18 - 20 | ED217 | Andrei Zamfir |
+| Lab | 335CC A | Thursday | 18 - 20 | ED218 | Gabriel Păvăloiu |
+| Lab | 335CC B | Thursday | 18 - 20 | ED217 | Andrei Zamfir |
+
 
 ## Grading
 
@@ -113,6 +137,7 @@ teodor.dicu@wyliodrin.com
 
 ### Hardware
 1. **Joseph Yiu**, *The Definitive Guide to ARM® Cortex®-M0 and Cortex-M0+ Processors, 2nd Edition* 
+2. **Joseph Yiu**, *The Definitive Guide to ARM® Cortex®-M23 and Cortex-M33 Processors* 
 2. **Charles Platt**, *Encyclopedia of Electronic Components*, Volumes 1, 2, 3 
 3. **Paul Scherz, Simon Monk**, *Practical Electronics for Inventors, 2nd edition*
 4. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
@@ -120,7 +145,7 @@ teodor.dicu@wyliodrin.com
 ### Software
 1. **Steve Klabnik, Carol Nichols**, *[The Rust Programming Language](https://doc.rust-lang.org/stable/book/)*
 2. **Rust Team**, *[Rust Embedded, The Discovery book](https://docs.rust-embedded.org/discovery/microbit/)*
-3. **Raspberry Pi Ltd**, *[Getting started with Raspberry Pi Pico](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)*
+3. **Raspberry Pi Ltd**, *[Getting started with Raspberry Pi Pico-series](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)*
 4. [embassy_rp](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html) crate documentation
 5. [embassy_rp examples](https://github.com/embassy-rs/embassy/tree/main/examples/rp/src/bin)
 6. [Raspberry Pi Pico Python SDK](https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-python-sdk.pdf)

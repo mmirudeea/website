@@ -31,21 +31,21 @@ alexandru.radovici@upb.ro
 </td>
 
 <td>
-**Irina Niță**
-![Irina Nita](images/irina_nita.jpg)
- 
-Lab Professor \
-GitHub: [irina-nita](https://github.com/irina-nita) \
-irina.nita@oxidos.io
-</td>
-
-<td>
 **Irina Bradu**
 ![Irina Bradu](images/irina_bradu.jpg)
  
 Lab Professor \
 GitHub: [irina-b-dev](https://github.com/irina-b-dev) \
 irina.bradu@upb.ro
+</td>
+<td>
+**Teodor Dicu**
+![Teodor Dicu](images/teodor_dicu.jpg)
+ 
+Lab Professor\
+Responsible for hardware\
+GitHub: [DTeodor-Alexaandru](https://github.com/DTeodor-Alexaandru) \
+teodor.dicu@wyliodrin.com
 </td>
 </tr>
 
@@ -55,6 +55,7 @@ irina.bradu@upb.ro
 ![Danut Aldea](images/danut_aldea.jpg)
  
 Lab Professor \
+Responsible for software
 GitHub: [danutaldea](https://github.com/danutaldea) \
 danut.aldea@oxidos.io
 </td>
@@ -70,13 +71,12 @@ andrei.zamfir@wyliodrin.com
 </td>
 
 <td>
-**Teodor Dicu**
-![Teodor Dicu](images/teodor_dicu.jpg)
- 
-Lab Professor\
-Responsible for hardware\
-GitHub: [DTeodor-Alexaandru](https://github.com/DTeodor-Alexaandru) \
-teodor.dicu@wyliodrin.com
+**Ioana Culic**
+![Ioana Culic](images/ioana_culic.jpg)
+
+Lab Professor \
+GitHub: [ioanaculic](https://github.com/ioanaculic) \
+ioana_maria.culic@upb.ro
 </td>
 </tr>
 
@@ -127,9 +127,6 @@ Lab Professor \
 GitHub: [Pfat8equalsD](https://github.com/Pfat8equalsD) \
 andrei.batasev@stud.acs.upb.ro
 </td>
-
-<td>
-</td>
 </tr>
 </table>
 
@@ -138,15 +135,15 @@ andrei.batasev@stud.acs.upb.ro
 | Activity | Group | Day | Hour | Room | Professor |
 |----------|-------|-----|------|-------|----------|
 | Lecture | *all students* | Friday | 10 - 12 | AN024 | Alexandru Radovici |
-| Lab | 1221Aa - first half | Thursday | 8 - 10 | ED 218 | |
-| Lab | 1221Ab - second half | Thursday | 12 - 14 | ED 217 | |
-| Lab | 1221Ba - first half | Thursday | 10 - 12 | ED 218 | Cristiana Precup |
-| Lab | 1221Bb - second half | Thursday | 14 - 16 | ED 217 | |
-| Lab | 1221Ca - first half | Friday | 14 - 16 | ED 218 | |
-| Lab | 1221Cb - second half | Thursday | 8 - 10 | ED 217 | |
-| Lab | 1221D | Thursday | 10 - 12 | ED 217 | Layla El-Ghoul |
-| Lab | 1222EEA | Thursday | 14 - 16 | ED 218 | |
-| Lab | 1222EEB | Thursday | 12 - 14 | ED 218 | |
+| Lab | 1221Aa - first half | Thursday | 8 - 10 | ED 218 | Andrei Zamfir |
+| Lab | 1221Ab - second half | Thursday | 12 - 14 | ED 217 | Ioana Culic |
+| Lab | 1221Ba - first half | Thursday | 10 - 12 | ED 218 | Cristiana Precup <br/> Layla El-Ghoul |
+| Lab | 1221Bb - second half | Thursday | 14 - 16 | ED 217 | Teodor Dicu |
+| Lab | 1221Ca - first half | Friday | 14 - 16 | ED 218 | Dănuț Aldea |
+| Lab | 1221Cb - second half | Thursday | 8 - 10 | ED 217 | Alexandru Ungureanu |
+| Lab | 1221D | Thursday | 10 - 12 | ED 217 | Andrei Batasev |
+| Lab | 1222EEA | Thursday | 14 - 16 | ED 218 | Alexandru Ungureanu |
+| Lab | 1222EEB | Thursday | 12 - 14 | ED 218 | Teodor Dicu |
 
 ## Grading
 
@@ -173,14 +170,15 @@ andrei.batasev@stud.acs.upb.ro
 
 ### Hardware
 1. **Joseph Yiu**, *The Definitive Guide to ARM® Cortex®-M0 and Cortex-M0+ Processors, 2nd Edition* 
-2. **Charles Platt**, *Encyclopedia of Electronic Components*, Volumes 1, 2, 3 
-3. **Paul Scherz, Simon Monk**, *Practical Electronics for Inventors, 2nd edition*
-4. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
+2. **Joseph Yiu**, *The Definitive Guide to ARM® Cortex®-M23 and Cortex-M33 Processors* 
+3. **Charles Platt**, *Encyclopedia of Electronic Components*, Volumes 1, 2, 3 
+4. **Paul Scherz, Simon Monk**, *Practical Electronics for Inventors, 2nd edition*
+5. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
 
 ### Software
 1. **Steve Klabnik, Carol Nichols**, *[The Rust Programming Language](https://doc.rust-lang.org/stable/book/)*
 2. **Rust Team**, *[Rust Embedded, The Discovery book](https://docs.rust-embedded.org/discovery/microbit/)*
-3. **Raspberry Pi Ltd**, *[Getting started with Raspberry Pi Pico](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)*
+3. **Raspberry Pi Ltd**, *[Getting started with Raspberry Pi Pico-series](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)*
 4. [embassy_rp](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html) crate documentation
 5. [embassy_rp examples](https://github.com/embassy-rs/embassy/tree/main/examples/rp/src/bin)
 6. [Raspberry Pi Pico Python SDK](https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-python-sdk.pdf)

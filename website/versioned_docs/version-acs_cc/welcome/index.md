@@ -27,7 +27,7 @@ You takeaways from the course are:
 ![Daniel Rosner](images/daniel_rosner.png)
 
 Course Professor \
-daniel.rosner[at]upb.ro
+daniel.rosner@upb.ro
 </td>
 
 <td>

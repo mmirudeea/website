@@ -116,7 +116,9 @@ layout: section
 
 
 ## 1 point for lab activity
-## 1 point for lab assignment (final lab exam)br>
+## 1 point for lab assignment (final lab exam)
+
+<br> 
 
 ## 3 points PROJECT
 <br> 

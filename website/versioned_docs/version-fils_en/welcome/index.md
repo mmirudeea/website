@@ -31,13 +31,14 @@ alexandru.radovici@upb.ro
 </td>
 
 <td>
-**Irina Bradu**
-![Irina Bradu](images/irina_bradu.jpg)
+**Gabriel Păvăloiu**
+![Gabriel Păvăloiu](images/gabriel_pavaloiu.jpg)
  
 Lab Professor \
-GitHub: [irina-b-dev](https://github.com/irina-b-dev) \
-irina.bradu@upb.ro
+GitHub: [GabrielPavaloiu](https://github.com/GabrielPavaloiu) \
+gabriel.pavaloiu@upb.ro
 </td>
+
 <td>
 **Teodor Dicu**
 ![Teodor Dicu](images/teodor_dicu.jpg)
@@ -110,15 +111,6 @@ cristiana.precup@wyliodrin.com
 </tr>
 
 <tr valign="top">
-<td>
-**Gabriel Păvăloiu**
-![Gabriel Păvăloiu](images/gabriel_pavaloiu.jpg)
- 
-Lab Professor \
-GitHub: [GabrielPavaloiu](https://github.com/GabrielPavaloiu) \
-gabriel.pavaloiu@upb.ro
-</td>
-
 <td>
 **Andrei Batasev**
 ![Andrei Batasev](images/andrei_batasev.jpg)

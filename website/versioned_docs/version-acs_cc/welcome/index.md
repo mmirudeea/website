@@ -118,10 +118,11 @@ alexagungureanu@gmail.com
 | Part | Description | Points |
 |--------|-------------|--------|
 | [Lecture](./category/lecture) tests | You will have a test every few classes with subjects from the previous class (will pe anounced). | 2p |
-| [Lab](./category/lab) | Your work at every lab will be graded. | 2p |
-| [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 4p |
-| Exam | You will have to take an exam during the session. This will be in written format. | 4p |
-| **Total** | *You will need at least 5 points to pass the subject.* | **11p** |
+| [Lab](./category/lab) | Your work at every lab will be graded. | 1p |
+| [Lab](./category/lab) | Final Lab Assigment (Final Lab Test) | 1p |
+| [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 3p |
+| Exam | You will have to take an exam during the session. This will be in written format. | 3p |
+| **Total** | *You will need at least 5 points to pass the subject.* | **10p** |
 
 ## Rules
 

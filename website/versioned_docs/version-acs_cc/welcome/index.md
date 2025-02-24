@@ -101,16 +101,16 @@ alexagungureanu@gmail.com
 |----------|-------|-----|------|-------|----------|
 | Lecture | *all students* | Wednesday | 08 - 10 | EC105 | Daniel Rosner|
 | Lecture | *all students* | Monday | 18 - 20 | PR001 | Daniel Rosner|
-| Lab | 331CC A | Tuesday | 12 - 14 | ED218 | Irina Bradu |
-| Lab | 331CC B | Tuesday | 12 - 14 | ED217 | Teodor Dicu |
-| Lab | 332CC A | Tuesday | 14 - 16 | ED218 | Irina Bradu |
-| Lab | 332CC B | Tuesday | 14 - 16 | ED217 | Irina Niță |
-| Lab | 333CC A | Wednesday | 16 - 18 | ED218 | Alexandru Ungureanu |
-| Lab | 333CC B | Wednesday | 16 - 18 | ED217 | Teodor Dicu |
-| Lab | 334CC A | Wednesday | 18 - 20 | ED218 | Alexandru Ungureanu |
-| Lab | 334CC B | Wednesday | 18 - 20 | ED217 | Andrei Zamfir |
-| Lab | 335CC A | Thursday | 18 - 20 | ED218 | Gabriel Păvăloiu |
-| Lab | 335CC B | Thursday | 18 - 20 | ED217 | Andrei Zamfir |
+| Lab | 331CC A | Tuesday | 12 - 14 | ED218 | Teodor Dicu |
+| Lab | 331CC B | Tuesday | 12 - 14 | ED217 | Irina Bradu |
+| Lab | 332CC A | Tuesday | 14 - 16 | ED218 | Irina Niță |
+| Lab | 332CC B | Tuesday | 14 - 16 | ED217 | Irina Bradu |
+| Lab | 333CC A | Wednesday | 16 - 18 | ED218 | Teodor Dicu |
+| Lab | 333CC B | Wednesday | 16 - 18 | ED217 | Alexandru Ungureanu |
+| Lab | 334CC A | Wednesday | 18 - 20 | ED218 | Andrei Zamfir |
+| Lab | 334CC B | Wednesday | 18 - 20 | ED217 | Alexandru Ungureanu |
+| Lab | 335CC A | Thursday | 18 - 20 | ED218 | Andrei Zamfir |
+| Lab | 335CC B | Thursday | 18 - 20 | ED217 | Gabriel Păvăloiu |
 
 
 ## Grading

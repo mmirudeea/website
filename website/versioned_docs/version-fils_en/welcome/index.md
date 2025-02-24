@@ -138,11 +138,11 @@ andrei.batasev@stud.acs.upb.ro
 | Lab | 1221Aa - first half | Thursday | 8 - 10 | ED 218 | Andrei Zamfir |
 | Lab | 1221Ab - second half | Thursday | 12 - 14 | ED 217 | Ioana Culic |
 | Lab | 1221Ba - first half | Thursday | 10 - 12 | ED 218 | Cristiana Precup <br/> Layla El-Ghoul |
-| Lab | 1221Bb - second half | Thursday | 14 - 16 | ED 217 | Teodor Dicu |
-| Lab | 1221Ca - first half | Friday | 14 - 16 | ED 218 | Dănuț Aldea |
+| Lab | 1221Bb - second half | Thursday | 14 - 16 | ED 217 | Alexandru Ungureanu |
+| Lab | 1221Ca - first half | Friday | 14 - 16 | ED 218 | Teodor Dicu |
 | Lab | 1221Cb - second half | Thursday | 8 - 10 | ED 217 | Alexandru Ungureanu |
 | Lab | 1221D | Thursday | 10 - 12 | ED 217 | Andrei Batasev |
-| Lab | 1222EEA | Thursday | 14 - 16 | ED 218 | Alexandru Ungureanu |
+| Lab | 1222EEA | Thursday | 14 - 16 | ED 218 | Dănuț Aldea |
 | Lab | 1222EEB | Thursday | 12 - 14 | ED 218 | Teodor Dicu |
 
 ## Grading

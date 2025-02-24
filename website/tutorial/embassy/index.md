@@ -44,6 +44,10 @@ info: This is the version for the rustup toolchain manager, not the rustc compil
 info: The currently active `rustc` version is `rustc 1.83.0 (90b35a623 2024-11-26)`
 ```
 
+:::note
+The command might not be recognised unless you restart VSCode if you're using the integrated PowerShell terminal on Windows. Simply killing the terminal and opening a new one is not always enough.
+:::
+
 ### `elf2uf2-rs`
 
 This is one of the tools we will need in order to program the board over USB. In order to install it, run the following in your terminal:
@@ -98,7 +102,7 @@ udevadm trigger # to ensure the new rules are applied to already added devices.
 #### Windows
 
 :::info
-You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`.
+You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`. Make sure you choose the latest **stable** version, under the Latest Release section.
 :::
 
 Once `cmake` is set up, you can run
@@ -160,7 +164,7 @@ without having to specify the target every time.
 
 ### Flashing
 
-To flash a program to the Raspberry Pi Pico via USB, it needs to be in *USB mass storage device mode*. To put it in this mode, you need to **hold the `BOOTSEL` button down**  while connecting it to your PC. Connecting and disconnecting the USB can lead to the port getting damaged, so we conveniently attached a reset button on the breadboard included on the **Pico Explorer Base**. Now, to make it reflashable again, just press the two buttons simultaneously.
+To flash a program to the Raspberry Pi Pico via USB, it needs to be in *USB mass storage device mode*. To put it in this mode, you need to **hold the `BOOTSEL` button down**  while connecting it to your PC. Connecting and disconnecting the USB can lead to the port getting damaged, so we conveniently added a reset button to our custom board. Now, to make it reflashable again, just press the two buttons simultaneously.
 
 After connecting the board to your PC and compiling the program, locate the binary in the `target/thumbv6m-none-eabi/release/` (or `target/thumbv6m-none-eabi/debug/` if you didn't use the `--release` option) folder. There are a few ways to flash the binary to the board:
 
@@ -320,6 +324,23 @@ Remember to modify the path provided to the `"programBinary"` attribute so that 
 
 You can find out more about this configuration file and available options, as well as the debugging process itself from the official [probe-rs documentation](https://probe.rs/docs/tools/debugger/).
 
+**On Windows**, you will also have to create a `tasks.json` file in the `.vscode/` folder in order to define the `rust: cargo build` task. Here is what it should contain:
+
+##### tasks.json
+
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "rust: cargo build",
+            "type": "shell",
+            "command": "cargo build"
+        }
+    ]
+}
+```
+
 A recommended step is to download the [`rp2040.svd`](https://raw.githubusercontent.com/raspberrypi/pico-sdk/1.3.1/src/rp2040/hardware_regs/rp2040.svd) file and place it in the `.vscode/` directory, as it gives `probe-rs` and VSCode additional information on the registers and memory regions used by the MCU. If you aren't using this file, the `"svdFile"` attribute should be commented out or removed from `launch.json`.
 
 ### With another Raspberry Pi Pico
@@ -369,6 +390,15 @@ cargo new --vcs none embassy
 
 * `--vcs none` because at the moment we do not want to use any code versioning (they are useful, but this is not the purpose of this tutorial)
 
+Next, open the `cargo.toml` file that was just generated and check the `edition` field. It will most likely be set to 2024, but we will use the 2021 edition of Rust.
+
+```toml
+[package]
+name = "embassy"
+version = "0.1.0"
+edition = "2021"
+```
+
 ### Crate settings
 
 Because we are running in an embedded environment, our code needs to be *"tailored"* specifically for the microcontroller we intend to use. In our case, it is the **RP2040**, but these general steps apply for any chip, produced by any manufacturer.
@@ -382,6 +412,10 @@ Due to the size constraints imposed on us (in our case, `2MB` of flash memory), 
 Because we are using the **Embassy-rs** framework, we want to let it take care of the entry point of our program (because it has to do some complex operations, like allocating the `task-arena` and `executor` structures). For the moment, all we will need to do is add the `#![no_main]` attribute to `src/main.rs`.
 
 #### Toolchain setting
+
+:::info
+The three files mentioned below (`rust-toolchain.toml`,`memory.x` and `build.rs`) should be found in the root folder of your project (same directory as `Cargo.toml`).
+:::
 
 Our chip is a **Cortex-M0+** that uses the **ThumbV6-M** architecture so we will need to specify the target triple we are compiling for. We will do that using a `rust-toolchain.toml` file, as it allows us to also set the **toolchain release channel** we will use, and the components we require.
 
@@ -483,10 +517,6 @@ fn main() {
 }
 ```
 
-:::info
-These three files should be found in the root folder of your project (same directory as `Cargo.toml`).
-:::
-
 #### Adding the Dependencies
 
 At this step, we must add the dependencies we will use for our project. Bellow you will find the basics you will need for a minimal application, including an `usb_logger` to *"enable"* debugging over serial.
@@ -577,7 +607,6 @@ Here you can find a minimally explained code that prints `"Hello World!"` over t
 
 use defmt::*;
 use embassy_executor::Spawner;
-use embassy_rp::gpio::{self};
 use embassy_time::{Duration, Timer};
 use {defmt_rtt as _, panic_probe as _};
 
@@ -593,7 +622,7 @@ async fn print_task() {
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     // Initialize peripherals
-    let p = embassy_rp::init(Default::default());
+    let _p = embassy_rp::init(Default::default());
 
     Timer::after(Duration::from_secs(1)).await;
     info!("Hello world!");

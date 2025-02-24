@@ -1,353 +1,452 @@
 ---
-description: Asynchronous Programming with Embassy
+description: Pulse Width Modulation and Analog to Digital Converters
 slug: /lab/03
 ---
 
-# 03 - Asynchronous Development
+# 03 - PWM & ADC
 
-This lab will teach you the principles of asynchronous programming, and its application in Embassy.
+This lab will teach you the difference between digital and analog signals, how to simulate analog signals by using Pulse Width Modulation (PWM) and how to convert analog signals to digital ones using Analog-to-Digital Converters (ADC).
 
 
 ## Resources
 
-1. **Bert Peters**, *[How does async Rust work](https://bertptrs.nl/2023/04/27/how-does-async-rust-work.html)* 
-2. **Omar Hiari**, *[Sharing Data Among Tasks in Rust Embassy: Synchronization Primitives](https://dev.to/apollolabsbin/sharing-data-among-tasks-in-rust-embassy-synchronization-primitives-59hk)* 
+1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
+    - Chapter 2 - *System Description*
+     - Chapter 2.15 - *Clocks*
+       - Subchapter 2.15.1
+       - Subchapter 2.15.2
+   - Chapter 4 - *Peripherals*
+     - Chapter 4.5 - *PWM*
+     - Chapter 4.6 - *Timer*
+     - Chapter 4.9 - *ADC and Temperature Sensor*
+       - Subchapter 4.9.1
+       - Subchapter 4.9.2
+       - Subchapter 4.9.5
 
-## Asynchronous functions
+2. **Paul Denisowski**, *[Understanding PWM](https://www.youtube.com/watch?v=nXFoVSN3u-E)*
 
-Up to now, during the labs, we've seen that, in order to be able to do multiple different actions "at once", we would use *tasks*. We would let the `main` function run, while also doing another action seemingly "in parallel" inside of another task. 
-Let's take the following example: if we want to blink an LED every second while also waiting for a button press to do something else, we would need to spawn a new task in which we would wait for the button press, while blinking the LED in the `main` function. 
+## Timing
 
-When thinking of how exactly this works, you would probably think that the task is running on a separate *thread* than the `main` function. Usually this would be the case when developing a normal computer application. Multithreading is possible, but requires a preemptive operating system. Without one, only one thread can independently run per processor core and that means that, since we are using only one core of the RP2040 (which actually has only 2), we would only be able to run **one thread at a time**. So how exactly does the task wait for the button press in parallel with the LED blinking? 
-Short answer is: it doesn't. In reality, both functions run asynchronously. 
+In embedded applications, keeping track of time is crucial. Even for the simple task of blinking a led at a certain time interval, we need a reference of time that is constant and precise. 
 
-### Tasks
+### Clocks
 
-A task in Embassy is represented by an *asynchronous function*. Asynchronous functions are different from normal functions, in the sense that they allow asynchronous code execution. Let's take an example from the previous lab:
+A clock is a piece of hardware that provides us with that reference. Its purpose is to oscillate at a fixed frequency and provide a signal that switches from high to low at a fixed interval.
+
+![ClockSignal](images/clock_signal.png)
+
+The most precise type of clock is the crystal oscillator (XOSC). The reason why it is so accurate is because it uses the crystal's natural vibration frequency to create the clock signal. This clock is usually external to the processor itself, but the processor also has an internal clock (ROSC) that is less accurate and that can be used in cases where small variations of clock  pulses are negligeable. When using the USB protocol, for instance, a more stable clock signal is required, therefore the XOSC is necessary.
+The crystal oscillator on the Raspberry Pi Pico board has a frequency of 12MHz. 
+
+This clock signal is just a reference, and most of the time we need to adjust it to our needs. This is done by either multiplying or dividing the clock, or in other words, elevating or lowering the frequency of the clock. For example, the RP2040 itself runs on a 125MHz clock, so the crystal oscillator frequency of 12MHz is multiplied (this is done using a method called Phase-Locked Loop).
+
+![RPCrystal](images/rp_crystal.png)
+
+### Counters
+
+A counter is a piece of hardware logic that counts, as its name suggests. Every clock cycle, it increments the value of a register, until it overflows and starts anew. 
+
+:::info
+A regular counter on 8 bits would count up from 0 to 255, then loop back to 0 and continue counting. 
+:::
+
+In theory a counter is associated with 3 registers:
+
+| Register | Description |
+|-----------|----------|
+| `value` | the current value of the counter |
+| `direction` | whether the counter is counting UP or DOWN |
+| `reset` | if the direction is UP, the value at which the counter resets to 0; if the direction is DOWN, the value at which the counter reset after reaching 0 |
+
+![Counter](images/counter.svg)
+
+The way the counter works here is that it increments/decrements every clock cycle and checks whether or not it has reached its reset value. If is has, then it resets to its initial value and starts all over again.
+
+
+#### SysTick
+
+The ARM Cortex-M uses the SysTick time counter to keep track of time. This counter is decremented every microsecond, and when it reaches 0, it triggers an exception and then resets.
+
+- `SYST_CVR` register - the value of the timer itself
+- `SYST_RVR` register - the reset value
+- `SYST_CSR_SET` register:
+	- `ENABLE` field - enable/disable the counter
+	- `TICKINT` field - enable/disable exception on reaching 0
+
+### Timers
+
+Until now, we have been able to blink a led at a certain time interval, by busy waiting a while between each led toggle. The technique we used so far was asking the processor to skip a clock cycle a number of times, or by calling the processor instruction `nop` (no operation) in a loop. 
+:::info
+This method is not ideal, since the `nop` instruction stalls the processor and wastes valuable time that could otherwise be used to do other things in the meantime. To optimize this, we can use *alarms*.
+:::
+An **alarm** is a counter that triggers an interrupt every time it reaches a certain value. This way, an alarm can be set to trigger after a specific interval of time, and while it's waiting, the main program can continue executing instructions, and so it is not blocked. When the alarm reaches the chosen value, it goes off and triggers an interrupt that can then be handled in its specific ISR.
+
+![Alarm](images/alarm.svg)
+
+:::info
+The RP2040 timer is fully monotomic, meaning it can never truly overflow. Its value is stored on 64 bits and increments every 1 microsecond, which means that the last value it can increment to before overflowing is 2<sup>64-1</sup>, which the equivalent of roughly 500,000 years. This timer allows 4 different alarms, which can be used independently (`TIMER_IRQ_0/1/2/3`).
+:::
+
+## Analog and Digital Signals
+
+**Analog signals** are a representation of real-world data. They communicate information in a continuous function of time. They are smooth and time-varying waves, and contain an infinite number of values within the continuous range. An example of an analog signal would be sound, or the human voice.
+
+![AnalogSignal](images/analog_signal.png)
+
+**Digital signals** are a discrete representation of data. They are represented by a sequence of binary values, taken from a finite set of possible numbers. They are square and discrete waves. In most cases, they are represented by two values: 0 and 1 (or 0V and 5V). Digital representation of signals is usually used in hardware.
+
+![DigitalSignal](images/digital_signal.png)
+
+## Pulse-Width Modulation (PWM)
+Up to now, we learned to turn a led on and off, or in other words, set a led's intensity to 100% or 0%. What if we wanted to turn on the led only at 50% intensity? We only have a two-level digital value, 0 or 1, so technically a value of 0.5 is not possible. What we can do is simulate this analog signal, so that it *looks* like the led is at half intensity. 
+
+**Pulse-Width Modulation** is a method of simulating an analog signal using a digital one, by varying the width of the generated square wave. 
+
+![PWMExample](images/pulse-width-modulation-signal-diagrams-average.png)
+
+:::note
+We can think of the simulated analog signal being directly proportional to the change in digital signal pulse size. The larger the square wave at a given period T, the higher the average analog amplitude output for that period.
+:::
+
+The **duty cycle** of the signal is the percentage of time per period that the signal is high.
+
+![DutyCycle](images/duty_cycle.png)
+
+So if we wanted our led to be at 50% intensity, we would choose a duty cycle of 50%. By quickly switching between high and low, the led appears to the human eye as being at only 50% intensity, when in reality, it's only on at max intensity 50% of the time, and off the rest of the time.
+
+![PWMLed](images/pwm_led.gif)
+
+$$
+
+duty\_cycle = \frac{time\_on}{period} \%
+
+$$
+
+For the RP2040, to generate this PWM signal, a *counter* is used. The PWM counter is controlled by these registers (`X` can be from 0-7, depending on the channel):
+
+- `CHX_CTR` - the actual value of the counter
+- `CHX_CC` - the value that the counter will compare to
+- `CHX_TOP` - the value at which the counter will reset (or *wrap*)
+
+When `CHX_CTR` is reset, the value of the output signal is 1. The counter counts up until it reaches `CHX_CC`, after which the value of the output signal becomes 0. The counter continues to count until it reaches `CHX_TOP`, and then the signal becomes 1 again. This way, by choosing the value of `CHX_CC`, we set the duty cycle of the PWM signal.
+
+![PWMRP2040](images/pwm_rp2040_example.png)
+
+On RP2040, all GPIO pins support PWM. Every two pins share a PWM slice, and each one of them is on a separate channel. 
+
+![RP2040PWMPins](images/pwm_rp2040_pins.png)
+
+:::info
+This means that in order to use a pin as PWM, we need to know what channel it's on, and which output it uses (A or B).
+:::
+
+### Examples of hardware controlled through PWM
+
+- leds
+- motors
+- buzzers
+- RGB leds (what we will be using for this lab)
+
+An **RGB** LED is a led that can emit any color, using a combination of red, green and blue light. On the inside, it's actually made up of 3 separate leds:
+- *R* led - to control the intensity of the *red* light
+- *G* led - to control the intensity of the *green* light
+- *B* led - to control the intensity of the *blue* light
+
+By using PWM on the R, G and B leds, we can control each of their intensity to represent any color.
+
+:::info
+For example, if we wanted to create the color purple, we would set the intensity of red and blue to 100%, and the intensity of green to 0%.
+:::
+
+There are two different types of RGB LEDs:
+
+- common cathode: all LED cathodes are connected together. A LOW signal means off, and a HIGH signal means on at max intensity.
+- common anode: all LED anodes are connected together. A LOW signal means on at max intensity, and a HIGH signal means off.
+
+![CommonAnodeCommonCathode](images/common_anode_common_cathode.png)
+
+:::warning
+For this lab, we will be using **common anode** RGB LEDs, which means that the PWM signal should be *opposite*. 0 will be 100% intensity, and 1 will be 0% intensity.
+:::
+
+#### How to wire an RGB LED
+
+For **common cathode** RGB LEDs, we must tie each of the 3 color led legs to GPIO pins in series with a *resistance*, and connect the fourth pin to **GND**. 
+
+For **common anode** RGB LEDs, we must also tie each of the 3 color led legs to GPIO pins in series with a *resistance*, but connect the fourth pin to **3V3** instead. 
+
+:::danger
+Do not forget to tie a resistance to each color pin of the RGB LED!
+:::
+
+### PWM in Embassy-rs
+
+First, we need a reference to all peripherals, as usual. 
+
 ```rust
+// Initialize peripherals
+let peripherals = embassy_rp::init(Default::default());
+```
+
+In order to modify the PWM counter configurations, we need to create a `Config` for our PWM.
+
+```rust
+use embassy_rp::pwm::Config as ConfigPwm; // PWM config
+
+// Create config for PWM slice
+let mut config: ConfigPwm = Default::default();
+// Set top value (value at which PWM counter will reset)
+config.top = 0x8000; // in HEX, equals 32768 in decimal
+// Set compare value (counter value at which the PWM signal will change from 1 to 0)
+config.compare_a = config.top / 2;
+```
+
+In the example above:
+    - `top` is the field from `Config` that will define the value at which the counter will reset back to 0
+    - `compare_a` is the field from `Config` that will define the value at which the PWM signal will switch from 1 to 0
+In this case, `config.compare_a` is half of `config.top`. This means that the duty cycle of the generated PWM signal will be 50%, or, in other words, that the PWM signal will switch from 1 to 0 halfway through each period.
+
+To select the pin that we want to use for PWM, we need to create a new PWM driver that uses the correct channel and output for our pin.
+
+```rust
+// Create PWM driver for pin 0
+let mut pwm = Pwm::new_output_a( // output A
+    peripherals.PWM_CH0, // channel 0
+    peripherals.PIN_0, // pin 0
+    config.clone()
+);
+```
+
+:::warning
+1. The code above is an example for pin 0. You need to modify the channel, output and pin depending on the PWM pin you choose to use!
+2. The value of `compare_a` or `compare_b` must be changed depending on the desired duty cycle!
+:::
+
+If we decide to modify the value of `compare_a` or `compare_b`, we have to update the configuration for the PWM.
+
+```rust
+config.compare_a += 100; // modified value of `compare_a`
+pwm.set_config(&config); // set the new configuration for PWM
+```
+
+## Analog-to-Digital Converter (ADC)
+
+Now we know how to represent an analog signal using digital signals. There are plenty of cases in which we need to know how to transform an analog signal into a digital one, for example a temperature reading, or the voice of a person. This means that we need to correctly represent a continuous wave of infinite values to a discrete wave of a finite set of values.
+For this, we need to sample the analog signal periodically, in other words to measure the analog signal at a fixed interval of time. This is done by using an **Analog-to-Digital converter**.
+
+The ADC has two important parameters that define the quality of the signal representation:
+
+| Parameter | Description | Impact on quality |
+|-----------|-------------|-------------------|
+| Sampling Rate | Frequency at which a new sample is read | The higher the sampling rate, the more samples we get, so the more accurate the representation of the signal |
+| Resolution | Number of bits which we can use in order to store the value of the sample | The higher the resolution, the more values we can store, so the more accurate the representation |
+
+:::info
+For example, a resolution of 8 bits means that we can approximate the analog signal to a value from 0 to 255.
+:::
+
+![ADCSampling](images/sampling_values.svg)
+
+### Nyquist-Shannon Sampling Theorem
+
+The [Nyquist-Shannon sampling theorem](https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem) serves as a bridge between continuous-time signals and discrete-time signals. It establishes a link between the frequency range of a signal and the sample rate required to avoid a type of distortion called *aliasing*. Aliasing occurs when a signal is not sampled fast enough to construct an accurate waveform representation.
+
+For an analog signal to be represented without loss of information, the conversion needs to satisfy the following formula:
+
+$$
+sampling_f >= 2 \times max_{f}
+$$
+
+The analog signal needs to be sampled at a frequency greater than twice the *maximum frequency* of the signal.
+In other words, we must sample at least twice per cycle.
+
+![NyquistTheorem](images/nyquist_theorem.png)
+
+
+### Examples of analog sensors
+
+- temperature sensor
+- potentiometer
+- photoresistor (what we will be using for this lab)
+
+A **photoresistor** (or photocell) is a sensor that measures the intensity of light around it. Its internal resistance varies depending on the light hitting its surface; therefore, the more light there is, the lower the resistance will be. 
+
+![Photoresistor](images/photoresistor.png)
+
+#### How to wire a photoresistor
+
+To wire a photoresistor, we need to connect one leg to *GND* and the other leg to a voltage divider. Take a look at the [Electronics](/tutorial/electronics/index.md#voltage-divider) tutorial:
+$$
+V_{out} = V_{in} * \frac{R_{2}}{R_{1} + R_{2}};
+$$
+
+In our case:
+- $ V_{out} $ will be the voltage at the ADC pin on the MCU
+- $ V_{in} $ will be the voltage at the from the GPIO pin the photoresistor is tied to
+- $ R_{1} $ is the variable resistance of the photoresistor
+- $ R_{2} $ is a resistance compatible with our photoresistor (in our case, 10k $\Omega$)
+
+This way, the ADC pin measures the photoresistor's resistance, without the risk of a short-circuit.
+
+![PhotoresistorWiring](images/photoresistor_wiring.png)
+
+### ADC in Embassy-rs
+
+On the RP2040, ADC uses an interrupt called `ADC_IRQ_FIFO` to signal whenever a new sample has been added to the ADCs' FIFO. This new sample will be stored inside a FIFO. In the Embassy library, this interrupt is already implemented, so all we need to do is bind it and use it in our ADC variable.
+
+```rust
+// Bind the `ADC_IRQ_FIFO` interrupt to the Embassy's ADC handler
+bind_interrupts!(struct Irqs {
+    ADC_IRQ_FIFO => InterruptHandler;
+});
+
+// ---- fn main() ----
+
+// Initialize peripherals
+let peripherals = embassy_rp::init(Default::default());
+
+// Create ADC driver
+let mut adc = Adc::new(peripherals.ADC, Irqs, Config::default());
+```
+
+:::warning
+If we are using PWM and ADC in the same code, we will have two different `Config` imports with the same name. In order to avoid compilation errors, we need to separate the PWM config import from the ADC one. To do this, we can import the two `Config`s with different names.
+
+```rust
+use embassy_rp::adc::Config as ConfigAdc; // ADC config
+
+// ---- fn main() ----
+let mut adc = Adc::new(peripherals.ADC, Irqs, ConfigAdc::default());
+```
+:::
+
+Now, we need to initialize the ADC pin we will be using. The Raspberry Pi Pico has 3 pins that support ADC: `ADC0`, `ADC1`, and `ADC2`.
+
+```rust
+// Initialize ADC pin
+let mut adc_pin = Channel::new_pin(peripherals.PIN_X, Pull::None); // where X should be replaced with a pin number
+```
+
+Once we have the ADC and pin set up, we can start reading values from the pin. 
+
+```rust
+let level = adc.read(&mut adc_pin).await.unwrap(); // read a value from the pin
+info!("Light sensor reading: {}", level); // print the value over serial
+Timer::after_secs(1).await; // wait a bit before reading and printing another value
+```
+
+## Exercises
+
+1. Connect an LED to pin GP2, a photo-resistor to ADC0 and an RGB LED to pins GP1, GP3, GP4. Use [KiCad](https://www.kicad.org/) to draw the schematics. (**1p**)
+2. Take a look at `lab04_ex2` in the lab skeleton. It is a working example of lighting an LED using PWM at 50% intensity. The LED in the example is connected to GP0.
+    - Modify the provided example to light the LED of *your circuit* to 25% intensity. (**1p**)
+    - Increase the LED's intensity by 10% every second, until it reaches max intensity, when it stops. (**1p**)
+3. Read the value of the photo-resistor and print it to the console. (**2p**)
+
+:::info
+To see the console with messages from the Pico, use the flash command with an extra `-s` parameter. 
+```bash
+elf2uf2-rs -s -d /target/thumbv6m-none-eabi/debug/<crate_name>
+```
+:::
+
+:::info
+To be able to print messages to the console, we need to send messages over a simulated serial port to the computer. For this, we will use the USB driver provided by Embassy.
+
+```rust
+use embassy_rp::usb::{Driver, InterruptHandler};
+use embassy_rp::{bind_interrupts, peripherals::USB};
+use log::info;
+
+// Use for the serial over USB driver
+bind_interrupts!(struct Irqs {
+    USBCTRL_IRQ => InterruptHandler<USB>;
+});
+
+
+// The task used by the serial port driver 
+// over USB
 #[embassy_executor::task]
-async fn button_pressed(mut led: Output<'static, PIN_X>, mut button: Input<'static, PIN_X>) {
-    loop {
-	info!("waiting for button press");
-        button.wait_for_falling_edge().await;
-    }
+async fn logger_task(driver: Driver<'static, USB>) {
+    embassy_usb_logger::run!(1024, log::LevelFilter::Info, driver);
 }
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let peripherals = embassy_rp::init(Default::default());
 
-    let button = Input::new(peripherals.PIN_X, Pull::Up);
-    let led2 = Output::new(peripherals.PIN_X, Level::Low);
+    // Start the serial port over USB driver
+    let driver = Driver::new(peripherals.USB, Irqs);
+    spawner.spawn(logger_task(driver)).unwrap();
 
-    spawner.spawn(button_pressed(led2, button)).unwrap();
+    // ...
 
-    let mut led = Output::new(peripherals.PIN_X, Level::Low);
-
-    loop {
-        led.toggle();
-        Timer::after_millis(200).await;
-    }
-}
-```
-In this example, we notice that both the `button_pressed` and `main` functions are declared as `async`, telling the compiler to treat them as asynchronous functions. Inside the `main` function (which is also a task, actually), we blink the LED:
-
-```rust
-loop {
-    led.toggle();
-
-    Timer::after_millis(200).await;
-}
-```
-
-## `await` keyword
-
-After setting the timer, our `main` function would need to wait until the alarm fires after 200 ms. Instead of just waiting and blocking the current and *only* thread of execution, it could allow the thread to do another action in the meantime. This is where the `.await` keyword comes into play.
-When using `.await` inside of an asynchronous function, we are telling a third party (called the **executor**, detailed later) that this action might take more time to finish, so *do something else* until it's ready. Basically, the execution flow of the asynchronous function function is halted exactly where `.await` is used, and the executor starts running another task. In our case, it would halt the main function while waiting for the alarm to go off and it could start running the code inside the `button_pressed` task.
-```rust
-loop {
-    info!("waiting for button press");
-    button.wait_for_falling_edge().await;
-}
-```
-We can see that here, we also use the `wait_for_falling_edge` function asynchronously, meaning that until we get a signal that a button has been pressed, the executor can decide to do other stuff. If it has nothing else to do, it goes to sleep, until it receives a signal that either the button has been pressed, or the timer has run out. Then, it will resume execution of the function where the action has completed. 
-When the button is pressed the execution flow will resume inside of the `button_pressed` task, until it is interrupted by the next `.await` in that function. If the timer runs out before the `button_pressed` task execution reaches the next `.await`, the resuming of the `main` function will delayed until the `button_pressed` task `.await`s.
-This method of development allows our programs to run seemingly "in parallel", without the need of multiple threads. Each task *voluntarily* pauses its execution and passes control over to whatever other task needs it. This means that it's the task's business to allow other tasks to run while it's idly waiting for something to happen on its end.
-:::note
-On a preemptive operating system, it would be the scheduler's job to decide when and for how long processes get to run.
-:::
-
-## `Future`s
-
-Rust has a special datatype that represents an action that will complete sometime in the future. By using `.await` on a `Future`, we are passing control to another task until the `Future` completes.
-:::info
-In the `button_pressed` task, the `wait_for_falling_edge` returns a `Future`, which is then `.await`ed.
-:::
-This is a simplified version of what a `Future` in Rust really looks like:
-```rust
-enum Poll<T> {
-    Pending,
-    Ready(T),
+    info!("message");
 }
 
-trait Future {
-   type Output;
-   fn poll(&mut self) -> Poll<Self::Output>;
-}
-```
-The `Future` has an `Output` associated type, that represents the type of the result that it will return once it completes. For `wait_for_falling_edge()`, the Output type is `()` (nothing).
-The function `poll` returns a `Poll` type, which can either be `Pending`, or `Ready<T>` (T will be output in this case).
-Let's break down what all of this means. A `Future` needs to be checked on, every now and then, to see what its status is. This is the job of the **Executor**. The executor must regularly ask the `Future` if it's completed, or if it needs more time before it can give a result. We can say that the `Future` is `poll`ed, and depending on whether it's ready to give a result or not, it gives its status as `Pending` or `Ready`. If it's still pending, it needs more time before it can return a result, so the executor moves on to poll another `Future`. Whenever the `Future` is completed, it returns `Ready` once polled, and the executor returns execution back to the function where the `Future` `.await`ed.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    Executor->>+Future: poll()
-    loop until the Future finishes all the requests to the Hardware
-        Future->>+Hardware: execute_next_action()
-        Hardware-->>Future: in_progress()
-        note right of Hardware: performs the action in parallel
-        Future-->>-Executor: Poll::Pending
-        note over Executor: sleeps until an event arrives
-        note right of Hardware: sends an event when job is done (interrupt)
-        Hardware--)-Executor: event
-        Executor->>+Future: poll()
-    end
-    Future->>Hardware: read_value()
-    Hardware-->>Future: value
-    Future-->>-Executor: Poll::Ready(value)
-```
-
-:::note
-An efficient executor will not poll all tasks. Instead, tasks signal the executor that they are ready to make progress by using a `Waker`.
-:::
-
-:::info
-A real future in Rust looks like this:
-```rust
-pub trait Future {
-    type Output;
-
-    // Required method
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
-}
 ```
 :::
-
-Under the hood, the Rust compiler is actually transforming our asynchronous function into a state-machine. That is why we can only use `.await` inside of an `async` function, because it needs to be treated differently than an ordinary function in order to work asynchronously.
-
-:::info
-Asynchronous programming is widely used in web development. In JavaScript, the equivalent of a `Future` would be a `Promise`.
-:::
-
-Read more about how async/await works in Rust [here](https://rust-lang.github.io/async-book/01_getting_started/01_chapter.html).
-
-### `await`ing multiple `Future`s
-
-Sometimes we need to `.await` several futures at the same time. Embassy provides two ways of doing this:
-- `select` - wait for several `Future`s, stop as soon as **one** of them **returns**;
-- `join` - wait for several `Future`s until they **all return**
-
-#### `select`
-
-In some cases, we might find ourselves in the situation where we need to await multiple futures at a time. For example, we want to wait for a button press *and* wait for a timer to expire, and we deal with each future completion in different ways.
-
-There is a function in Embassy that allows us to do this: `select`. It takes two `Future`s as arguments, and polls both of them to see which one completes first.
-```rust
-let select = select(button.wait_for_falling_edge(), Timer::after_secs(5)).await;
-```
-
-It returns an `Either` type, that looks like this:
-```rust
-pub enum Either<A, B> {
-    First(A),
-    Second(B),
-}
-```
-A and B are the results of each `Future`, so we can just use a `match` on the `select` variable to see which `Future` finished first.
-```rust
-match select {
-    First(res1) => {
-        // handle case for button press
-    },
-    Second(res2) => {
-        // handle case for alarm firing
-    }
-}
-```
 
 :::warning
-After selecting the first `Future` that completes, the other one is *dropped*. For instance, if the button press happens first, the timer will be stopped.
+Notice that the USB driver also uses an `InterruptHandler` import that could be confused with the `InterruptHandler` used by ADC. Make sure to use different naming conventions for each one, as described in the warning [here](#adc-in-embassy-rs). 
+:::
+4. Depending on the value read from the photo-resistor, brighten or dim the led. The led should shine brighter when there is *less* light in the room. (**2p**)
+:::tip
+Use the serial console to debug your program!
+:::
+5. Make the RGB LED switch from red -> yellow -> blue every time the switch A is pressed. (**2p**)
+:::note
+The reason why we **can't** use GP1, GP2 and GP3 for the RGB LED, for example, is because GP2 and GP3 are both on PWM channel 1, therefore we can't independently control them with PWM.
+:::
+![Colors](images/colors.png)
+
+6. Using the `SysTick` interrupt in *bare metal*, make the led blink at a 100ms delay. (**1p**)
+:::tip
+Setting up the `SysTick` counter:
+```rust
+const SYST_RVR: *mut u32 = 0xe000_e014 as *mut u32;
+const SYST_CVR: *mut u32 = 0xe000_e018 as *mut u32;
+const SYST_CSR: *mut u32 = 0xe000_e010 as *mut u32;
+
+// fire systick every 5 seconds
+let interval: u32 = 5_000_000;
+unsafe {
+    write_volatile(SYST_RVR, interval);
+    write_volatile(SYST_CVR, 0);
+
+    // set fields `ENABLE` and `TICKINT`
+    write_volatile(SYST_CSR, 0b011);
+    // we need to write the whole register, single bit modifications is not possible with the SYST_CSR register
+}
+```
+Registering the `SysTick` handler:
+```rust
+#[exception]
+unsafe fn SysTick() { 
+    /* systick fired */ 
+}
+```
+
 :::
 
 :::info
-You can also use [`select3`](https://docs.rs/embassy-futures/latest/embassy_futures/select/fn.select3.html), [`select4`](https://docs.rs/embassy-futures/latest/embassy_futures/select/fn.select4.html) or [`select_array`](https://docs.rs/embassy-futures/latest/embassy_futures/select/fn.select_array.html) when dealing with more than two `Future`s.
-:::
+To safely share a bool value globally to keep track of the LED status, we need to use an [`AtomicBool`](https://doc.rust-lang.org/std/sync/atomic/struct.AtomicBool.html). This requires less code than using a normal `bool` and a `Mutex`.
 
-#### `join`
-
-Similarly, we can also [`join`](https://docs.rs/embassy-futures/latest/embassy_futures/join/fn.join.html) multiple `Future`s, meaning that we wait for all of them to complete before moving on. 
-
+Creating a new static `AtomicBool`:
 ```rust
-let (res1, res2) = join(button.wait_for_falling_edge(), Timer::after_secs(5)).await;
+// imports 
+use core::sync::atomic::{AtomicBool, Ordering};
+
+static atomic_bool: AtomicBool = AtomicBool::new(false);
 ```
 
-`join` returns a tuple containing the results of both `Future`s.
-
-
-## Channels
-
-Up to this point, to be able to share peripherals or data across multiple tasks, we have been using global `Mutex`s or passing them directly as parameters to the tasks. But there are other, more convenient ways to send data to and from tasks. Instead of having to make global, static variables that are shared by tasks, we could choose to only send the information that we need from one task to another. To achieve this, we can use *channels*.
-
-**Channels** allow a unidirectional flow of information between two endpoints: the *Sender* and the *Receiver*. The sender sends a value through the channel, and the receiver receives this value once it is ready to do so. Until it is ready, the data will be stored inside a queue. Channels in Embassy are *Multiple Producer, Multiple Consumer*, which means that we can have a channel associated with multiple senders and multiple receivers. 
-
-To use a channel in Embassy, we first need to declare a static instance of the channel. 
-
+Reading the value of an `AtomicBool`:
 ```rust
-static CHANNEL: Channel<ThreadModeRawMutex, bool, 64> = Channel::new();
-```
-- `ThreadModeRawMutex` - the type of Mutex that the Channel internally uses. It is a mutex that can safely be shared between threads
-- `bool` - the type of data that is sent through the channel
-- `64` - the maximum number of values that can be stored in the channel's queue
-
-Let's say we spawn a task `task1` that runs a timer. Every second, we want to toggle an LED in the `main` function, based on the timer running in `task1`. For this, `task1` would need to send a signal to the `main` program every time the 1 second alarm has fired, meaning the task and the main program would share the channel. `task1` would *send* over the channel, and `main` would *receive*.
-
-Inside `task1`, we would just set a timer and wait until it fires. After it fires, we send a signal through the channel, to indicate that 1 second has elapsed.
-
-```rust
-#[embassy_executor::task]
-async fn task1() {
-    loop {
-        Timer::after_secs(1).await;
-        CHANNEL.send(true).await;
-    }
-}
+let atomic_bool_value = atomic_bool.load(Ordering::Relaxed);
 ```
 
-In the `main` function, we need to then wait for the signal, and once it's received, toggle the LED.
-
+Writing the value of an `AtomicBool`:
 ```rust
-// ---- fn main() ----
-loop {
-    let value = CHANNEL.receive().await;
-    match value {
-        true => led.toggle().unwrap(),
-        false => info!("We got something else")
-    }
-}
-```
-
-:::info
-The reason we need all of this is because Rust doesn't allow us to mutably borrow more than once. To use a peripheral (say PWM) inside multiple tasks, 
-we would need to either move it inside the task entirely, or use a mutable reference to it. If we have multiple tasks, though, once we move our peripheral variable *inside* the first task,
-we can't pass it to another task, because the value was *moved* inside that task completely. And if we wanted to pass it as a mutable reference instead, we would quickly realize that Rust 
-doesn't allow multiple mutable references at once, to avoid concurrent modifications. So this is why we need to either declare a global, static `Mutex` that any task can access, to ensure 
-that the value cannot be modified concurrently by two different tasks, or use channels and keep the peripheral inside the `main` function.
-
-To better understand the concepts of ownership and borrowing in Rust, take a look at [chapter 4](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) of the Rust Book.
-:::
-
-## Potentiometer
-
-A potentiometer is a three-terminal resistor with a sliding or rotating contact that forms an adjustable voltage divider. If only two terminals are used, one end and the wiper, it acts as a variable resistor or rheostat. A volume knob on a speaker is a potentiometer, for instance.
-
-![Potentiometer](images/potentiometer_pins.png)
-
-## Exercises
-
-![Pico Explorer Pinout](../images/explorer_pins.jpg)
-
-1. Connect an LED to GP0, an RGB LED to GP1, GP2, GP5 and a potentiometer to ADC0. Use Kicad to draw the schematic. (**1p**)
-2. Change the monochromatic LED's intensity, using button A (SW_A) and button B(SW_B) on the Pico Explorer. Button A will increase the intensity, and button B will decrease it. (**2p**)
-
-:::tip
-- Use PWM to control the intensity.
-- Create two tasks, one for button A, one for button B. Use a channel to send commands from each button task to the main task.
-:::
-
-3. Control the RGB LED's color with buttons A, B, X and Y on the Pico Explorer. (**2p**)
-- Button A -> RGB = Red
-- Button B -> RGB = Green
-- Button X -> RGB = Blue
-- Button Y -> RGB = Led Off
-:::tip
-Use a separate task for each button. When a button press is detected, a command will be sent to the main task, and the main task will set the RGB LED's color according to that command.
-
-:::warning
-When building Rust software in *debug mode*, which is what `cargo build` does, Rust will panic if mathematical operations underflow or overflow. This means that:
-
-```rust
-let v = 10u8;
-v -= 12;
-```
-
-will panic. To avoid this, you can use the [`wrapping_`](https://doc.rust-lang.org/std/primitive.u8.html#method.wrapping_add) and [`saturating_`](https://doc.rust-lang.org/std/primitive.u8.html#method.saturating_add) functions:
-
-```rust
-let v = 10u8;
-// this will store 0 in v
-v = v.saturating_sub(12); 
-```
-:::
-
-```mermaid
-sequenceDiagram
-    autonumber
-    note right of TaskBtnA: waits for button A press
-    note right of TaskBtnB: waits for button B press
-    note right of TaskBtnX: waits for button X press
-    note right of TaskBtnY: waits for button Y press
-    note right of TaskMain: waits for LED command
-    Hardware-->>TaskBtnA: button A press
-    TaskBtnA-->>TaskMain: LedCommand(LedColor::Red)
-    note right of TaskMain: sets PWM configuration
-    TaskMain-->>Hardware: sets RGB LED color RED
-    Hardware-->>TaskBtnX: button X press
-    TaskBtnX-->>TaskMain: LedCommand(LedColor::Blue)
-    note right of TaskMain: sets PWM configuration
-    TaskMain-->>Hardware: sets RGB LED color BLUE
-```
-:::
-
-4. In addition to the four buttons, control the RGB LED's intensity with the potentiometer. (**3p**)
-
-:::tip
-You will need another task in which you sample the ADC and send the values over a channel.
-You could do this in one of two ways:
-1. Use a single channel for both changing the color and the intensity of the LED. Button tasks and the potentiometer task will send over the same channel. For this, you will need to change the type of data that is sent over the channel to encapsulate both types of commands. For example, you could use an enum like this:
-```rust
-enum LedCommand {
-    ChangeColor(Option<LedColor>),
-    ChangeIntensity(u16)
-}
-```
-2. Use two separate channels, one for sending the color command (which contains the LedColor), and one for sending the intensity. You can `await` both channel `receive()` futures inside of a `select` to see which command is received first, and handle it.
-Example:
-```rust
-let select = select(COLOR_CHANNEL.receive(), INTENSITY_CHANNEL.receive()).await;
-match select {
-    First(color) => {
-        // ...
-    },
-    Second(intensity) => {
-        // ...
-    }
-}
-```
-:::
-
-5. Print to the screen of the Pico Explorer the color of the RGB LED and its intensity. Use the SPI screen driver provided in the lab skeleton. (**2p**)
-:::tip
-To write to the screen, use this example:
-```rust
-let mut text = String::<64>::new();
-write!(text, "Screen print: ", led_color).unwrap(); // led_color must be defined first
-
-Text::new(&text, Point::new(40, 110), style)
-    .draw(&mut display)
-    .unwrap();
-
-// Small delay for yielding
-Timer::after_millis(1).await;
+atomic_bool.store(true, Ordering::Relaxed);
 ```
 :::

@@ -59,9 +59,9 @@ layout: two-cols
 ```rust
 //EXAMPLES
 
-let board_id: String = get_board_id(); 
+let board_id = get_board_id(); 
 
-let WiFi_id: String = read_WiFi_id_from_config(); 
+let WiFi_id = read_WiFi_id_from_config(); 
 
 let AES_key: [u8; 32] = read_AES_key_from_OTP(); 
 // AES-256 key
@@ -88,10 +88,16 @@ layout: two-cols
 <br>
 
 ```rust
-//EXAMPLES
-let mut signal = read_adc_signal(); 
+//EXAMPLE
+
+let mut signal = [0u8, 64];
+
+loop {
+
+read_adc_signal(&mut signal); 
 let mut max_fft_value = get_max_fft_value(&signal);
 
+}
 
 ```
 
@@ -105,7 +111,7 @@ layout: two-cols
 
 - Intuitive and simple for types that implement the `Copy` trait:
 - - primitive types: `i32`, `f64`, `bool`, `char`
-- - tooples composed of primitive types
+- - tuples composed of primitive types
 - You need to pay attention for types that do not implement the `Copy` trait. E.g.:
 - - `String`
 - - `Vec <_>`
@@ -184,7 +190,7 @@ fn main() {
     let wifi_name_2 = &wifi_name_1;  
     // Borrows wifi_name_1 (immutable reference)
 
-    println!("{}", wifi_name_2);  
+    println!("{}", wifi_name_2); //compiler dropes the referance  
     println!("{}", wifi_name_1);  
     // Both lines compiles & print expected value
 }
@@ -211,3 +217,174 @@ layout: two-cols
 ---
 
 # Variables: How to modify
+
+::right::
+
+```rust
+
+fn main() {
+    let mut wifi_name_1 = String::from("RoEduNet");    
+    //mutable so it can be modified.
+    let wifi_name_2 = &mut wifi_name_1; // Mut borrow  
+
+    wifi_name_2.push_str("_5G");  
+
+    println!("{}", wifi_name_2);  
+    println!("{}", wifi_name_1);  
+    //! NOTE: works with newer compiler versions 
+    //(with non-lexical lifetimes (NLL) feature) 
+
+}
+
+//EX2
+fn main() {
+    let mut wifi_name_1 = String::from("RoEduNet");  
+    let wifi_name_2 = &mut wifi_name_1 ;  
+
+    wifi_name_2.push_str("_5G");  
+
+    println!("{}", wifi_name_2);  
+    println!("{}", wifi_name_1);  
+    wifi_name_2.push_str("_high_speed");  
+    //compiler error:  cannot borrow `wifi_name_1` 
+    //as immutable because it is also borrowed as mut
+}
+
+```
+
+---
+
+# Variables: Functions
+
+
+```rust
+
+fn change_wifi_name (
+   wifi_name: &mut String, 
+   string_to_append: &str
+) {    
+    wifi_name.push_str(string_to_append);    
+}
+
+
+fn main() {
+    let mut wifi_name_1 = String::from("RoEduNet");  
+    let extra_name = "Fast_Network";
+    
+    change_wifi_name(&mut wifi_name_1, extra_name);
+
+    println!("{}", wifi_name_1);   
+}
+
+```
+
+---
+
+# Variables: Functions
+
+```rust
+
+
+fn change_wifi_name (wifi_name: &str, string_to_append: &str) -> String {
+
+    //let mut new_wifi = String::from(wifi_name);
+    //new_wifi.push_str(string_to_append)
+    //new_wifi
+    
+    let new_wifi = format!("{}{}", wifi_name, string_to_append);
+    new_wifi
+}
+
+
+fn main() {
+    let wifi_name_1 = "RoEduNet";  
+    let extra_name = "Fast_Network";
+    
+    println!("{}", change_wifi_name(wifi_name_1, extra_name));  
+    
+}
+
+```
+
+
+---
+layout: two-cols
+---
+
+# A look at the compiler
+
+```rust
+
+fn integer_division (a:isize, b: isize) -> isize {
+     a / b
+}
+
+fn main () {
+  let x = 120;
+  let y = 0;
+  
+  println! ("{}:{} = {}", 
+ x, y, integer_division (x, y));
+   
+}
+
+```
+
+
+::right::
+
+<br>
+<br>
+
+```rust
+
+...
+...
+
+bb2: {
+        _4 = Eq(copy _2, const 0_isize);
+        assert(!move _4, "attempt to divide `{}` 
+by zero", copy _1) -> 
+[success: bb3, unwind continue];
+    }
+
+    bb3: {
+        _5 = Eq(copy _2, const -1_isize);
+        _6 = Eq(copy _1, const isize::MIN);
+        _7 = BitAnd(move _5, move _6);
+        assert(!move _7, "attempt to compute `{} / {}`, 
+which would overflow", copy _1, copy _2) -> 
+[success: bb4, unwind continue];
+    }
+
+...
+...
+
+```
+
+---
+
+# A better way to do this
+
+```rust
+
+fn integer_division(a: isize, b: isize) -> Option<isize> {
+    if b == 0 {
+        None
+    } else {
+        Some(a / b)
+    }
+}
+
+fn main() {
+    let x = 120;
+    let y = 0;
+    match integer_division(x, y) {
+        Some(d) => println!("{} / {} = {}", x, y, d),
+        None => println!("division by 0"),
+    }
+    println!("{} / {} = {:?}", x, y, integer_division(x, y));
+}
+
+
+```

@@ -8,23 +8,7 @@ layout: section
 
 # Our team
 
-<div grid="~ cols-2 gap-2" m="t-2">
-
-<div>
-
-## Lectures
-- Daniel Rosner
-
-</div>
-<div>
-
-## Labs
-
-- ToDo
-- ToDo
-
-</div>
-</div>
+<img src="/img/team.png" style="width: 60%; max-width: 100%; height: auto; margin: 0 auto; display: block;">
 
 ---
 

@@ -347,3 +347,146 @@ System View Description
 	</peripherals>
 </device>
 ```
+
+---
+layout: two-cols
+---
+
+# tock-registers
+define registers format
+
+```rust {1|2,22|3-15|16-32|all}
+use tock_registers::register_bitfields;
+register_bitfields! {u32,
+    CPUID [
+        IMPLEMENTER OFFSET(24) NUMBITS(8) [],
+        VARIANT OFFSET(20) NUMBITS(4) [],
+        ARCHITECTURE OFFSET(16) NUMBITS(4) [
+            ARM_V6_M = 0xc,
+            ARM_V8_M = 0xa
+        ],
+        PARTNO OFFSET(4) NUMBITS(12) [
+            CORTEX_M0P = 0xc60,
+            CORTEX_M33 = 0xd21
+        ],
+        REVISION OFFSET(0) NUMBITS(2) []
+    ],
+    AIRCR [
+        VECTKEY OFFSET(16) NUMBITS(8) [KEY = 0x05fa],
+        ENDIANESS OFFSET(15) NUMBITS(1) [],
+        SYSRESETREQ OFFSET(2) NUMBITS(1) [],
+        VECTCLRACTIVE OFFSET(1) NUMBITS(1) []
+    ]
+}
+```
+
+::right::
+
+<v-switch>
+
+<template #0>
+
+![CPUID Register](./cpuid_register.png)
+![AIRCR Register 1](./aircr_register_1.png)
+![AIRCR Register 2](./aircr_register_2.png)
+
+</template>
+
+<template #-1>
+
+## AIRCR Register
+![AIRCR Register 1](./aircr_register_1.png)
+![AIRCR Register 2](./aircr_register_2.png)
+
+</template>
+
+<template #-2>
+
+## CPUID Register
+![CPUID Register](./cpuid_register.png)
+
+</template>
+
+</v-switch>
+
+---
+layout: two-cols
+---
+
+# tock-registers
+define a structure for the peripheral
+
+```rust {1|4,17|4,5,16,17|2,8,9|2,12,13|all}{lines:false}
+use tock_registers::register_structs;
+use tock_registers::registers::{ReadOnly, ReadWrite};
+
+register_structs! {
+Scr {
+	// we registers up to 0xed00
+	(0x0000 => _reserved1),
+	// we define the CPUID register
+	(0xed00 => cpuid: ReadOnly<u32, CPUID::Register>),
+	// we registers up to 0xed
+	(0xed04 => _reserved2),
+	// we define the AIRCR register
+	(0xed0c => aircr: ReadWrite<u32, AIRCR::Register>),
+	// we ignore the rest of the registers
+	(0xed10 => @END),
+}
+}
+```
+
+::right::
+
+<v-switch>
+
+<template #-1>
+
+<arrow x1="910" y1="450" x2="870" y2="450" color="#0060df" width="2" arrowSize="1" />
+
+</template>
+
+<template #-2>
+
+<arrow x1="910" y1="387" x2="790" y2="387" color="#0060df" width="2" arrowSize="1" />
+
+</template>
+
+
+</v-switch>
+
+![SysCtrl Registers](./sysctrl_registers.png)
+
+---
+layout: two-cols
+---
+# Read the CPUID
+
+```rust 
+const SCR_PERIPHERAL: *const u32 = 0xe000_0000;
+
+let scr = unsafe { &*(SCR_PERIPHERAL as *const Scr) };
+
+let variant = scr.cpuid.read(CPUID::VARIANT);
+let revision = scr.cpuid.read(CPUID::REVISION);
+let archtecture = scr.cpuid.read(CPUID::ARCHITECTURE);
+
+let part_no = scr.cpuid.read(CPUID::PARTNO);
+
+if part
+```
+
+::right::
+
+# Reset the MCU
+
+```rust
+const SCR_PERIPHERAL: *const u32 = 0xe000_0000;
+
+let scr = unsafe { &*(SCR_PERIPHERAL as *const Scr) };
+
+let variant = scr.cpuid.read(CPUID::VARIANT);
+let part_no = scr.cpuid.read(CPUID::PARTNO);
+let revision = scr.cpuid.read(CPUID::REVISION);
+let archtecture = scr.cpuid.read(CPUID::ARCHITECTURE);
+```

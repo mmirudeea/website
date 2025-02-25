@@ -20,6 +20,7 @@ test fake slides:
     paths:
       - website/static/slides/acs_cc/**/*
       - website/static/slides/fils_en/**/*
+    expire_in: 12 mins
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
@@ -35,6 +36,7 @@ test slides acs_cc:
   artifacts:
     paths:
       - website/static/slides/acs_cc/**/*
+    expire_in: 12 mins
   needs: ["test fake slides"]
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
@@ -56,6 +58,7 @@ test slides fils_en:
   artifacts:
     paths:
       - website/static/slides/fils_en/**/*
+    expire_in: 12 mins
   needs: ["test fake slides"]
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH

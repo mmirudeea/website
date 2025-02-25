@@ -8,6 +8,7 @@ info: |
   ## Introduction to microprocessors
 drawings:
   persist: false
+author: Alexandru Radovici
 defaults:
   foo: true
 transition: slide-left
@@ -19,6 +20,8 @@ themeConfig:
 download: true
 exportFilename: ma-01
 background:
+wakeLock: true
+
 ---
 
 # Introduction
@@ -47,7 +50,7 @@ src: ./team.md
 <!-- Admin -->
 
 ---
-src: ../../resources/admin/slides.md
+src: ./admin/slides.md
 ---
 
 <!-- Subjects -->
@@ -80,8 +83,14 @@ src: ../../resources/mcu/slides.md
 src: ../../resources/rp2040/slides.md
 ---
 
+<!-- RP2350 -->
+
 ---
+src: ../../resources/rp2350/slides.md
 ---
+
+---
+
 # Conclusion
 we talked about
 
@@ -89,4 +98,4 @@ we talked about
 - Microcontrollers (MCU) / Microprocessors (CPU)
 - Microcontroller architectures
 - ARM Cortex-M
-- RP2040
+- RP2040 and RP2350

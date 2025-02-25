@@ -24,21 +24,21 @@ the MCU
 
 | | |
 |-|-|
-| Vendor | Raspberry PI |
-| Variant | ARM Cortex-M33 (/ Hazard3 RISC-V) |
-| ISA | ARMv8-M (Thumb-2) |
+| Vendor | Raspberry Pi |
+| Variant | ARM Cortex-M33 / Hazard3 RISC-V |
+| ISA | ARMv8-M / rv32iamc |
 | Cores | 2 |
 | Word | 32 bit |
 | Frequency | up to 150 MHz |
 | RAM | 520 KB |
-| Storage | N/A (external only) |
+| Storage | RP2350 - 0 MB, RP2354 - 2MB |
 
 ::right::
 
 # Boards
 that use RP2350
 
-### Raspberry Pi Pico (W)
+### Raspberry Pi Pico 2 (W)
 
 <br> 
 <br> 

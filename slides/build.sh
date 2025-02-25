@@ -12,7 +12,7 @@ function build {
     if [ -z "$FAKE_SLIDES" ];
     then
         echo "Building slides $slides"
-        ln -s ../assets/global-bottom.vue "lectures/$series/$slides/global-bottom.vue"
+        ln -s ../../assets/global-bottom.vue "lectures/$series/$slides/global-bottom.vue"
         npm run build -- "lectures/$series/$slides/slides.md" --base /slides/$series/$slides --out "../../../$SLIDES_OUTPUT_FOLDER/$series/$slides"
         fail=$?
         rm "lectures/$series/$slides/global-bottom.vue"

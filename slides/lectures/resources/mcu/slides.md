@@ -109,7 +109,7 @@ Peripheral Interface Controller / Programmable Intelligent Computer
 </div>
 
 ---
----
+
 # ARM Cortex-M
 Advanced RISC Machine
 
@@ -119,17 +119,43 @@ Advanced RISC Machine
 | | |
 |-|-|
 | Vendor | Qualcomm, NXP, Nordic Semiconductor, Broadcom, Raspberry Pi |
-| ISA | ARMv6-M (Thumb and some Thumb-2) ARMv7-M (Thumb and Thumb-2) |
+| ISA | ARMv6-M (Thumb and some Thumb-2) <br/> ARMv7-M (Thumb and Thumb-2) <br/> ARMv8-M (Thumb and Thumb-2) |
 | Word | 32 |
 | Frequency | 1 - 900 MHz |
 | Storage | up to a few MB |
-| Variants | *M0*, *M0+*, *M3*, *M4*, *M7*, *M33* |
+| Variants | *M0*, *M0+*, *M3*, *M4*, *M7*, *M23*, *M33* |
 
 </div>
 
 <img src="./arm_logo.png" class="h-20" />
 
 </div>
+
+---
+layout: two-cols
+---
+# ARM Cortex-M Instruction Set
+what the MCU can do
+
+**Fun Facts**
+
+<v-clicks>
+
+- M0/M0+ has no `div`
+- M0 - M3 have no floating point
+- M23 and M33 have security extensions
+
+</v-clicks>
+
+<style>
+.two-columns {
+    grid-template-columns: 3fr 6fr;
+}
+</style>
+
+::right::
+
+<img src="./arm_cortex_m_instruction_set.png" class="h-125" />
 
 ---
 ---

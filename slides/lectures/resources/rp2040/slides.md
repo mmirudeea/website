@@ -23,7 +23,7 @@ the MCU
 
 | | |
 |-|-|
-| Vendor | Raspberry PI |
+| Vendor | Raspberry Pi |
 | Variant | ARM Cortex-M0+ |
 | ISA | ARMv6-M (Thumb and some Thumb-2) |
 | Cores | 2 |

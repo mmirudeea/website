@@ -20,12 +20,15 @@ layout: section
 
 ## Labs
 
-- Irina Niță
-- Irina Bradu
 - Teodor Dicu
+- Alexandru Ungureanu
 - Andrei Zamfir
 - Dănuț Aldea
-- Teodora Miu
+- Ioana Culic
+- Cristiana Precup
+- Layla El-Ghoul
+- Gabriel Păvăloiu
+- Andrei Batasev
 
 </div>
 </div>

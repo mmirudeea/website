@@ -33,7 +33,7 @@ General purpose, for PC & workstations
 <img src="./pi5.jpg" class="m-5 h-50 rounded">
 ---
 ---
-# How a microprocessor (MCU) works
+# How a microprocessor works
 This is a simple processor
 
 ![Processor](./processor.svg)

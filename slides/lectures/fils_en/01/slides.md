@@ -90,6 +90,14 @@ src: ../../resources/rp2350/slides.md
 ---
 
 ---
+src: ../../resources/lab_board/slides.md
+---
+
+---
+src: ../../resources/bitwise/rust.md
+---
+
+---
 
 # Conclusion
 we talked about

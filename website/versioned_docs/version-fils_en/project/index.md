@@ -21,7 +21,7 @@ The repository contains:
     - functional diagram
 - software source code
 
-The github repository will be checked by the lab coordinator at each lab assigned to the project. Uploading code on the last day of the software milestone is not allowed.
+The progress of the project will be regulary checked by the lab coordinator by looking at the commits sent to the project's Github repository. **Uploading code on the last day of the software milestone is not allowed**.
 
 Students will have to build and showcase the hardware with the running software at PM Fair. On the day of the presentation, students will upload the source code to the hardware and the demo will be done live in front of the committee.
 

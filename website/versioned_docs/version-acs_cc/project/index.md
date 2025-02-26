@@ -4,10 +4,10 @@ sidebar_position: 1
 
 # Description
 
-The purpose of the project is to build a hardware device that runs software written in Rust.
+The goal of the project is to showcase the knowledge gained throughout the semester by creating functional hardware that runs software written in Rust.
 
 ## Deliverables
-All the deliverables will be published in a GitHub repository that each student will be assigned to.
+The deliverables will be stored in two places, the source code will be stored on Github and the project documentation will be stored on Gitlab, where there is a repository for the course site.
 
 The repository contains:
 - documentation - the reposiotry's `README.md` file
@@ -19,20 +19,22 @@ The repository contains:
     - functional diagram
 - software source code
 
-Students will have to build and showcase the hardware with the running software at PM Fair.
+The github repository will be checked by the lab coordinator at each lab assigned to the project. Uploading code on the last day of the software milestone is not allowed.
+
+Students will have to build and showcase the hardware with the running software at PM Fair. On the day of the presentation, students will upload the source code to the hardware and the demo will be done live in front of the committee.
 
 ## Hardware Rules
 
 1. Projects have to use a microcontroller (MCU) that is capable of running Rust code. Examples of MCUs are *nRF52*, *RP2040*, *ESP32* (RISC-V version). 
 2. Usage of a development board is encouraged, but not required, a custom PCB can be built. Example of development boards are:
-  - [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) (RP2040) or [Raspberry Pi Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) for WiFi
+  - [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) (RP2040) or [Raspberry Pi Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) for WiFi (The version of Pico is not important, but we encourage the use of version 2.)
   - [Adafruit Trinkey QT2040](https://www.adafruit.com/product/5056) (RP2040)
   - [Arduino Nano RP2040 Connect](https://store.arduino.cc/products/arduino-nano-rp2040-connect) (RP2040) - ⚠️ [^arduino_nano_rp2040_connect]
   - [micro:bit v2](https://microbit.org/) (nRF52833)
   - [nRF52 DK](https://www.nordicsemi.com/Products/Development-hardware/nrf52-dk) (nRF52810)
   - [STM32 NUCLEO-F401RE](https://ro.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-F401RE?qs=sGAEpiMZZMuqBwn8WqcFUv%2FX0DKhApUpi46qP7WpjrffIid8Wo1rTg%3D%3D)
   - [ESP32-C3-DevKit-RUST-1](https://www.espressif.com/en/dev-board/esp32-c3-devkit-rust-1-en) (ESP32-C3) - ⚠️ [^esp32_riscv]
-3. The hardware part may be designed either using a breadboard and jumper wires, a prototype board (solder breadboard) or a PCB.
+3. The hardware part may be designed either using a breadboard and jumper wires, a prototype board (solder breadboard) or a PCB. If you want to use prototyping boards, ask the lab coordinator if he can help you with solder them during lab hours.
 
 ## Software Rules
 It has to run software written in Rust. Students can use:
@@ -45,15 +47,18 @@ It has to run software written in Rust. Students can use:
 
 ## Project Rules
 
-1. Copying schematics or source code from the Internet is not allowed.
-2. Each project is considered individual work, students can ask the lab assistant (lab) about implementation details during the development period.
-3. Students are strongly encouraged to ask the lab assistant questions about the project.
-4. The presentation of all the milestones is mandatory.
+1. Copying schematics or source code from the Internet is not allowed. Any attempt to copy the project will be accompanied by the corresponding repercussions.
+2. The project is individual, any attempt at collaborative work will be sanctioned, students can also carry out projects that interact, but the work must be separate.
+3. Any problem or blockage you have will be discussed with the lab teacher during project work hours.
+4. Students are strongly encouraged to ask the lab assistant questions about the project.
+5. The presentation of all the milestones is mandatory.
+6. The project topic must be established in week 4 and approved by the lab coordinator by week 6. After week 6, the topic cannot be changed.
+7. The laboratory supervisor may modify the topic or propose another topic if it is not complex enough for this project.
 
 ## Requirements
-1. *Complexity:* use knowledge of at least 3 labs, **excluding** [00 - Rust](https://embedded-rust-101.wyliodrin.com/docs/lab/00), [01 - Hardware Introduction](https://embedded-rust-101.wyliodrin.com/docs/lab/01) and [02 - Setting up the Raspberry Pi Pico + GPIO](https://embedded-rust-101.wyliodrin.com/docs/lab/02)
+1. *Complexity:* The project must reflect at least 40 hours of work and contain elements learned during the year.
 2. *Documentation:* Complete documentation of the implementation for both hardware and software.
-3. *Functionality:* the hardware device has to be fully functional.
+3. *Functionality:* The hardware device has to be fully functional.
 
 ## Example Projects
 
@@ -71,11 +76,11 @@ It has to run software written in Rust. Students can use:
 
 | Part | Deadline | Points |
 |--------|--------|--------|
-| Documentation Milestone | Lab 9 | 1p |
-| Hardware Milestone | Lab 11 | 1p |
-| Software Milestone | Lab 12 | 1p |
-| PM Faire | TBD | 2p |
-| **Total** |  | **5p** |
+| Documentation Milestone | Lab 9 | 0.5p |
+| Hardware Milestone | Lab 11 | 0.5p |
+| Software Milestone | Lab 12 | 0.5p |
+| PM Faire | TBD | 1.5p |
+| **Total** |  | **3p** |
 
 ## F.A.Q
 **Q:** Can I use another programming language, not Rust?\

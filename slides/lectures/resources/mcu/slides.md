@@ -1,7 +1,7 @@
 ---
 layout: section
 ---
-# Real Word Microcontrollers
+# Real World Microcontrollers
 Intel / AVR / PIC / TriCore / ARM Cortex-M / RISC-V rv32i(a)mc
 
 ---

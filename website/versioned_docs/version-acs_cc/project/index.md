@@ -23,6 +23,30 @@ The repositories will be checked by the lab coordinator at each lab assigned to 
 
 Students will have to build and showcase the hardware with the running software at PM Fair. On the day of the presentation, students will upload the source code to the hardware and the demo will be done live in front of the committee.
 
+## How to create a page for your project?
+
+### How to setup gitlab?
+1. To begin with, you will have to get a good ssh key with the gitlab account. For this, call the following command in the windows/linux/mac console: ssh-keygen -t rsa -b 2048. Press enter until you exit the respective command prompts.
+ - If your command prompt "Overwrite (y/n)?" press 'n' and run the above command again, changing the destination of the key.
+ - If the key was generated successfully, you will have the keys generated in the location indicated by the command "Enter file in which to save the key (C:\Users\"NAME"/.ssh/id_rsa):"
+ - Read the content of the file id_rsa.pub or the name you gave to the file and transfer it to Github.
+ - Login to https://gitlab.cs.pub.ro/ and go to : https://gitlab.cs.pub.ro/-/user_settings/ssh_keys.
+ - Click on "Add new key" and insert into "Key" textbox your key from "id_rsa.pub".
+ - Be very careful about the expiration date of the ssh key, change the expiration date otherwise it is set to 30 days.
+
+2. Download Git from the official website and access it in the command line using git -v to check if it was installed correctly.
+3. Run in the command line: 'git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git'
+4. Now you have your own clone. You need to create a new branch. For this, follow the steps:
+ - Run the command: 'git fetch' followed by the 'git pull' command
+ - The branches have the following naming convention: project/[first_name]-[last_name]-[project_name]. Example: 'project/andrei-paul-zamfir-smart-weather'
+ - To create a new branch:
+    - git checkout -b branch_name
+    - git push --set-upstream origin test 
+
+5. To start creating your page for the project, go to the directory: website/versioned_docs/version-acs_cc/project/2025 and create a new directory with your tag from Gitlab. Example: andrei_paul.zamfir.
+
+6. In that directory you must create a file named index.md which will be your project page. For a better understanding of Markdown syntax look over: https://www.markdownguide.org/cheat-sheet/
+
 ## Hardware Rules
 
 1. Projects have to use a microcontroller (MCU) that is capable of running Rust code. Examples of MCUs are *nRF52*, *RP2040*, *ESP32* (RISC-V version). 
@@ -54,6 +78,7 @@ It has to run software written in Rust. Students can use:
 5. The presentation of all the milestones is mandatory.
 6. The project topic must be established in week 4 and approved by the lab coordinator by week 6. After week 6, the topic cannot be changed.
 7. The laboratory supervisor may modify the topic or propose another topic if it is not complex enough for this project.
+8. We encourage you not to use prebuild kits, you may be penalized for hardware part.
 
 ## Requirements
 1. *Complexity:* The project must reflect at least 40 hours of work and contain elements learned during the year.

@@ -7,9 +7,7 @@ sidebar_position: 1
 The goal of the project is to showcase the knowledge gained throughout the semester by creating functional hardware that runs software written in Rust.
 
 ## Deliverables
-The deliverables will be stored in two places: 
-- the project's source code will be stored on Github;
-- the project's documentation will be published on the course's website, that I stored on Gitlab.
+The deliverables will be stored in two places: the source code will be stored on Github and the project documentation will be stored on Gitlab, by creating a fork of the course site.
 
 The repository contains:
 - documentation - the reposiotry's `README.md` file
@@ -21,9 +19,33 @@ The repository contains:
     - functional diagram
 - software source code
 
-The progress of the project will be regulary checked by the lab coordinator by looking at the commits sent to the project's Github repository. **Uploading code on the last day of the software milestone is not allowed**.
+The repositories will be checked by the lab coordinator at each lab assigned to the project. Uploading code on the last day of the software milestone is not allowed.
 
 Students will have to build and showcase the hardware with the running software at PM Fair. On the day of the presentation, students will upload the source code to the hardware and the demo will be done live in front of the committee.
+
+## How to create a page for your project?
+
+### How to setup gitlab?
+1. To begin with, you will have to get a good ssh key with the gitlab account. For this, call the following command in the windows/linux/mac console: ssh-keygen -t rsa -b 2048. Press enter until you exit the respective command prompts.
+ - If your command prompt "Overwrite (y/n)?" press 'n' and run the above command again, changing the destination of the key.
+ - If the key was generated successfully, you will have the keys generated in the location indicated by the command "Enter file in which to save the key (C:\Users\"NAME"/.ssh/id_rsa):"
+ - Read the content of the file id_rsa.pub or the name you gave to the file and transfer it to Github.
+ - Login to https://gitlab.cs.pub.ro/ and go to : https://gitlab.cs.pub.ro/-/user_settings/ssh_keys.
+ - Click on "Add new key" and insert into "Key" textbox your key from "id_rsa.pub".
+ - Be very careful about the expiration date of the ssh key, change the expiration date otherwise it is set to 30 days.
+
+2. Download Git from the official website and access it in the command line using git -v to check if it was installed correctly.
+3. Run in the command line: 'git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git'
+4. Now you have your own clone. You need to create a new branch. For this, follow the steps:
+ - Run the command: 'git fetch' followed by the 'git pull' command
+ - The branches have the following naming convention: project/[first_name]-[last_name]-[project_name]. Example: 'project/andrei-paul-zamfir-smart-weather'
+ - To create a new branch:
+    - git checkout -b branch_name
+    - git push --set-upstream origin test 
+
+5. To start creating your page for the project, go to the directory: website/versioned_docs/version-fils_en/project/2025 and create a new directory with your tag from Gitlab. Example: andrei_paul.zamfir.
+
+6. In that directory you must create a file named index.md which will be your project page. For a better understanding of Markdown syntax look over: https://www.markdownguide.org/cheat-sheet/
 
 ## Hardware Rules
 
@@ -36,7 +58,7 @@ Students will have to build and showcase the hardware with the running software 
   - [nRF52 DK](https://www.nordicsemi.com/Products/Development-hardware/nrf52-dk) (nRF52810)
   - [STM32 NUCLEO-F401RE](https://ro.mouser.com/ProductDetail/STMicroelectronics/NUCLEO-F401RE?qs=sGAEpiMZZMuqBwn8WqcFUv%2FX0DKhApUpi46qP7WpjrffIid8Wo1rTg%3D%3D)
   - [ESP32-C3-DevKit-RUST-1](https://www.espressif.com/en/dev-board/esp32-c3-devkit-rust-1-en) (ESP32-C3) - ⚠️ [^esp32_riscv]
-3. The hardware part may be designed either using a breadboard and jumper wires, a prototype board (solder breadboard) or a PCB. If you want to use prototyping boards, ask the lab coordinator if he can help you with solder them during lab hours.
+3. The hardware part may be designed either using a breadboard and jumper wires, a prototype board (solder breadboard) or a PCB. If you want to use prototyping boards, ask the lab coordinator for help with soldering during lab hours.
 
 ## Software Rules
 It has to run software written in Rust. Students can use:
@@ -51,11 +73,12 @@ It has to run software written in Rust. Students can use:
 
 1. Copying schematics or source code from the Internet is not allowed. Any attempt to copy the project will be accompanied by the corresponding repercussions.
 2. The project is individual, any attempt at collaborative work will be sanctioned, students can also carry out projects that interact, but the work must be separate.
-3. Any problem or blockage you have will be discussed with the lab teacher during project work hours.
+3. Any problem or blockage you have will be discussed with the lab assistant during project work hours.
 4. Students are strongly encouraged to ask the lab assistant questions about the project.
 5. The presentation of all the milestones is mandatory.
 6. The project topic must be established in week 4 and approved by the lab coordinator by week 6. After week 6, the topic cannot be changed.
 7. The laboratory supervisor may modify the topic or propose another topic if it is not complex enough for this project.
+8. We encourage you not to use prebuild kits, you may be penalized for hardware part.
 
 ## Requirements
 1. *Complexity:* The project must reflect at least 40 hours of work and contain elements learned during the year.

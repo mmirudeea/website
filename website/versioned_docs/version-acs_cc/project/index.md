@@ -49,7 +49,7 @@ It has to run software written in Rust. Students can use:
 
 1. Copying schematics or source code from the Internet is not allowed. Any attempt to copy the project will be accompanied by the corresponding repercussions.
 2. The project is individual, any attempt at collaborative work will be sanctioned, students can also carry out projects that interact, but the work must be separate.
-3. Any problem or blockage you have will be discussed with the lab teacher during project work hours.
+3. Any problem or blockage you have will be discussed with the lab assistant during project work hours.
 4. Students are strongly encouraged to ask the lab assistant questions about the project.
 5. The presentation of all the milestones is mandatory.
 6. The project topic must be established in week 4 and approved by the lab coordinator by week 6. After week 6, the topic cannot be changed.

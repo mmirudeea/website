@@ -44,7 +44,7 @@ The **pressure and temperature** sensor detects changes in temperature and press
 
 A **DC Motor** that controls the fan
 
-![diagram](proiectma.jpg)
+![diagram](proiectma.webp)
 
 
 
@@ -102,12 +102,12 @@ In the final week, I successfully completed the software development and thoroug
 
 ### Schematics
 
-![diagram](newkicad_fan.jpg)
-![diagram](pic1.2.jpg)
-![diagram](pic2.jpg)
-![diagram](pic3.jpg)
-![diagram](pic4.jpg)
-![diagram](pic5.jpg)
+![diagram](newkicad_fan.webp)
+![diagram](pic1.2.webp)
+![diagram](pic2.webp)
+![diagram](pic3.webp)
+![diagram](pic4.webp)
+![diagram](pic5.webp)
 
 
 ### Bill of Materials

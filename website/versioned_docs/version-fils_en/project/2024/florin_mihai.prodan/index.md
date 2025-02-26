@@ -19,7 +19,7 @@ This project was inspired by my past experiences with gambling, particularly one
 
 ## Architecture 
 
-![Aviator Game Control Panel](./architecture.png)
+![Aviator Game Control Panel](./architecture.webp)
 
 * The airplane shape will be made of LEDs connected using 75HC595 Shift Registers.
 * The LCD screen will display information about game status, current money amount, etc.
@@ -35,19 +35,19 @@ Considering that I was a complete beginner when I started the project, I decided
 
 This week I didn't manage to make much noticeable progress, but at least I realized that for my project I need shift registers for LEDs because I don't have enough ports on the Raspberry Pi Pico.
 Besides that, I built a custom box for the hardware setup:
-![Custom box](./box.jpg)
+![Custom box](./box.webp)
 
 ### Week 7 - 19 May
 
 I started by researching how shift registers can be used for my project, I was helped by [this very well explained tutorial](https://peppe8o.com/how-to-use-74hc595-shift-register-with-raspberry-pi-pico-and-micropython/). Unfortunately, MicroPython was used in the tutorial, but I managed to adapt my code in Rust.
 
 I started to add the components on the breadboard, then I will also connect the LEDs in the shape of an airplane. Initially, I thought that I could connect them with mother-father wires, but after several tests from which I realized that the light intensity of the LEDs varies because of the wires, I decided that the most ideal would be to use a PCB board where I will solder the LEDs, from which the following prototype resulted:
-![Airplane LEDs](./airplane_LEDs.jpg)
+![Airplane LEDs](./airplane_LEDs.webp)
 
 ### Week 20 - 26 May
 
 This week I improved my code adding more functionalities: the money system and also some LED light show. I gave up on the PCB because I couldn't manage to solder it properly so I resumed to a easier solution: soldering the LEDs directly on my box:
-![LEDS soldering](./LEDs_soldering.jpg)
+![LEDS soldering](./LEDs_soldering.webp)
 I know it looks a bit messy, but was easier to connect the LEDs in the shape of an airplane like this rather than using a PCB (also I connected all LEDs' grounds together so that I don't have to use 24 wires for the ground).
 
 
@@ -64,7 +64,7 @@ I know it looks a bit messy, but was easier to connect the LEDs in the shape of 
 In the project, the Raspberry Pi Pico W runs the game logic, while LEDs visualize multiplier values, the LCD 1602 module displays game information, the push-button switch triggers the game, and the potentiometer adjusts the bet amount. These components are connected using a breadboard and jumper wires for prototyping and experimentation.
 
 Here is my hardware setup:
-![Hardware Setup](./hardware.jpg)
+![Hardware Setup](./hardware.webp)
 
 
 My final project is looking like this:
@@ -72,16 +72,16 @@ My final project is looking like this:
 
 | Front view | Side view |
 |------------|------------|
-| ![Front view](./front_view_final_project.jpg) | ![Side view](./side_view_final_project.jpg) |
+| ![Front view](./front_view_final_project.webp) | ![Side view](./side_view_final_project.webp) |
 
 
 #### Demo
 Please click the photo below to see the project in action:\
-[![Project video](./video_thumbnail.png)](https://youtube.com/shorts/bxZ65pR0FiY?feature=share "Project demonstration")
+[![Project video](./video_thumbnail.webp)](https://youtube.com/shorts/bxZ65pR0FiY?feature=share "Project demonstration")
 
 ### Schematics
 
-![KICad Schematics](./KicadSchematics.png)
+![KICad Schematics](./KicadSchematics.webp)
 
 In the center of the schematics there is the Raspberry Pi Pico W. In it's left side, there are 3 shift registers (74HC595) which I use for the 24 leds that will form my airplane shape. In the right side of the Pico W, there is the LCD connection (actually the PCF8574 I2C module that I use to connect the 1602LCD with my Raspberry Pi Pico W), the 2 push buttons and the potentiometer.
 

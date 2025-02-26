@@ -40,7 +40,7 @@ As it can be probably guessed from the above paragraphs, I want to combine 2 sub
 
 
 
-![architecture](architecture.png)
+![architecture](architecture.webp)
 
 
 Here is a small diagram of all the connections (I think) should be neccessary for the controller. I'll also try to describe it in words. Hopefully it will make sense.
@@ -103,14 +103,14 @@ Another compromise is the fact that, for reasons of availability, the "Trigger" 
 
 ### Schematics
 
-![hardware](hardware.png)
+![hardware](hardware.webp)
 
 
 
 
 
 
-![hardware_implementation](hardware_implementation.jpg)
+![hardware_implementation](hardware_implementation.webp)
 
 
 ### Bill of Materials

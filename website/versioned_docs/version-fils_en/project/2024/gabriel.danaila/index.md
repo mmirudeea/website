@@ -32,7 +32,7 @@ The project has the following architecture:
 
 &nbsp;
 
-![Architecture](arch_light.png#gh-light-mode-only)![Architecture](arch_dark.png#gh-dark-mode-only)
+![Architecture](arch_light.webp#gh-light-mode-only)![Architecture](arch_dark.webp#gh-dark-mode-only)
 
 ## Log
 
@@ -60,17 +60,17 @@ I am using two Pico MCUs because the code snippets and code parts that I use are
 <tr>
  <td>
   
-![HDW1](hardware_schematics/hardware1.png)
+![HDW1](hardware_schematics/hardware1.webp)
 
 </td>
 <td>
  
-![HDW2](hardware_schematics/hardware2.png)
+![HDW2](hardware_schematics/hardware2.webp)
 
 </td>
 <td>
 
-![HDW3](hardware_schematics/hardware3.png)
+![HDW3](hardware_schematics/hardware3.webp)
 
 </td>
 </tr>
@@ -79,17 +79,17 @@ I am using two Pico MCUs because the code snippets and code parts that I use are
 <tr>
  <td>
   
-![HDW4](hardware_schematics/hardware4.png)
+![HDW4](hardware_schematics/hardware4.webp)
 
 </td>
 <td>
  
-![HDW5](hardware_schematics/hardware5.png)
+![HDW5](hardware_schematics/hardware5.webp)
 
 </td>
 <td>
 
-![HDW6](hardware_schematics/hardware6.png)
+![HDW6](hardware_schematics/hardware6.webp)
 
 </td>
 </tr>
@@ -97,7 +97,7 @@ I am using two Pico MCUs because the code snippets and code parts that I use are
 
 ### Schematics
 
-![KiCad](hardware_schematics/kicad_schematic.png)
+![KiCad](hardware_schematics/kicad_schematic.webp)
 
 ### Bill of Materials
 

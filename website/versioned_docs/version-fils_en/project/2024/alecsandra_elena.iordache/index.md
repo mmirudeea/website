@@ -17,7 +17,7 @@ My project focuses on innovative humidity sensing using the Raspberry Pi Pico mi
 Think about it – every drop counts, right? By setting up this cool project, we're actually doing our part for the planet. Water scarcity is a big deal nowadays, and we're tackling it head-on by making sure we're not wasting a single drop. With my system in place, we're not just watering plants efficiently; we're also being kinder to Mother Earth. It's like showing her some love and saying, "Hey, we care about you!" Plus, when others see what we're doing, maybe they'll get inspired to jump on the eco-friendly bandwagon too. So, it's not just about plants – it's about making a difference, one humidity sensor at a time!
 
 ## Architecture 
-![A prototype of architecture](architecture.png)
+![A prototype of architecture](architecture.webp)
 a.   Raspberry Pi Pico
 b.   MG996 Servo Motor
 -	The servo motor is responsible for actuating the water release mechanism. It receives instructions from the Raspberry Pi Pico to rotate and control the flow of water from the bottle
@@ -50,7 +50,7 @@ The humidity sensor will read the percentage of the soil. If it is under 60%, th
 
 ### Schematics
 
-![Kicad Schematics](Kicad.png)
+![Kicad Schematics](Kicad.webp)
 
 Place your KiCAD schematics here.
 

@@ -19,7 +19,7 @@ We are both loving mathematics, so the idea of combining complex mathematics wit
 
 ## Architecture
 
-![Architecture diagram](Arhitecturediagram.jpg)
+![Architecture diagram](Arhitecturediagram.webp)
 
 ## Log
 
@@ -42,12 +42,12 @@ The hardware utilized includes a Raspberry Pi Pico microcontroller, a breadboard
 
 ### Gallery
 
-![Picture](0.png)
-![Picture](1.png)
+![Picture](0.webp)
+![Picture](1.webp)
 
 ### Schematic
 
-![Schematic](KiCad_Schematic.png)
+![Schematic](KiCad_Schematic.webp)
 
 ### Bill of Materials
 

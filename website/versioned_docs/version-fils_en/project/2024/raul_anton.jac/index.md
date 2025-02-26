@@ -18,7 +18,7 @@ I chose this project because I am a fan and I have a blog about Eurovision Song 
 
 ## Architecture 
 
-![Architecture photo](./schematicsforcomponents.png)
+![Architecture photo](./schematicsforcomponents.webp)
 
 
  **Raspberry Pico RP2040**
@@ -57,13 +57,13 @@ I uploaded the KiCad schematics and the photos with components connected on brea
 
 I used the Pico RP2040 W as the "brain" of the entire project, a MicroSD Card Reader for playing the songs connected through SPI. I also have a potentiometer for controlling the volume of the mp3 player, an IR receiver for the remote control (used to control the player and the LED strip). For the outputs I have an OLED Screen (0.91 inch) where I will display the song title and the artist. Also for the output i have an audio amplifier connected to a speaker.
 
-![Hardware photo](./sch1.jpg)
-![Hardware photo](./sch2.jpg)
+![Hardware photo](./sch1.webp)
+![Hardware photo](./sch2.webp)
 
 ### Schematics
 
 The KiCad Schematics with all components connected.
-![KiCad Schematics photo](./KiCad-1.png)
+![KiCad Schematics photo](./KiCad-1.webp)
 
 
 ### Bill of Materials

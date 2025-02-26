@@ -37,7 +37,7 @@ Connection overview :
     
     Acting as the central unit, the Raspberry Pico controls and coordinates all components of the safebox. This includes the LCD display, servo motor, and buzzer, which are all connected to and dependent on the Pico for operation.
 
-![Architecture photo](./Architecture.png)
+![Architecture photo](./Architecture.webp)
 
 
 ## Log
@@ -68,25 +68,25 @@ In my project, the Raspberry Pi Pico microcontroller serves as the central proce
 
 This picture shows the project from the above.
 
-![Above photo](./Above.jpeg)
+![Above photo](./Above.webp)
 
 Here I took a picture from the front for a better view.
 
-![Front photo](./Front.jpeg)
+![Front photo](./Front.webp)
 
 This is how my project less or more will look like.
 
-![Connections photo](./Connections.jpeg)
+![Connections photo](./Connections.webp)
 
 
 This is the final version of the project
 
-![Connections photo](./poza.jpg)
+![Connections photo](./poza.webp)
 
 
 ### Schematics
 
-![Kicad schematics photo](./KiCad_schematic.png)
+![Kicad schematics photo](./KiCad_schematic.webp)
 
 
 ### Bill of Materials

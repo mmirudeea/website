@@ -24,7 +24,7 @@ I think that this would be a good solution for real-life problems that I have en
 
 Main Components:
 
-![diagram](diagram.jpg)
+![diagram](diagram.webp)
 
 Raspberry Pico: Acts as the central processing unit for the Pet Feeder, controlling the sensors and motors.
 
@@ -89,17 +89,17 @@ Power Supply - 4 \* R6 1.5V battery and a voltage divider to go at 5V
 
 ### Schematics
 
-![schematics](kicad.png)
+![schematics](kicad.webp)
 
 Kicad project also atached here in the folder and in the project repo.
 
 Here are some pictures IRL:
 
-![picture1](pic1.jpg)
+![picture1](pic1.webp)
 
-![picture2](pic2.jpg)
+![picture2](pic2.webp)
 
-![picture3](pic3.jpg)
+![picture3](pic3.webp)
 
 ### Bill of Materials
 

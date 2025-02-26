@@ -17,7 +17,7 @@ I chose to work on the Tic-Tac-Toe project because it perfectly combines my love
 
 ## Architecture 
 
-![Architecture photo](./architechture.jpg)
+![Architecture photo](./architechture.webp)
 
 The diagram shows the setup of the Interactive Tic-Tac-Toe Game System, built with the Raspberry Pi Pico W. This is a list with all the components and their functionality presented in the representation:
 
@@ -71,15 +71,15 @@ Wires: Conduct electrical connections between components (Female-to-Male, Female
 Resistors: Control and limit the flow of electrical current to other components, protecting them from damage (10KΩ joystick / 220Ω LEDs).
 Micro USB Cable: Connects the Raspberry Pi Pico W to a power supply.
 
-![Schematic](hardware1.jpg)
+![Schematic](hardware1.webp)
 
-![Schematic](hardware2.jpg)
+![Schematic](hardware2.webp)
 
-![Schematic](hardware3.jpg)
+![Schematic](hardware3.webp)
 
 ### Schematics
 
-![Schematic](kicadschematic.png)
+![Schematic](kicadschematic.webp)
 
 ### Bill of Materials
 

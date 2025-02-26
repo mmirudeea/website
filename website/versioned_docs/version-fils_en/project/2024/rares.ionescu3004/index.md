@@ -18,7 +18,7 @@ My interest in cybersecurity stems from its technical complexity and the direct 
 
 ## Architecture 
 
-![architecture](architecture.png)
+![architecture](architecture.webp)
 
 ## Log
 
@@ -66,23 +66,23 @@ Buttons: For user input or interaction.
 
 Up next, here are presented some pictures of the hardware:
 Wiring for both Picos:
-![Wiring for both Picos](Photos/Both_PICOs.jpg)
+![Wiring for both Picos](Photos/Both_PICOs.webp)
 Attacker Pico:
-![Wiring for the Attacker Pico](Photos/Attack_PICO.jpg)
+![Wiring for the Attacker Pico](Photos/Attack_PICO.webp)
 Facility Pico:
-![Wiring for the Facility Pico](Photos/Facility_PICO_1.jpg)
-![Wiring for the Facility Pico](Photos/Facility_PICO_2.jpg)
+![Wiring for the Facility Pico](Photos/Facility_PICO_1.webp)
+![Wiring for the Facility Pico](Photos/Facility_PICO_2.webp)
 
 ### Schematics
 
 Here are presented the KiCAD Schematics
 
 The Attacker:
-![Attacker Pico](KiCad_Attacker_PICO.jpg)
+![Attacker Pico](KiCad_Attacker_PICO.webp)
 The Facility:
-![Facility Pico](KiCad_Facilty_PICO.jpg)
+![Facility Pico](KiCad_Facilty_PICO.webp)
 The Facility(created for a cleaner design):
-![Facility Pico clean](KiCad_Facility_PICO_Clean.jpg)
+![Facility Pico clean](KiCad_Facility_PICO_Clean.webp)
 
 ### Bill of Materials
 

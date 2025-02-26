@@ -20,7 +20,7 @@ I chose this project because it is straightforward and doesn’t require complex
 
 ## Architecture 
 
-![Architecture](Architecture.png)
+![Architecture](Architecture.webp)
 Here’s a description of the system components and their interactions:
 
 1) Hall Effect Sensor:
@@ -80,10 +80,10 @@ These components work together to create a simple yet effective door alarm syste
 
 ### Schematics
 This is the Kicad Schematic:
-![KiCad Schematics](KiCad.png)
+![KiCad Schematics](KiCad.webp)
 Here are some photos of the hardware:
-![Hardware1](hardware1.jpg)
-![Hardware2](Hardware2.jpg)
+![Hardware1](hardware1.webp)
+![Hardware2](Hardware2.webp)
 
 ### Bill of Materials
 

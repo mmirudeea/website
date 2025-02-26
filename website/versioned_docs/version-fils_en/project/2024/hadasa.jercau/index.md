@@ -49,9 +49,9 @@ By developing the PicoW Garden Monitor, the goal is to create a reliable and int
 
 
 
-![Project Diagram](Diagram.jpg)
-![Kicad Diagram](projectki.png)
-![ProjectStatus](ProjectStatus.jpeg)
+![Project Diagram](Diagram.webp)
+![Kicad Diagram](projectki.webp)
+![ProjectStatus](ProjectStatus.webp)
 ## Log
 
 <!-- write every week your progress here -->

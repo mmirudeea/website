@@ -34,7 +34,7 @@ as well as understand the conversion of digital code into analog sound.
  - how they connect with each other
  -->
 
- ![architecture](assets/Architecture.JPG)
+ ![architecture](assets/Architecture.webp)
 
 ## Log
 
@@ -50,7 +50,7 @@ In the end, I found a solution. I created a blocking::spi::SpiDevice using embas
 
 For initialization, I had to give the program ownership over a phantom CS pin—a CS pin that could not be used and would no longer need to be used in the case of microSDs.
 
-![code_1](assets/cs.JPG)
+![code_1](assets/cs.webp)
 
 I opted for a normal SD card in the end, where I could still connect the second CS pin, given that the SD card module comes with 2 rows of pins.
 
@@ -107,15 +107,15 @@ The amplifier is connected to the opposite port of the stereo potentiometer, and
 
 Full breadboard prototype:
 
-![hardware_on_breadboard](assets/hardware_1.jpeg)
+![hardware_on_breadboard](assets/hardware_1.webp)
 
 Laser processing:
 
-![hardware_on_breadboard](assets/hardware_2.jpeg)
+![hardware_on_breadboard](assets/hardware_2.webp)
 
 Analog signal processing:
 
-![hardware_on_breadboard](assets/hardware_3.jpeg)
+![hardware_on_breadboard](assets/hardware_3.webp)
 
 
 
@@ -125,7 +125,7 @@ Some of the parts were either created by me as they did not have a publicly avai
 
 In this case I couldn't find the Laser Receiver Symbol, the SD card reader module, the LM386 module and the audio jack module with the portable speaker. 
 
-![schematics](assets/KiCad.JPG)
+![schematics](assets/KiCad.webp)
 
 
 ### Bill of Materials

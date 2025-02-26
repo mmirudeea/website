@@ -24,7 +24,7 @@ The main parts of this robot are:
 - the power supply (batteries)
 - the raspberry pi pico
 - the chassis with the 4 wheels and dc motors
-  ![architecture](./architecture.png)
+  ![architecture](./architecture.webp)
 
 ## Log
 
@@ -47,13 +47,13 @@ We finished the hardware and started working on the software.
 -The battery storage case for the pico (3 AA batteries)
 - 4 wheels
   
-![hardware1](./hardware1.jpg) 
-![hardware2](./hardware2.jpg) 
-![hardware3](./hardware3.jpg) 
-![hardware4](./hardware4.jpg) 
+![hardware1](./hardware1.webp) 
+![hardware2](./hardware2.webp) 
+![hardware3](./hardware3.webp) 
+![hardware4](./hardware4.webp) 
 ### Schematics
 
-![kicad](./kicad.jpg)
+![kicad](./kicad.webp)
 
 
 ### Bill of Materials

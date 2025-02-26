@@ -20,7 +20,7 @@ I have been interested in cars for as long as I can remember, so I have been thi
 
 ## Architecture 
 
-![architecture](architectureLuca.png)
+![architecture](architectureLuca.webp)
 
 ## Log
 
@@ -43,12 +43,12 @@ An ultrasonic HC-SR04 sensor will represent the base of both the parking sensor 
 
 ### Schematics
 
-![Kicad schematic](Project_kicad_final.png)
+![Kicad schematic](Project_kicad_final.webp)
 
 ### Photos
 
-![Pic1](pic2.jpg)
-![Pic2](pic4.jpg)
+![Pic1](pic2.webp)
+![Pic2](pic4.webp)
 
 ### Bill of Materials
 

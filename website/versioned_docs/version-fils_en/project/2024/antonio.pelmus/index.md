@@ -21,7 +21,7 @@ That's when I remembered one of my favourite games from my childhood, chicken in
 
 ## Architecture 
 
-![architecture](architecture.png)
+![architecture](architecture.webp)
 
 ## Log
 
@@ -39,11 +39,11 @@ Connected all of the hardware components.
 
 We will use a Joystick for movement and push buttons for game settings (reset,options etc).The game will be displayed on a OLED Display
 Here are images of the hardware :
-![image1](hw1.png)
-![image2](hw2.png)
+![image1](hw1.webp)
+![image2](hw2.webp)
 ### Schematics
 
-![kicad](kicad.png)
+![kicad](kicad.webp)
 
 ### Bill of Materials
 

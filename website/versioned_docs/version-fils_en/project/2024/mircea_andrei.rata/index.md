@@ -30,7 +30,7 @@ The motivation behind this project stems from a desire to enhance home and prope
 
 ## Architecture 
 
-![System Diagram](arhitecture1.png)
+![System Diagram](arhitecture1.webp)
 
 ## Log
 
@@ -123,7 +123,7 @@ The hardware includes a Raspberry Pi Pico W for control, a PIR sensor for motion
 </pre>
 
 
-![kicadschematic](kicad1.png)
+![kicadschematic](kicad1.webp)
 
 # Here are also a few pictures of the actual project :
 
@@ -131,12 +131,12 @@ The hardware includes a Raspberry Pi Pico W for control, a PIR sensor for motion
 <tr>
 <td>
 
-![Hardware1](top.jpeg)
+![Hardware1](top.webp)
 
 </td>
 <td>
 
-![Hardware2](side1.jpeg)
+![Hardware2](side1.webp)
 
 </td>
 </tr>
@@ -144,13 +144,13 @@ The hardware includes a Raspberry Pi Pico W for control, a PIR sensor for motion
 <tr> 
 <td>
 
-![Hardware3](side2.jpeg) 
+![Hardware3](side2.webp) 
 
 </td>
 
 <td>
 
-![Hardware4](front.jpeg)
+![Hardware4](front.webp)
 
 </td>
 </tr>
@@ -163,12 +163,12 @@ The hardware includes a Raspberry Pi Pico W for control, a PIR sensor for motion
 <tr>
 <td>
 
-![Design](Finalinside.jpeg)
+![Design](Finalinside.webp)
 
 </td>
 <td>
 
-![Design2](Finalinside2.jpeg)
+![Design2](Finalinside2.webp)
 
 </td>
 </tr>
@@ -176,12 +176,12 @@ The hardware includes a Raspberry Pi Pico W for control, a PIR sensor for motion
 
 <td>
 
-![Design3](FinalTop.jpeg)
+![Design3](FinalTop.webp)
 
 </td>
 <td>
 
-![Design4](FinalTop2.jpeg)
+![Design4](FinalTop2.webp)
 
 </td>
 </tr>
@@ -205,7 +205,7 @@ The format is
 | [Lcd](http://wiki.sunfounder.cc/index.php?title=LCD1602_Module) | Display | [15 RON](https://ardushop.ro/ro/electronica/36-lcd-1602.html?search_query=lcd+i2c&results=147) |
 | [I2c module](https://wiki.eprolabs.com/index.php?title=I2C_LCD_Adapter_Module) | DIsplay module | [6 RON](https://cleste.ro/modul-serial-i2c-iic-pentru-lcd.html?gad_source=1&gclid=Cj0KCQjwltKxBhDMARIsAG8KnqU7LK61NSB7DHVkKL_SpEnCMU25b99QS0knvlcc8odSx-R28GBbz90aAonSEALw_wcB) |
 | [Led](https://en.m.wikipedia.org/wiki/File:LED,_5mm,_green_%28en%29.svg) | Visual alert | [0.45 RON](https://ardushop.ro/ro/electronica/299-led-5mm.html?search_query=led&results=242) |
-| [Buzzer](https://wiki.zb45.nl/index.php?title=File:Buzzer.jpg) | Sound | [4 RON](https://ardushop.ro/ro/electronica/194-buzzer.html?search_query=buzzer&results=16) |
+| [Buzzer](https://wiki.zb45.nl/index.php?title=File:Buzzer.webp) | Sound | [4 RON](https://ardushop.ro/ro/electronica/194-buzzer.html?search_query=buzzer&results=16) |
 | [PIR](http://wiki.sunfounder.cc/index.php?title=HC-SR501_Human_Body_Pyroelectricity_Infrared_Sensor_Module) | Sensor | [9 RON](https://ardushop.ro/ro/electronica/45-modul-pir-senzor-de-prezenta-miscare.html?search_query=PIR&results=54) |
 | [Keypad](https://www.tinytronics.nl/en/switches/manual-switches/keypads/keypad-1x4-matrix) | User input| [4 RON](https://ardushop.ro/ro/home/1003-tastatura-cu-4-intrari.html?search_query=TASTATURA&results=29)|
  

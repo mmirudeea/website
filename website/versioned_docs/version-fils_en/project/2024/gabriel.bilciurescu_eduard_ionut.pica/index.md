@@ -35,7 +35,7 @@ To operate a 12V cooling fan, a voltage amplifier is employed to boost the outpu
 
 The circuit features an on/off button that allows users to power the system up or down, and an LED indicator that signals whether the cooling system is currently active or inactive.
 
- ![architecture](./arhitecture.png)
+ ![architecture](./arhitecture.webp)
 
 ## Log
 
@@ -60,20 +60,20 @@ TP4056 - is a module we use for charging the battery
 
 
 This is the final product simulation made in Fusion:
-![3D_simulation](./3D_simulation.jpg)
+![3D_simulation](./3D_simulation.webp)
 
 This is the current internal circuit of the project( not mounted with the frame and coolers for easy code debuging)
-![circuit_1](./hardware_internal_circuit1.jpeg)
-![circuit_2](./hardware_internal_circuit2.jpeg)
+![circuit_1](./hardware_internal_circuit1.webp)
+![circuit_2](./hardware_internal_circuit2.webp)
 
  This is the 3D printed frame with mounted fans :
-![3D_CAD](./3D_cad.jpeg)
+![3D_CAD](./3D_cad.webp)
 
 
 ### Schematics
 
- ![KiCAD_schematic](./hardware_schematic1.jpeg)
-  ![KiCAD_schematic](./hardware_schematic2.png)
+ ![KiCAD_schematic](./hardware_schematic1.webp)
+  ![KiCAD_schematic](./hardware_schematic2.webp)
 
 
 
@@ -130,5 +130,5 @@ The format is
 6. [TP4056 Charging Module](https://www.youtube.com/watch?v=jE0O8PP-wsw)
 ...
 ## Final Project 
-![GUI_interface](./interface.jpeg)
-![hardware_final](./final_hardware.jpeg)
+![GUI_interface](./interface.webp)
+![hardware_final](./final_hardware.webp)

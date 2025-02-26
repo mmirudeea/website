@@ -17,7 +17,7 @@ My main motivation was my passion for Formula 1 and cars, which led me to create
 
 ## Architecture 
 
-![visual representation](architecture.png)
+![visual representation](architecture.webp)
 
 The project architecture consists of a Raspberry Pi board, a motor driver (L298N), four DC motors, a chassis, and a line-following sensor array.
 
@@ -40,8 +40,8 @@ During this week, I built a general idea of how I wanted the project to look lik
 ### Week 7 - 19 May
 After several issues regarding the soldering of the wires to the DC motors, I continued to assemble the chassis and to connect the DC motors to the L298N Motor Driver, the IR sensors to the Pico, the motor driver to the Pico, and, finally, I added the power supply to the Motor Driver and the board.
 Below are some pictures taken at the beginning of the process:
-![](process1.png)
-![](process.png)
+![](process1.webp)
+![](process.webp)
 
 ### Week 20 - 26 May
 I finished the final hardware adjustments, then worked on the line follower's code and started debugging the cargo.
@@ -59,7 +59,7 @@ The chassis provides the structural framework for the line following car, housin
 
 ### Schematics
 
-![KICad Schematics](./schematic.jpg)
+![KICad Schematics](./schematic.webp)
 
 In the middle of the schematics, we have the Raspberry Pi Pico, which will be connected with the two IR Sensors, through the Gpio pins 2 and 3. On the left side, we have the 4 DC motors: the upper motors represent the motors from the left side of the chassis, while the ones below represent the right side. They are connected to the Motor Driver, and then to the Raspberry Pi Pico, through the Gpio Pins 10,11,12 and 13, while the enable pins of the driver are connected to the Gpio Pins 6 and 7 of the board. 
 

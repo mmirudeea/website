@@ -18,7 +18,7 @@ As someone who has always been captivated by music, art, the creation and work b
 
 ## Architecture 
 
-![Architechture Diagram](arhitecture_schematic.jpg)
+![Architechture Diagram](arhitecture_schematic.webp)
 
 Each shift register handles 8 LEDs, and with four shift registers connected in a cascade configuration, a total of 32 LEDs are managed. The shared clock signal ensures that data bits move from one to the next, creating specific light patterns. The LCD display, controlled via the SPI protocol, provides a platform for showing complementary visuals or information. The SPI connection involves CD_CS, LCD_DC, LCD_SCLK, and LCD_MOSI on the Raspberry Pi Pico, which acts as the central controller.
 
@@ -47,14 +47,14 @@ I started the software and finished it, while also doing final improvements to m
 
 ### Schematics
 
-![KiCad Schematics](kicad.jpg)
-![Circuit picture 1](circuit.jpg)
-![Circuit picture 2](circuit1.jpg)
-![Circuit picture 3](circuit2.jpg)
+![KiCad Schematics](kicad.webp)
+![Circuit picture 1](circuit.webp)
+![Circuit picture 2](circuit1.webp)
+![Circuit picture 3](circuit2.webp)
 
 
 ### Final Look
-![Final look](scena_final.jpg)
+![Final look](scena_final.webp)
 
 
 ### Bill of Materials

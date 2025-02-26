@@ -20,7 +20,7 @@ This project aims to show how a home appliance can be remotely operated using th
 
 ## Architecture 
 
-![architecture](schematic_project.png)
+![architecture](schematic_project.webp)
 
 
 ## Log
@@ -46,7 +46,7 @@ The pico gets a signal from another pico connected through wifi (Rebeca's projec
  - **28BYJ-48 stepper motor**: this motor is a unipolar stepper motor with 4 phases. It has the torque of about 0.34 kg per cm on its axis. This is enough to raise a lightweight model blind. 
 
 I will use this table for the clockwise direction to create a matrix where high is 1 and low is 0: 
-![motor_rotation](motor_rotation.jpg)
+![motor_rotation](motor_rotation.webp)
 
 For counterclockwise rotation, it is the same matrix, only reversed.
 
@@ -54,13 +54,13 @@ For counterclockwise rotation, it is the same matrix, only reversed.
 
 ### Schematics
 
-![kicad_schematic](kicad_schematic.jpg)
+![kicad_schematic](kicad_schematic.webp)
 
 ## Photos
-![picture01](project_image01.jpg)
-![picture02](picos.jpg)
-![picture03](motor.jpg)
-![picture04](whole_project.jpg)
+![picture01](project_image01.webp)
+![picture02](picos.webp)
+![picture03](motor.webp)
+![picture04](whole_project.webp)
 
 ### Bill of Materials
 

@@ -27,7 +27,7 @@ The motivation behind the SmartBot Navigator is to advance the capability of aut
 
 ## Architecture 
 
-![Architecture photo](./architecture.png)
+![Architecture photo](./architecture.webp)
 
 1. **SmartBot Navigator Unit:**
    - The core of the system, this unit houses all operational components. It’s designed to navigate indoor spaces autonomously using various sensors and actuators.
@@ -85,19 +85,19 @@ The architecture of the SmartBot Navigator is designed to ensure robust operatio
 - **Raspberry Pi Pico:** It serves as the robot's microcontroller, analyzing all sensory input, managing motor operations, and handling communications. It activates the software that analyzes ultrasonic data to find openings and obstacles and then controls the motor controllers and servo to steer the robot in the appropriate direction.
 
 Here are some photos of the SmartBot Navigator
-![photo1](./1.jpeg)
+![photo1](./1.webp)
 
-![photo2](./2.jpeg)
+![photo2](./2.webp)
 
-![photo3](./3.jpeg)
+![photo3](./3.webp)
 
-![photo4](./4.jpeg)
+![photo4](./4.webp)
 
-![photo7](./7.jpeg)
+![photo7](./7.webp)
 
 ### Schematics
 
-![Kicad schematics](./SmartBot-Navigator_schematics.jpeg)
+![Kicad schematics](./SmartBot-Navigator_schematics.webp)
 
 
 ### Bill of Materials

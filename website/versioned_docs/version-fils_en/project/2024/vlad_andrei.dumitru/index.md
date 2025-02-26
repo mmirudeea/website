@@ -20,7 +20,7 @@ The motivation behind this project is to blend the excitement and allure of casi
 ## Architecture 
 
 In it's final stage, my project will look more or less like the following diagram:
-![Roulette Mini Game Schematic](./Schematic.png)
+![Roulette Mini Game Schematic](./Schematic.webp)
 
 * The round roulette shape will be made of LEDs of the indicated colors.
 * The central LCD screen will display information about game status.
@@ -36,8 +36,8 @@ Worked mostly on hardware components and connections, testing the best way of co
 Managed to fully integrate the spinning roulette with the LEDs, and also managed to make the LEDs stop on a random number. I also completed the LCD display software and hardware, which will display the current odds and game information. Moreover, the push-button switch was integrated to trigger the game, and the potentiometer was connected to select the desired number. The buzzer was also added to emit a sound when the LEDs are spinning.
 ### Week 20 - 26 May
 On this week, I spent most of the time focusing on hardware, as my software and logic were already done. The only software addon was that I implemented a system of betting. I built a box for the project and gave everything I had to make it look okay. I finished the project on the 26th. Here are some pictures of the final project:
-![Final1](./Final1.jpeg)
-![Final2](./Final2.jpeg)
+![Final1](./Final1.webp)
+![Final2](./Final2.webp)
 
 
 
@@ -58,16 +58,16 @@ On this week, I spent most of the time focusing on hardware, as my software and 
 In the project, the Raspberry Pi Pico W runs the game logic, while LEDs visualize the spinning motion of the roulette values, the LCD 1602 module displays game information, the push-button switch triggers the game, and 1 potentiometer selects the winning color, anothr the value of your desired bet. These components are connected using a breadboard and jumper wires for prototyping and experimentation.
 
 Here are some pictures of the current state of the project`s hardware:
-![Hardware1](./Hard1.jpg)
-![Hardware2](./Hard2.jpg)
-![Hardware3](./Hard3.jpg)
-![Hardware4](./Hard4.jpg)
-![Hardware5](./Hard5.jpg)
+![Hardware1](./Hard1.webp)
+![Hardware2](./Hard2.webp)
+![Hardware3](./Hard3.webp)
+![Hardware4](./Hard4.webp)
+![Hardware5](./Hard5.webp)
 
 
 ### Schematics
 
-![KiCad Schematic](./KiCadRoulette.png)
+![KiCad Schematic](./KiCadRoulette.webp)
 
 ### Bill of Materials
 

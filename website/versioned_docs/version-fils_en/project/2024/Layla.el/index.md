@@ -15,8 +15,8 @@ These days, cars have become a necessity rather than a luxury. People rely on th
 I picked this project because it addresses this concern. My project focuses on making parking lots safer, ensuring a better parking experience for everyone.
 
 ## Architecture 
-![A prototype of architecture](Architecture.png)
-![Architecture Scheme](Architecture2.png)
+![A prototype of architecture](Architecture.webp)
+![Architecture Scheme](Architecture2.webp)
 
 This project utilizes a Raspberry Pi Pico W to create a smart parking system, housed within a cardboard box. The system features two floors, with various sensors and components managing the parking spaces.
 
@@ -98,18 +98,18 @@ I've completed the decoration of the cardboard. With  guidance from our laborato
 -*Orange led*: used to indicate the presence of authorised car
 
 This is what the wiring looks like:
-![This is what the wiring looks like](Initial_hardware.jpg)
+![This is what the wiring looks like](Initial_hardware.webp)
 
 This picture shows what the wires look like inside the cardboard behind the "wall" i will be adding:
-![This picture shows what the wires look like inside the cardboard behind the "wall" i will be adding](Hardware_inprogress.jpg)
+![This picture shows what the wires look like inside the cardboard behind the "wall" i will be adding](Hardware_inprogress.webp)
 
 This is the final product as of yet:
-![This is the final product as of yet](Hardware_product.jpg)
+![This is the final product as of yet](Hardware_product.webp)
 
 
 
 ### Schematics
-![Kicad schematic ](Kicad_schematic.png)
+![Kicad schematic ](Kicad_schematic.webp)
 This is the kicad schematic.
 
 ### Bill of Materials

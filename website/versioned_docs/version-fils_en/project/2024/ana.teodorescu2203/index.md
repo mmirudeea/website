@@ -24,7 +24,7 @@ I chose this project because since I was little I was very passionate by the con
 
 ## Architecture 
 
-![diagram](diagram.jpg)
+![diagram](diagram.webp)
 
 The main components are:
 
@@ -78,20 +78,20 @@ Battery Holder 3 x R6 for power supply
 
 Plastic gears (different diameters) for rotational movement
 
-![macara](macara.jpg)
-![hardware1](hardware1.jpg)
-![hardware2](hardware2.jpg)
-![hardware3](hardware3.jpg)
-![breadboard](breadboard.jpg)
+![macara](macara.webp)
+![hardware1](hardware1.webp)
+![hardware2](hardware2.webp)
+![hardware3](hardware3.webp)
+![breadboard](breadboard.webp)
 
 The final look of the Tower Crane, presented at the PM Fair:
 
-![macara_final](macara_final.jpg)
+![macara_final](macara_final.webp)
 
 
 ### Schematics
 
-![kicad](kicad.jpg)
+![kicad](kicad.webp)
 
 ### Bill of Materials
 

@@ -16,7 +16,7 @@ The Smart Pet Door project is designed to provide pets with the freedom to enter
 This project idea actually came from my mom. Our family cat, admittedly not the sharpest tool in the shed, has struggled with using traditional pet houses. Every time we tried giving him one, other neighborhood cats would take it over. They’d get inside, eat his food, and leave him outside, especially when it rained and we weren't home to let him in. To help him have a place of his own, my mom thought a smart pet door would be really useful. This system uses a beacon-based entry mechanism that ensures only our cat can enter, preventing other animals from accessing his shelter and food. This door not only promises to give our beloved but intellectually challenged cat the comfort and security he deserves but also offers peace of mind, knowing he has access to his own space, regardless of whether we are home to assist him.
 
 ## Architecture 
-![Architecture](Architecture.jpg)
+![Architecture](Architecture.webp)
  
 The system consists of the following main components:
 - **Infrared Sensor**: Detects movement near the door.
@@ -49,16 +49,16 @@ In this week we succeeded to make the code work in Embassy with all the needed f
 ## Hardware
 
 The circuitry:
-![Circuitry](circuitry.png)
+![Circuitry](circuitry.webp)
 
 When an authorized pet (carying the BLE beacon) is at the door (the servomotor moves to horizontal position to allow access):
-![Access Permitted](access_permitted.png)
+![Access Permitted](access_permitted.webp)
 
 When an unauthorized pet is trying to enter (the servomotor remains vertical, stopping the flap door from being pushed):
-![Access Denied](access_denied.png)
+![Access Denied](access_denied.webp)
 
 Final look from the PM Faire stand:
-![Final Product](final_product.jpg)
+![Final Product](final_product.webp)
 
 
 - **Raspberry Pi Pico W**: The microcontroller, coordinating all device interactions.
@@ -75,7 +75,7 @@ Final look from the PM Faire stand:
 
 ### Schematics
 This is the KiCad schematic:
-![Schematic](kicad_schematic.png)
+![Schematic](kicad_schematic.webp)
 
 
 ### Bill of Materials

@@ -18,7 +18,7 @@ I have an Xbox One X console with two controllers. A friend of mine borrowed one
 
 ## Architecture 
 
-![architecture](Architecture.png)
+![architecture](Architecture.webp)
 
 ## Log
 
@@ -37,7 +37,7 @@ This controller uses a Raspberry Pi Pico, 16 buttons and two thumbsticks.
 
 ### Schematics
 
-![schematic](Kicad.png)
+![schematic](Kicad.webp)
 
 ### Bill of Materials
 

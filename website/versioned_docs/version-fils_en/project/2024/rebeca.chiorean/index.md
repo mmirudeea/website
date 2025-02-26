@@ -34,7 +34,7 @@ This project aims to help people with disabilities gain some of their autonomy b
 
 ## Architecture 
 
-![architecture](architecture_ChioreanRebeca_LitaNaomi.png)
+![architecture](architecture_ChioreanRebeca_LitaNaomi.webp)
 
 ## Log
 
@@ -74,16 +74,16 @@ The information is then sent through WiFi connection to a second PicoW (Naomi's 
 
 ### Pictures of hardware
 This shows the finished hardware as presented at PM Fair. The display shows an "Welcome" message when it starts up and finishes connecting to WiFi. It also displays messages such as "Rolling Up" and "Rolled Up!" and the pair of "Rolling Down" and "Rolled Down!".<br />  
-![PicoWand hardware picture](pico_wand.jpg)
+![PicoWand hardware picture](pico_wand.webp)
 <br />
 The following image shows the 3D printed model that we used.
 <br />
 
-![3D printed design](3D_printed_model.jpg)
+![3D printed design](3D_printed_model.webp)
 <br />
 This is the final product presented at PM Fair.
 <br />
-![Full project](full_project.jpg)
+![Full project](full_project.webp)
 
 
 ### Bill of Materials

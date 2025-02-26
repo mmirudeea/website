@@ -21,7 +21,7 @@ I picked this project simply because I love cars. They're exciting and fun, and 
 
 ## Architecture 
 
-![Architecture](Architecture.jpg)
+![Architecture](Architecture.webp)
 
 This project diagram illustrates the connectivity of the system utilizing a Raspberry Pi Pico W as the main controller. The Raspberry Pi Pico W is connected to various components including two LEDs which act as headlights, a buzzer acting as a horn, an ultrasonic sensor, and four DC motors with wheels through an L298N motor driver module. 
 
@@ -57,18 +57,18 @@ In the final week of my electronic car project, I coded the car's functions. Rus
 
 Here are some pictures of the project car:
 
-![1](photos/1.jpg)
+![1](photos/1.webp)
 
-![2](photos/2.jpg)
+![2](photos/2.webp)
 
-![3](photos/3.jpg)
+![3](photos/3.webp)
 
-![4](photos/4.jpg)
+![4](photos/4.webp)
 
 ### Schematics
 
 Here is presented the KiCad schematic:
-![KiCad](KiCad.JPG)
+![KiCad](KiCad.webp)
 
 
 ### Bill of Materials

@@ -41,7 +41,7 @@ The project has the following architecture:
  - __MicroSD Card:__ Used for data logging and storage, the MicroSD card records system events, sensor reading and alarm triggers
 
 
-![Block Diagram](block_diagram.png)
+![Block Diagram](block_diagram.webp)
 
 ## Log
 
@@ -72,14 +72,14 @@ To provide control, there are two push buttons: one for submitting the code ente
 
 ### Schematics
 
-![Kicad Schematic](kicad_schematic.png)
+![Kicad Schematic](kicad_schematic.webp)
 
 
 ### Hardware pictures
 
-![Hardware picture](hardware_picture1.jpg)
+![Hardware picture](hardware_picture1.webp)
 
-![Hardware picture](hardware_picture2.jpg)
+![Hardware picture](hardware_picture2.webp)
 
 ### Bill of Materials
 

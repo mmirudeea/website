@@ -22,7 +22,7 @@ And as an added bonus I'm quite passionate about video games and I spend most of
 
 ## Architecture 
 
-![architecture](architecture.png)
+![architecture](architecture.webp)
 
 ### Main Components
 
@@ -68,20 +68,20 @@ The microcontroller, depending on what is happening in game, will tell the buzze
 At the moment, this is how my project looks like right now. Keep in mind that this version is meant to be used as a testing grounds for the software program. As we approach the day of the final product, for example, the buttons and lcd display will be moved onto a smalled bredboard, to allow for an easier way of pressing them, without having to jam your fingers in between wires. Furthermore, I will design a small case for the bredboard which will resemble a game console.
 
 These are the connections of the microcontroller:
-![Micro](Microcontroller-Close.jpeg)
+![Micro](Microcontroller-Close.webp)
 
 These are the buttons, which are connected using pull-up resistors:
-![Buttons](Buttons.jpeg)
+![Buttons](Buttons.webp)
 
 This is how the lcd diplay is connected to the microcontroller:
-![LCD](Top-Down-View.jpeg)
+![LCD](Top-Down-View.webp)
 
 These are the buzzers of the project:
-![Buzzers](Buzzers.jpeg)
+![Buzzers](Buzzers.webp)
 
 ### Schematics
 
-![Kicad](Kicad_Scheme.png)
+![Kicad](Kicad_Scheme.webp)
 
 ### Bill of Materials
 

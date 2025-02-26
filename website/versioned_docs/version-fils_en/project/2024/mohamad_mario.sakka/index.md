@@ -26,7 +26,7 @@ program running on the RP Pico W will be written using the *embassy-rs* framewor
 
 * The physical UI (buttons & LCD) will be used to establish the connection, increase or decrease fan speed, power on or off the setup, with all necessary info being displayed on the LCD.
 
-![architecture](MA_project_architecture_2.png)  
+![architecture](MA_project_architecture_2.webp)  
 
 ## Log
 
@@ -66,14 +66,14 @@ I fixed a bug which did not allow the laptop and MCU to disconnect properly, now
 
 * **The KiCAD schematic:**
 
-![kicad_schematic](hardware_pics/kicad_schematic222.png)
+![kicad_schematic](hardware_pics/kicad_schematic222.webp)
 
 * **In Reality:**
-![hardware pic 1](hardware_pics/pic_1.jpg)
+![hardware pic 1](hardware_pics/pic_1.webp)
 
-![hardware pic 2](hardware_pics/pic_2.jpg)
+![hardware pic 2](hardware_pics/pic_2.webp)
 
-![hardware_pic 3](hardware_pics/pic_3.jpg)
+![hardware_pic 3](hardware_pics/pic_3.webp)
 
 ### Bill of Materials
 
@@ -90,18 +90,18 @@ The format is
 | Device | Usage | Price                                                                                                                                                                                           |
 |-|-|-|
 | [Rapspberry Pi Pico WH](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html)| The Microcontroller | [1 x 56.23 RON](https://ardushop.ro/ro/home/2819-raspberry-pi-pico-wh.html?search_query=Raspberry+Pi+Pico+WH%2C+Wireless+Headers&results=1027) |
-| [Data Micro USB Cable](https://static.optimusdigital.ro/31356-large_default/cablu-micro-usb-1-m-alb.jpg) | PC-Microcontroller Communication (Debugging or Flashing Program) | [1 x 3.48 RON](https://www.optimusdigital.ro/ro/cabluri-cabluri-usb/498-cablu-micro-usb-1-m-alb.html?search_query=0104210000002362&results=1) |
-| [Motor Driver](https://ardushop.ro/4686-thickbox_default/l298n-punte-h-dubla-dual-h-bridge-motor-dcsteppe.jpg) | Powering Cooling Fans | [1 x 11.49 RON](https://ardushop.ro/ro/electronica/84-l298n-punte-h-dubla-dual-h-bridge-motor-dcsteppe.html?search_query=XNVELI_module-L298N&results=166) |
-| [12V 80mm Cooling Fan](https://ardushop.ro/4102-thickbox_default/cooler-carcasa-80-mm.jpg) | Cooling | [2 x 10.84 RON](https://ardushop.ro/ro/home/986-cooler-carcasa-80-mm.html?search_query=ATPNWB_80mm_cooler&results=20)  |
-| [1602 LCD with I2C Adaptor](https://static.optimusdigital.ro/55018-large_default/lcd-cu-interfata-i2c-si-backlight-albastru.jpg) | Physical User Interface | [1 x 16.34 RON](https://www.optimusdigital.ro/ro/optoelectronice-lcd-uri/2894-lcd-cu-interfata-i2c-si-backlight-albastru.html?search_query=LCD&results=210)  |                                                                   
-| [6x6x6 Push Buttons](https://static.optimusdigital.ro/7679-large_default/buton-6x6x6.jpg) | Physical User Interface | [4 x 0.36 RON](https://www.optimusdigital.ro/ro/butoane-i-comutatoare/1119-buton-6x6x6.html?search_query=buton&results=222) |
-| [5mm LEDs](https://ardushop.ro/605-thickbox_default/led-5mm.jpg) | Physical User Interface | [4 x 0.45 RON](https://ardushop.ro/ro/electronica/299-led-5mm.html?search_query=GIISED_LED5_red&results=286#/10-culoare-rou) |
-| [830 Points Breadboard](https://static.optimusdigital.ro/54847-large_default/breadboard-830-points.jpg) | Connectivity | [1 x 10.14 RON](https://ardushop.ro/ro/electronica/33-breadboard-830.html?search_query=Breadboard+830+puncte+MB-102%09&results=584) |
-| [Set of Female-Male Wires](https://static.optimusdigital.ro/48492-large_default/set-fire-mama-tata-10p-30-cm.jpg) | Connectivity | [1 x 5.79 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/879-set-fire-mama-tata-10p-30-cm.html?search_query=Fire+Colorate+Mama-Tata+%2810p%2C+30+cm%29%09&results=6) |
-| [Set of Male-Male Wires](https://static.optimusdigital.ro/48477-large_default/set-fire-tata-tata-10p-10-cm.jpg) | Connectivity | [2 x 2.69 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/885-set-fire-tata-tata-10p-10-cm.html?search_query=Tata-Tata&results=722) |
-| [Set of Rigid Jumper Wires](https://static.optimusdigital.ro/55063-large_default/set-de-fire-pentru-breadboard-rigide.jpg) | Connectivity | [1 x 12.49 RON](https://www.optimusdigital.ro/ro/fire-fire-nemufate/899-set-de-fire-pentru-breadboard-rigide.html?search_query=fire+rigide&results=2) |
-| [Set of Resistors](https://ardushop.ro/7381-thickbox_default/set-rezistente-14w-600buc30-valori-10r-1m.jpg) | Current Modulation | [1 x 12.29 RON](https://ardushop.ro/ro/electronica/212-set-rezistente-14w-600buc30-valori-10r-1m.html?search_query=SET+rezistori+1%2F4W+600buc%2F30+valori+10R-1M%09&results=893) |
-| [DIY Cooling Pad Frame](hardware_pics/coolingpad.jpg) |  Frame That Holds Fans & Laptop | [50 RON] |
+| [Data Micro USB Cable](https://static.optimusdigital.ro/31356-large_default/cablu-micro-usb-1-m-alb.webp) | PC-Microcontroller Communication (Debugging or Flashing Program) | [1 x 3.48 RON](https://www.optimusdigital.ro/ro/cabluri-cabluri-usb/498-cablu-micro-usb-1-m-alb.html?search_query=0104210000002362&results=1) |
+| [Motor Driver](https://ardushop.ro/4686-thickbox_default/l298n-punte-h-dubla-dual-h-bridge-motor-dcsteppe.webp) | Powering Cooling Fans | [1 x 11.49 RON](https://ardushop.ro/ro/electronica/84-l298n-punte-h-dubla-dual-h-bridge-motor-dcsteppe.html?search_query=XNVELI_module-L298N&results=166) |
+| [12V 80mm Cooling Fan](https://ardushop.ro/4102-thickbox_default/cooler-carcasa-80-mm.webp) | Cooling | [2 x 10.84 RON](https://ardushop.ro/ro/home/986-cooler-carcasa-80-mm.html?search_query=ATPNWB_80mm_cooler&results=20)  |
+| [1602 LCD with I2C Adaptor](https://static.optimusdigital.ro/55018-large_default/lcd-cu-interfata-i2c-si-backlight-albastru.webp) | Physical User Interface | [1 x 16.34 RON](https://www.optimusdigital.ro/ro/optoelectronice-lcd-uri/2894-lcd-cu-interfata-i2c-si-backlight-albastru.html?search_query=LCD&results=210)  |                                                                   
+| [6x6x6 Push Buttons](https://static.optimusdigital.ro/7679-large_default/buton-6x6x6.webp) | Physical User Interface | [4 x 0.36 RON](https://www.optimusdigital.ro/ro/butoane-i-comutatoare/1119-buton-6x6x6.html?search_query=buton&results=222) |
+| [5mm LEDs](https://ardushop.ro/605-thickbox_default/led-5mm.webp) | Physical User Interface | [4 x 0.45 RON](https://ardushop.ro/ro/electronica/299-led-5mm.html?search_query=GIISED_LED5_red&results=286#/10-culoare-rou) |
+| [830 Points Breadboard](https://static.optimusdigital.ro/54847-large_default/breadboard-830-points.webp) | Connectivity | [1 x 10.14 RON](https://ardushop.ro/ro/electronica/33-breadboard-830.html?search_query=Breadboard+830+puncte+MB-102%09&results=584) |
+| [Set of Female-Male Wires](https://static.optimusdigital.ro/48492-large_default/set-fire-mama-tata-10p-30-cm.webp) | Connectivity | [1 x 5.79 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/879-set-fire-mama-tata-10p-30-cm.html?search_query=Fire+Colorate+Mama-Tata+%2810p%2C+30+cm%29%09&results=6) |
+| [Set of Male-Male Wires](https://static.optimusdigital.ro/48477-large_default/set-fire-tata-tata-10p-10-cm.webp) | Connectivity | [2 x 2.69 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/885-set-fire-tata-tata-10p-10-cm.html?search_query=Tata-Tata&results=722) |
+| [Set of Rigid Jumper Wires](https://static.optimusdigital.ro/55063-large_default/set-de-fire-pentru-breadboard-rigide.webp) | Connectivity | [1 x 12.49 RON](https://www.optimusdigital.ro/ro/fire-fire-nemufate/899-set-de-fire-pentru-breadboard-rigide.html?search_query=fire+rigide&results=2) |
+| [Set of Resistors](https://ardushop.ro/7381-thickbox_default/set-rezistente-14w-600buc30-valori-10r-1m.webp) | Current Modulation | [1 x 12.29 RON](https://ardushop.ro/ro/electronica/212-set-rezistente-14w-600buc30-valori-10r-1m.html?search_query=SET+rezistori+1%2F4W+600buc%2F30+valori+10R-1M%09&results=893) |
+| [DIY Cooling Pad Frame](hardware_pics/coolingpad.webp) |  Frame That Holds Fans & Laptop | [50 RON] |
 | **TOTAL** | - | [**208.55 RON**] |
 ## Software
 

@@ -27,7 +27,7 @@ On the other hand, taking into consideration the growth of concerns about the en
 
 The FloraMood Smart Pot is powered up by a battery. Then, it collects the parameters from the sensors, like humidity, temperature, and light. Based on them and on their thresholds, a specific emoji is displyed on the LCD Module, in order to transmit the state in which the plant is on that moment. The watering system is using a simple water pump with a gear, that automatically powers up when the humidity level is under the set threshold and stops after giving the plant the necessary ammount of water, and the humidity level comes back in its normal range.
 
-![Architecture photo](./Architecture.png)
+![Architecture photo](./Architecture.webp)
 
 The diagram depicts the functioning of FloraMood Smart Pot. Here is a breakdown of its components:
 
@@ -64,21 +64,21 @@ The main hardware components are the Raspberry Pi Pico and the sensors. The Rasp
 The aquarium pump is used for the watering system, together with the gear for it, in order to increase the voltage to 12V, and the batteries, to power up the system. 
 
 This is the general view of the FloraMood smart pot.
-![General photo](./Picture1.jpg)
+![General photo](./Picture1.webp)
 
 Here are the connections with the sensors and the placement inside and outside the pot.
-![Photo1 photo](./Picture2.jpg)
+![Photo1 photo](./Picture2.webp)
 
-![Photo2 photo](./Picture3.jpg)
+![Photo2 photo](./Picture3.webp)
 
-![Photo3 photo](./Picture4.jpg)
+![Photo3 photo](./Picture4.webp)
 
 
 ### Schematics
 
 This is the Kicad schematic with the connection of all components.
 
-![Kicad photo](./Kicad.png)
+![Kicad photo](./Kicad.webp)
 
 ### Bill of Materials
 

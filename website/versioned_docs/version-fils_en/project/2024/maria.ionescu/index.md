@@ -19,8 +19,8 @@ The motivation behind the Ferrari Line Follower and Obstacle Avoider Car project
 By engaging in this project, I want to explore the frontiers of autonomous robotics and contribute to the advancement of technology in meaningful and impactful ways. Also, I've always been a huge fan of cars, especially Ferraris and it's a chance to show my DIY skills and dive into the world of robotics and electronics. 
 
 ## Architecture 
-![A prototype of architecture](architecture.jpg)
-![Architecture diagram](diagram.jpeg)
+![A prototype of architecture](architecture.webp)
+![Architecture diagram](diagram.webp)
 
 The architecture should sort of look like this. I will be using a white cardbox with a black line for the path and different objects as obstacles. 
 This project is a smart car using a Raspberry Pi Pico W and various sensors and components. It has the following strucure:
@@ -48,16 +48,16 @@ I worked very hard for the software, I barely finished and build it on 25th and 
 ## Hardware
 Rapspberry Pi Pico W, Four wheels, Four TT Motors, Four AA batteries (1.5V) + mounting device, HC-SR04 ultrasonic distance sensor + mounting bracket, SG90 Servo motor, Two IR sensors FC-123, Pololu QTRX-HD-06A, Reflective IR Sensor, L298N Motor Driver, Mini Breadboard, Active Buzzer Module, Male-female, male-male, female-female wires, Switch l Insulating electrical tape, Double-sided adhesive white tape, Connectors and screws, Chassis, Pin headers.
 
-[Photo1](img1.jpeg)
-[Photo2](img2.jpeg)
-[Photo3](img3.jpeg)
-[Photo4](img4.jpeg)
-[Photo5](img5.jpeg)
+[Photo1](img1.webp)
+[Photo2](img2.webp)
+[Photo3](img3.webp)
+[Photo4](img4.webp)
+[Photo5](img5.webp)
 
 ### Schematics
 Place your KiCAD schematics here.
 
-![Schematic](Kicad.png)
+![Schematic](Kicad.webp)
 
 ### Bill of Materials
 | Device | Usage | Price |

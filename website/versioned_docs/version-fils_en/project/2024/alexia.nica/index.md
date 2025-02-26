@@ -18,7 +18,7 @@ The motivation behind this project is to create a multifunctional clock that not
 
 ## Architecture 
 
-![Architecture diagram](./architecture.png)
+![Architecture diagram](./architecture.webp)
 =======
 
 *Main Components used in the WeatherSmart Clock project:*
@@ -48,11 +48,11 @@ In my project, the Raspberry Pi Pico microcontroller serves as the central proce
 
 
 ### Schematics
-![Kicad Schematics](./schematics.png)
-![Circuit](./1.jpg)
-![Front look](./2.jpg)
-![Breadboard connections](./3.jpg)
-![Buttons connections](./4.jpg)
+![Kicad Schematics](./schematics.webp)
+![Circuit](./1.webp)
+![Front look](./2.webp)
+![Breadboard connections](./3.webp)
+![Buttons connections](./4.webp)
 
 
 ### Bill of Materials

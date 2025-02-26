@@ -22,7 +22,7 @@ I chose this project because i started to have a passion for robotics. Being a m
  - what are the main components (architecture components, not hardware components)
  - how they connect with each other -->
 
- ![Robot Architecture](./Schematics.drawio.png)
+ ![Robot Architecture](./Schematics.drawio.webp)
  
 
 ## Instructions
@@ -53,26 +53,26 @@ The "brain" of this robot will be the Raspberry Pi Pico microcontroller. The IR 
 
 These are the components that i will use:
 
-![Components](./Components.jpg)
+![Components](./Components.webp)
 
 
 Soldering:
 
-![Solder](./soldering.jpg)
+![Solder](./soldering.webp)
 
 The final product!
 
-![Robot](./robot.jpg)
+![Robot](./robot.webp)
 
 I added some stickers.
 
-![Stickers1](./robot_stickers1.jpg)
+![Stickers1](./robot_stickers1.webp)
 
-![Stickers2](./robot_stickers2.jpg)
+![Stickers2](./robot_stickers2.webp)
 
 ### Schematics
 
-![Schematic](./kicad_schematic_2.png)
+![Schematic](./kicad_schematic_2.webp)
 
 ### Bill of Materials
 

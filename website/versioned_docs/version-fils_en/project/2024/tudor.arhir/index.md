@@ -26,7 +26,7 @@ I want to put in use everything that i learned until now and to learn new things
 Add here the schematics with the architecture of your project. Make sure to include:
  - what are the main components (architecture components, not hardware components)
  - how they connect with each other
-![Block diagram](image-1.png)
+![Block diagram](image-1.webp)
 ## Log
 
 <!-- write every week your progress here -->
@@ -51,15 +51,15 @@ The idea is simple : someone who drinks alcohol(a beer for example) blows into t
 Place your KiCAD schematics here.
 
 
-![Kicad Schematic](schematic.png)
+![Kicad Schematic](schematic.webp)
 
-![Photo of the project](case.jpeg)
+![Photo of the project](case.webp)
 
-![Led's](inside.jpeg)
+![Led's](inside.webp)
 
-![MQ-3 sensor](sensor.jpeg)
+![MQ-3 sensor](sensor.webp)
 
-![alcohol detected](alc_detected.jpeg)
+![alcohol detected](alc_detected.webp)
 
 
 ### Bill of Materials

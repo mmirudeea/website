@@ -18,7 +18,7 @@ I've chosen this project mainly because I've always wanted to create a fully fun
 
 ## Architecture 
 
-![architecture](assets/hardware/Architecture.png)
+![architecture](assets/hardware/Architecture.webp)
 
 ## Log
 
@@ -50,24 +50,24 @@ I've chosen this project mainly because I've always wanted to create a fully fun
 <tr>
 <td>
   
-![opened](assets/hardware/Opened.jpg)
+![opened](assets/hardware/Opened.webp)
 
 </td>
 <td>
   
-![game](assets/hardware/Game.jpg)
+![game](assets/hardware/Game.webp)
 
 </td>
 </tr>
 <tr>
 <td>
   
-![gameover](assets/hardware/GameOver.jpg)
+![gameover](assets/hardware/GameOver.webp)
 
   </td>
 <td>
   
-![sprofile](assets/hardware/SideProfile.jpg)
+![sprofile](assets/hardware/SideProfile.webp)
 
 </td>
 </tr>

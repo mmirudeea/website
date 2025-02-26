@@ -54,17 +54,17 @@ Writing the software for the robot and testing
 
 Hardware Diagram
 
-![Diagram](./diagram.jpg)
+![Diagram](./diagram.webp)
 
 Completed Robot
 
-![Robot](./robot.jpg)
+![Robot](./robot.webp)
 
 ### Schematics
 
 KiCad Schematic
 
-![Kicad schematic](./kicad.png)
+![Kicad schematic](./kicad.webp)
 
 
 ### Bill of Materials

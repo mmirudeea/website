@@ -28,7 +28,7 @@ What pushed me to choose this project was that, while observing a similar approa
  6. __16x02 LCD__: Used to display relevant information for pre/current/post game states.
  7. __Website Interface__ : Allows the user to select the choices for the game (Insurance, Hit, Stand, Double Down, Split). Communicating with the Pico trough the sockets of the web server to send/recieve information relevant to the current round. The server will run on a local machine, no connections other than the Pico are inteded.
 
-![Archictecture Diagram](architecture.png)
+![Archictecture Diagram](architecture.webp)
 
 
 
@@ -90,62 +90,62 @@ An adaptor (RS232 -> TTL) is needed for the scanner since it uses RS232 communic
 
 Bird's Eye View
 
-![BEV Project](pics/bev.jpg)
+![BEV Project](pics/bev.webp)
 
 
 
 Scanner 
 
-![Scanner](pics/scanner.jpg)
+![Scanner](pics/scanner.webp)
 
 
 
 LCD 
 
-![LCD](pics/lcd.jpg)
+![LCD](pics/lcd.webp)
 
 
 
 Buzzer
 
-![Buzzer](pics/buzzer.jpg)
+![Buzzer](pics/buzzer.webp)
 
 
 
 Potentiometer
 
-![Potentiometer](pics/pot.jpg)
+![Potentiometer](pics/pot.webp)
 
 
 
 Push Button with physical pull-down resistor
 
-![Push Button](pics/push_pull_down.jpg)
+![Push Button](pics/push_pull_down.webp)
 
 
 
 Resistive Capacitive Filter
 
-![RC](pics/RC.jpg)
+![RC](pics/RC.webp)
 
 
 
 RGB LEDs
 
-![rgb](pics/leds.jpg)
+![rgb](pics/leds.webp)
 
 
 
 
 Pico Close-Up
 
-![Pico](pics/pico.jpg)
+![Pico](pics/pico.webp)
 
 
 
 ### Schematics
 
-![KiCAD Schematic](FINAL_KICAD.PNG)
+![KiCAD Schematic](FINAL_KICAD.webp)
 
 ### Bill of Materials
 

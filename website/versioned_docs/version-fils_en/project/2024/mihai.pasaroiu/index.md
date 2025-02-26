@@ -19,7 +19,7 @@ Building a music player with a Raspberry Pi Pico W using Rust allowed me to work
 
 ## Architecture 
 
-![Architecture Diagram](arhitecture.png)
+![Architecture Diagram](arhitecture.webp)
 
 ## Log
 
@@ -38,10 +38,10 @@ This project utilizes a Raspberry Pi Pico to facilitate digital audio playback f
 
 ### Schematics
 
-  ![kicad](kicad.png)
-  ![hardware image 1](hardware_1.jpg)
-  ![hardware image 2](hardware_2.jpg)
-  ![hardware image 3](hardware_3.jpg)
+  ![kicad](kicad.webp)
+  ![hardware image 1](hardware_1.webp)
+  ![hardware image 2](hardware_2.webp)
+  ![hardware image 3](hardware_3.webp)
 
 ### Bill of Materials
 

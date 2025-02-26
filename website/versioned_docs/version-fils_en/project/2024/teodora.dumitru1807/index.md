@@ -27,16 +27,16 @@ This is my block diagram:
 
 UPDATE:
 
-![BLOCK DIAGRAM](<BLOCK_DIAGRAM.png>)
+![BLOCK DIAGRAM](<BLOCK_DIAGRAM.webp>)
 
 I will attach here photos of my project, i intend to style it more before the final presentation.
 
-![Below](Below.jpg)
-![Above](Above_car.jpg)
-![Circ](Circ1.jpg)
-![Driver](Driver.jpg)
-![Driver](Driver1.jpg)
-![Buzzer](BUZZER.jpg)
+![Below](Below.webp)
+![Above](Above_car.webp)
+![Circ](Circ1.webp)
+![Driver](Driver.webp)
+![Driver](Driver1.webp)
+![Buzzer](BUZZER.webp)
 
 
 I am going to connect the 2 motors to the 2 big wheels.
@@ -94,9 +94,9 @@ The motors consists of many winding of copper wire inside a magnetic field. Thes
 4.L298N Motor Driver Module
 This dual bidirectional motor driver, is based on the very popular L298 Dual H-Bridge Motor Driver Integrated Circuit. The circuit will allow you to easily and independently control two motors of up to 2A each in both directions. It is ideal for robotic applications and well suited for connection to a microcontroller requiring just a couple of control lines per motor.
 
-![L298N](image-1.png)
+![L298N](image-1.webp)
 
-![L298N](image-2.png)
+![L298N](image-2.webp)
 
 There are two types of control pins found at the bottom right side of the module. One type controls the speed and the other type controls the direction of the motor.
 The speed control pins labelled ENA and ENB on the module, control the speed of the dc motor and turn it ON and OFF. If ENA is in a HIGH state, the motor is enabled and if it is in a LOW state then the motor is off.
@@ -110,22 +110,22 @@ Putting a battery charger on a robot car is essential for several reasons: Batte
 
 7.Battery
 
-![Batteries](SS-AM.png)
+![Batteries](SS-AM.webp)
 
 
 ### Schematics
 
-![Kicadscheme](Kicad-scheme.png)
-![PCB](PCB.png)
-![3D VIEW](PCB1.png)
-![3D VIEW](PCB2.png)
+![Kicadscheme](Kicad-scheme.webp)
+![PCB](PCB.webp)
+![3D VIEW](PCB1.webp)
+![3D VIEW](PCB2.webp)
 
 
 ### Block diagram
 
 UPDATE:
 
-![Block_diagram](BLOCK_DIAGRAM.png)
+![Block_diagram](BLOCK_DIAGRAM.webp)
 
 ### Bill of Materials
 

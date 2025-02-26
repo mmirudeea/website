@@ -54,13 +54,13 @@ We will use a BME280 in order to gather environmental data. The Pico will proces
  <th>Schematics</th>
 <td>
  
-![KiCad schematic](schematics/kicad.png)
+![KiCad schematic](schematics/kicad.webp)
 
 </td>
 
 <td>
  
-![Simpler KiCad schematic](schematics/simple_kicad.png)
+![Simpler KiCad schematic](schematics/simple_kicad.webp)
 
 </td>
 </tr>
@@ -69,12 +69,12 @@ We will use a BME280 in order to gather environmental data. The Pico will proces
  <th>Photos</th>
  <td>
   
-![photo1](schematics/photo1.jpg)
+![photo1](schematics/photo1.webp)
 
 </td>
 <td>
  
-![photo2](schematics/photo2.jpg)
+![photo2](schematics/photo2.webp)
 
 </td>
 </tr>
@@ -87,10 +87,10 @@ We will use a BME280 in order to gather environmental data. The Pico will proces
 |--------|--------|-------|
 | [Raspberry Pi Pico WH](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) | The microcontroller | [56 RON](https://ardushop.ro/ro/home/2819-raspberry-pi-pico-wh.html) |
 | [BME280](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/) | Temperature, pressure and humidity sensor | [74 RON](https://www.optimusdigital.ro/ro/senzori-senzori-de-presiune/5649-modul-senzor-barometric-de-presiune-bme280.html) |
-| [LED Display](https://ardushop.ro/8014-thickbox_default/modul-lcd-spi-128x160.jpg) | Display | [39 RON](https://ardushop.ro/ro/home/2818-modul-lcd-spi-128x160.html) |
-| [Breadboard](https://www.yamanelectronics.com/wp-content/uploads/2020/06/basics-of-breadboard.jpg) | The physical base of the project | [10 RON](https://www.optimusdigital.ro/ro/prototipare-breadboard-uri/8-breadboard-830-points.html) |
-| [Jumper Wires](http://www.atomsindustries.com/assets/images/items/1075/1075.jpg) | For connecting all the different components | [7 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/886-set-fire-tata-tata-40p-15-cm.html) |
-| [Push buttons](https://ardushop.ro/655-thickbox_default/buton-mic-push-button-trough-hole.jpg) | For switching info on the screen| [0.36 RON each / 1.5 RON total](https://www.optimusdigital.ro/ro/butoane-i-comutatoare/1119-buton-6x6x6.html)
+| [LED Display](https://ardushop.ro/8014-thickbox_default/modul-lcd-spi-128x160.webp) | Display | [39 RON](https://ardushop.ro/ro/home/2818-modul-lcd-spi-128x160.html) |
+| [Breadboard](https://www.yamanelectronics.com/wp-content/uploads/2020/06/basics-of-breadboard.webp) | The physical base of the project | [10 RON](https://www.optimusdigital.ro/ro/prototipare-breadboard-uri/8-breadboard-830-points.html) |
+| [Jumper Wires](http://www.atomsindustries.com/assets/images/items/1075/1075.webp) | For connecting all the different components | [7 RON](https://www.optimusdigital.ro/ro/fire-fire-mufate/886-set-fire-tata-tata-40p-15-cm.html) |
+| [Push buttons](https://ardushop.ro/655-thickbox_default/buton-mic-push-button-trough-hole.webp) | For switching info on the screen| [0.36 RON each / 1.5 RON total](https://www.optimusdigital.ro/ro/butoane-i-comutatoare/1119-buton-6x6x6.html)
  
 
 ## Software

@@ -18,7 +18,7 @@ I want to make a pulse oximeter with a Oled display. The purpose of the project 
 I choose this project because I wanted to make something what it could be usefull also later in life outside getting my grade.
 
 ## Architecture 
-![image](architecture.png)
+![image](architecture.webp)
 
 
 
@@ -44,13 +44,13 @@ The hardware part consisted of the following steps:
 4. Displayed the data received from the MAX30100 sensor on the LCD screen.
 5. Added a buzzer that emits a sound each time the pulse sensor detects a heartbeat.
 
-![project1](project1.jpg)
-![project2](project2.jpg)
-![project3](project3.jpg)
+![project1](project1.webp)
+![project2](project2.webp)
+![project3](project3.webp)
 
 ### Schematics
 
-![schematic](schematic.png)
+![schematic](schematic.webp)
 
 ### Bill of Materials
 

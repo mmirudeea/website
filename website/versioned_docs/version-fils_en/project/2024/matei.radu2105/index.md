@@ -33,7 +33,7 @@ hardware is not really my specialty, I will do my best to make the best game I c
 
 ## Architecture 
 
-![Project_architecture](./Project_architecture.png)
+![Project_architecture](./Project_architecture.webp)
 
 
 ## Log
@@ -71,15 +71,15 @@ These are used to control the snake - they are put in a N/W/S/E formation and re
 
 This is the current prototype of my project, changes are 100% going to happen - a mask is going to be put to hide the hardware and the screen + the buttons will be moved to a separate breadboard to be more easily accessed for the user:
 
-![Project_seen_from_above](./Project_up.jpg)
+![Project_seen_from_above](./Project_up.webp)
 
-![Project_seen_from_one_side](./Project_Right.jpg)
+![Project_seen_from_one_side](./Project_Right.webp)
 
-![Project_seen_from_the_other_side](./Project_Left.jpg)
+![Project_seen_from_the_other_side](./Project_Left.webp)
 
 ### Schematics
 
-![KiCad](./KiCad.png)
+![KiCad](./KiCad.webp)
 
 ### Bill of Materials
 

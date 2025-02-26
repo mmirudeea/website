@@ -20,7 +20,7 @@ The motivation behind this project stems from the need for practical solutions t
 
 ## Architecture 
 
-![architecture](architecture.png)
+![architecture](architecture.webp)
 
 In this architecture:
 
@@ -55,13 +55,13 @@ DS18B20 Temperature sensor - used to measure the ambient temperature
 
 Jumper wires - used to connect all the parts together
 
-![Hardware Photo](Hardware_1.JPG)
-![Hardware Photo](Hardware_2.JPG)
+![Hardware Photo](Hardware_1.webp)
+![Hardware Photo](Hardware_2.webp)
 
 
 ### Schematics
 
-![Hardware Schematic](KiCadSchematic.png)
+![Hardware Schematic](KiCadSchematic.webp)
 
 
 ### Bill of Materials

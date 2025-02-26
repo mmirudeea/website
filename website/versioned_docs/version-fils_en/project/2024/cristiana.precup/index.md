@@ -36,7 +36,7 @@ Servo Motor to Controller: The Servo Motor is connected to the Raspberry Pi Pico
 Feedback to Controller: Both the RGB LED and the Passive Buzzer are linked to the Pico W, which activates these elements based on the processed data to provide alerts.\
 User Interface to Controller: The push buttons are wired to GPIO pins on the Pico W, enabling direct user control and configuration changes.
 
-![Architecture photo](./Architecture.png)
+![Architecture photo](./Architecture.webp)
 
 ## Log
 
@@ -74,22 +74,22 @@ Laptop: Displays the radar data graphically.
 This is what the wiring looks like:
 | Wiring Overview | Closer look |
 |------------|------------|
-| ![Hardware 1](./Hardware1.jpg) | ![Hardware 2](./Hardware2.jpg) |
+| ![Hardware 1](./Hardware1.webp) | ![Hardware 2](./Hardware2.webp) |
 
 
 This is the prototype:
 
-![Hardware3](./Hardware3.jpg)
+![Hardware3](./Hardware3.webp)
 
 This is how final project looks:
 
 | | |
 |------------|------------|
-| ![Final project](./Final_project1.jpg) | ![Final project](./Final_project2.jpg) |
+| ![Final project](./Final_project1.webp) | ![Final project](./Final_project2.webp) |
 
 ### Schematics
 
-![KiCad Schematics](./KiCadSchematics.png)
+![KiCad Schematics](./KiCadSchematics.webp)
 
 Connected to the Rasperry Pi Pico W, there is a RGB LED connected to `GPIO 0`, `GPIO 1` and `GPIO 2`, two push buttons connected to `GPIO 3` and `GPIO 4`. The buzzer is connected to `GPIO 5`. The HC-SR04 ultrasonic sensor is connected through `I2C` to the Raspberry Pi Pico using `GPIO 18` as SDA and `GPIO 19` as SCL, and to PIN 36 (`3V3_OUT`) for the power. The Servomotor is connected to `GPIO 16` in order to be used with `PWM`, and connected to PIN 39 (`VSYS`, used to power system, can be in range 1.8V-5.5V).
 

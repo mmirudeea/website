@@ -20,7 +20,7 @@ In this day and age, it is a common commodity to have a more feature-rich light 
 
 The IntelliGlow is powered by wire and it uses a sound sensor that listens for the first clap and then waits some time to find the second clap so that it can decide if there were 1 or 2 claps. The potentiometer is an element that sets the intensity of the RGB LED.
 
-![Architecture photo](./Diagram.png)
+![Architecture photo](./Diagram.webp)
 
 For the diagram above here is a brief breakdown:
 
@@ -50,15 +50,15 @@ A potentiometer is an adjustable electronic component used for controlling elect
 ### Schematics
 
 Here is the KiCAD schematic for my project. 
-![KiCAD schematic](./Kicad_sch.png)
+![KiCAD schematic](./Kicad_sch.webp)
 
 I used a sound sensor that it was not supported by KiCAD so I made my own representation of it.
-![Sound Sensor KiCAD schematic](./Sound_sensor.png)
+![Sound Sensor KiCAD schematic](./Sound_sensor.webp)
 This is the hardware all put together.
 
-![First Hardware photo](./HW1.jpeg)
+![First Hardware photo](./HW1.webp)
 
-![Second Hardware photo](./HW2.jpeg)
+![Second Hardware photo](./HW2.webp)
 
 ### Bill of Materials
 
@@ -75,7 +75,7 @@ The format is
 | Device | Usage | Price |
 |--------|--------|-------|
 | [Rapspberry Pi Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) | The microcontroller | [35 RON](https://www.optimusdigital.ro/en/raspberry-pi-boards/12394-raspberry-pi-pico-w.html) |
-| [Breadboard](https://www.yamanelectronics.com/wp-content/uploads/2020/06/basics-of-breadboard.jpg) | The physical base of the project | [10 RON](https://www.optimusdigital.ro/ro/prototipare-breadboard-uri/8-breadboard-830-points.html) |
+| [Breadboard](https://www.yamanelectronics.com/wp-content/uploads/2020/06/basics-of-breadboard.webp) | The physical base of the project | [10 RON](https://www.optimusdigital.ro/ro/prototipare-breadboard-uri/8-breadboard-830-points.html) |
 | [RGB LED](https://components101.com/diodes/rgb-led-pinout-configuration-circuit-datasheet)| The light bulb |[1,15 Lei](https://www.emag.ro/led-rgb-ws2811-5mm-ai1387/pd/D0WH0GMBM/)|
 | [Sound Sensor](https://components101.com/modules/lm393-sound-detection-sensor-module)| Sensor | [5,67 Lei](https://www.emag.ro/modul-detectare-sunet-cu-microfon-ky-037-compatibil-arduino-ai084-s36/pd/DWY988BBM/?cmpid=93116&gad_source=4)|
 | [Potentiometer](https://components101.com/resistors/potentiometer)| Controller | [2,57 lei](https://ardushop.ro/ro/electronica/193-potentiometru-10k.html?gad_source=4)|

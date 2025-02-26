@@ -7,7 +7,9 @@ sidebar_position: 1
 The goal of the project is to showcase the knowledge gained throughout the semester by creating functional hardware that runs software written in Rust.
 
 ## Deliverables
-The deliverables will be stored in two places, the source code will be stored on Github and the project documentation will be stored on Gitlab, where there is a repository for the course site.
+The deliverables will be stored in two places: 
+- the project's source code will be stored on Github;
+- the project's documentation will be published on the course's website, that I stored on Gitlab.
 
 The repository contains:
 - documentation - the reposiotry's `README.md` file

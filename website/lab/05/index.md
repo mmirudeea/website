@@ -1,6 +1,7 @@
 ---
 description: Serial Peripheral Interface
 slug: /lab/05
+unlisted: true
 ---
 
 # 05 - Serial Peripheral Interface

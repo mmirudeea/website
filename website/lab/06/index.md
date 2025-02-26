@@ -1,6 +1,7 @@
 ---
 description: Inter-Integrated Circuit
 slug: /lab/06
+unlisted: true
 ---
 
 # 06 - Inter-Integrated Circuit

@@ -1,6 +1,7 @@
 ---
 description: Asynchronous Programming with Embassy
 slug: /lab/04
+unlisted: true
 ---
 
 # 04 - Asynchronous Development

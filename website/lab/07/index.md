@@ -1,6 +1,7 @@
 ---
 descriptions: Exceptions and Interrupts Requests Handling
 slug: /lab/07
+unlisted: true
 ---
 
 # 07 - Exceptions & Interrupts
@@ -166,7 +167,7 @@ flowchart LR
 
 The before starting the actual code written into Flash, the internal bootloader loads a secondary bootloader that
 is written in Flash (the first 256 bytes) together with the developer's app. 
-This is the bootloader section that was described in the [Lab 01](./01#bootloader).
+This is the bootloader section that was described in the [Lab 02](./02#bootloader).
 
 The IVT that the Flash application provides start after the secondary bootloader, at address 0x100.
 

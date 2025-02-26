@@ -1,6 +1,7 @@
 ---
 description: Pulse Width Modulation and Analog to Digital Converters
 slug: /lab/03
+unlisted: true
 ---
 
 # 03 - PWM & ADC

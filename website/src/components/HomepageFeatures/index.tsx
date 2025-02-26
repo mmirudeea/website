@@ -10,12 +10,12 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Raspberry Pi Pico W',
+    title: 'Raspberry Pi Pico 2W',
     Svg: require('@site/static/img/pi-pico-w.svg').default,
     description: (
       <>
-        Use the RP2040 processor, one of the most affordable and easy to use
-        MCUs, on the Raspberry Pi Pico W to design and implement hardware devices.
+        Use the RP2350 processor, one of the most affordable and easy to use
+        MCUs, on the Raspberry Pi Pico 2W to design and implement hardware devices.
       </>
     ),
   },

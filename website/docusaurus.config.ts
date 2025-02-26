@@ -41,8 +41,14 @@ const config: Config = {
           // onlyIncludeVersions: ['fils_en', 'acs_cc'],
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro/edit/main/website",
+          editUrl: ({docPath, versionDocsDirPath}):string => {
+            const PATH = "https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro/edit/main/website";
+            if (docPath.startsWith ("lab/")) {
+              return PATH+"/"+docPath;
+            } else {
+              return PATH+"/"+versionDocsDirPath+"/"+docPath;
+            }
+          },
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
           versions: {

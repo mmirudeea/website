@@ -26,13 +26,10 @@ Students will have to build and showcase the hardware with the running software 
 ## How to create a page for your project?
 
 ### How to setup gitlab?
-1. To begin with, you will have to get a good ssh key with the gitlab account. For this, call the following command in the windows/linux/mac console: ssh-keygen -t rsa -b 2048. Press enter until you exit the respective command prompts.
- - If your command prompt "Overwrite (y/n)?" press 'n' and run the above command again, changing the destination of the key.
- - If the key was generated successfully, you will have the keys generated in the location indicated by the command "Enter file in which to save the key (C:\Users\"NAME"/.ssh/id_rsa):"
- - Read the content of the file id_rsa.pub or the name you gave to the file and transfer it to Github.
- - Login to https://gitlab.cs.pub.ro/ and go to : https://gitlab.cs.pub.ro/-/user_settings/ssh_keys.
- - Click on "Add new key" and insert into "Key" textbox your key from "id_rsa.pub".
- - Be very careful about the expiration date of the ssh key, change the expiration date otherwise it is set to 30 days.
+1. Follow [this tutorial](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) to create a new SSH key pair.
+ - Login on https://gitlab.cs.pub.ro/ and go to https://gitlab.cs.pub.ro/-/user_settings/ssh_keys.
+ - Click on "Add new key" and insert the public key created earlier into the "Key" textbox.
+ - Be careful about the expiration date of the SSH key: the default value it is set to 30 days.
 
 2. Download Git from the official website and access it in the command line using `git -v` to check if it was installed correctly.
 3. Run this in the command line: `git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git`

@@ -42,7 +42,7 @@ Students will have to build and showcase the hardware with the running software 
 
 5. To start creating your page for the project, go to the `website/versioned_docs/version-acs_cc/project/2025` directory and create a new directory with your tag from Gitlab. Example: `andrei_paul.zamfir`.
 
-6. In that directory you must create a file named index.md which will be your project page. For a better understanding of Markdown syntax look over: https://www.markdownguide.org/cheat-sheet/
+6. In that directory you must create a file named `index.md` which will be your project page. For a better understanding of the Markdown syntax, chek out [markdownguide](https://www.markdownguide.org/).
 
 ## Hardware Rules
 

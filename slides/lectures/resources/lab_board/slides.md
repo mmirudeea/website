@@ -2,6 +2,7 @@
 layout: two-cols
 ---
 # Lab Board
+[Schematics and PCB](https://gitlab.cs.pub.ro/pmrust/pm-ma-pcb)
 
 <style>
 .two-columns {
@@ -22,8 +23,35 @@ layout: two-cols
 - SD Card Reader
 - USB-C connector
 - servo connectors
-- jumper wire connections
 
 ::right::
 
 <img src="./lab_board.png" class="w-120 rounded">
+
+---
+---
+# Project
+suggested hardware
+
+- the hardware should not cost more than 150 RON
+- we suggest having a Raspberry Pi Pico with a debugger debugger
+
+<div grid="~ cols-2 gap-20">
+
+<div>
+
+**Raspberry Pi Pico 2W** + **Debug Probe**
+
+<img src="./debug_probe.png" class="w-80 rounded">
+
+</div>
+
+<div>
+
+**2 x Raspberry Pi Pico 2W** + **Raspberry Pi Pico 1**
+
+<img src="./pico_debug.png" class="w-80 rounded">
+
+</div>
+
+</div>

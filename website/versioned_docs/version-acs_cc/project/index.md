@@ -34,7 +34,7 @@ Students will have to build and showcase the hardware with the running software 
  - Click on "Add new key" and insert into "Key" textbox your key from "id_rsa.pub".
  - Be very careful about the expiration date of the ssh key, change the expiration date otherwise it is set to 30 days.
 
-2. Download Git from the official website and access it in the command line using git -v to check if it was installed correctly.
+2. Download Git from the official website and access it in the command line using `git -v` to check if it was installed correctly.
 3. Run in the command line: 'git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git'
 4. Now you have your own clone. You need to create a new branch. For this, follow the steps:
  - Run the command: 'git fetch' followed by the 'git pull' command

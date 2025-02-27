@@ -89,10 +89,12 @@ It has to run software written in Rust. Students can use:
 2. *Documentation:* Complete documentation of the implementation for both hardware and software.
 3. *Functionality:* The hardware device has to be fully functional.
 
+The **IoT** stream has to use the **WiFi** capability.
+
 ## Example Projects
 
 ### Examples of projects from past years
-1. [Projects from 2024](/docs/fils_en/project/2024)
+1. [Projects from 2024](/docs/fils_en/category/projects-2024)
 1. https://ocw.cs.pub.ro/courses/pm/prj2022
 2. https://ocw.cs.pub.ro/courses/pm/prj2023
 

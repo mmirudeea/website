@@ -34,7 +34,7 @@ layout: two-cols
 suggested hardware
 
 - the hardware should not cost more than 150 RON
-- we suggest having a Raspberry Pi Pico with a debugger debugger
+- we suggest having a Raspberry Pi Pico with a debugger
 
 <div grid="~ cols-2 gap-20">
 

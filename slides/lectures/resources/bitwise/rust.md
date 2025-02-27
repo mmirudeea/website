@@ -37,7 +37,7 @@ fn set_bits(register: usize, bits: usize) -> usize {
 fn clear_bit(register: usize, bit: u8) -> usize {
     // assume register is 0b1100, bit is 2
     //   1 << 2 is 0b0100
-    //   !(1 << 3) is 0b1011
+    //   !(1 << 2) is 0b1011
     //   0b1100 & 0b1011 is 0b1000
     register & !(1 << bit)
 }

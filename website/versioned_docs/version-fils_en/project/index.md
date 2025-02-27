@@ -7,10 +7,14 @@ sidebar_position: 1
 The goal of the project is to showcase the knowledge gained throughout the semester by creating functional hardware that runs software written in Rust.
 
 ## Deliverables
-The deliverables will be stored in two places: the source code will be stored on Github and the project documentation will be stored on Gitlab, by creating a fork of the course site.
+The deliverables will be stored in two places: 
+- the *source code* will be stored on [Github](https://github.com/UPB-PMRust-Students) 
+- the project documentation will be stored on [Gitlab](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro), by creating a fork of the course's website
+
+## Source Code Repository
 
 The repository contains:
-- documentation - the reposiotry's `README.md` file
+- a brief documentation - the repository's `README.md` file
   - short description of functionality
   - requirements (hardware and software)
   - hardware design - use [KiCad EDA](https://www.kicad.org/) or a similar tool for the schematics
@@ -19,39 +23,39 @@ The repository contains:
     - functional diagram
 - software source code
 
-The repositories will be checked by the lab coordinator at each lab assigned to the project. Uploading code on the last day of the software milestone is not allowed.
+The repositories will be checked by the lab professor at during lab reserved for the project. Uploading code on the last day of the software milestone is not allowed. **The professor will check that students have **submitted regularly commits** to the repository.
 
-Students will have to build and showcase the hardware with the running software at PM Fair. On the day of the presentation, students will upload the source code to the hardware and the demo will be done live in front of the committee.
+Students will have to build and showcase the hardware with the running software at PM Fair. On the presentation day, **students will upload the source code to the hardware** and the demo will be done live in front of the committee.
 
 ## How to create a page for your project?
 
-### How to setup gitlab?
-1. To begin with, you will have to get a good ssh key with the gitlab account. For this, call the following command in the windows/linux/mac console: ssh-keygen -t rsa -b 2048. Press enter until you exit the respective command prompts.
- - If your command prompt "Overwrite (y/n)?" press 'n' and run the above command again, changing the destination of the key.
- - If the key was generated successfully, you will have the keys generated in the location indicated by the command "Enter file in which to save the key (C:\Users\"NAME"/.ssh/id_rsa):"
- - Read the content of the file id_rsa.pub or the name you gave to the file and transfer it to Github.
- - Login to https://gitlab.cs.pub.ro/ and go to : https://gitlab.cs.pub.ro/-/user_settings/ssh_keys.
- - Click on "Add new key" and insert into "Key" textbox your key from "id_rsa.pub".
+1. Please login with your UPB login to [Gitlab](https://gitlab.cs.pub.ro) 
+2. You will have to add an SSH Key to your Gitlab account. This will allow you to push code without entering you username and password every time. For this, run the following command in the Windows/Linux/macOS's console: `ssh-keygen -t rsa -b 2048`. Press press ENTER until you exit the respective command prompts.
+ - If your command prompt `Overwrite (y/n)?` press `n` and run the above command again, changing the destination of the key.
+ - If the key was generated successfully, you will have the keys generated in the location indicated by the command `Enter file in which to save the key (C:\Users\"NAME"/.ssh/id_rsa):`
+ - Read the content of the file `id_rsa.pub` or the name you gave to the file and transfer it to Github.
+ - Login to [Gitlab](https://gitlab.cs.pub.ro/) and go to: [SSH Keys](https://gitlab.cs.pub.ro/-/user_settings/ssh_keys).
+ - Click on *Add new key* and insert into the *Key* textbox your key from `id_rsa.pub`.
  - Be very careful about the expiration date of the ssh key, change the expiration date otherwise it is set to 30 days.
 
-2. Download Git from the official website and access it in the command line using git -v to check if it was installed correctly.
-3. Run in the command line: 'git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git'
-4. Now you have your own clone. You need to create a new branch. For this, follow the steps:
- - Run the command: 'git fetch' followed by the 'git pull' command
- - The branches have the following naming convention: project/[first_name]-[last_name]-[project_name]. Example: 'project/andrei-paul-zamfir-smart-weather'
- - To create a new branch:
-    - git checkout -b branch_name
-    - git push --set-upstream origin test 
+3. [Download Git](https://git-scm.com) from the official website and access it in the command line using `git -v` to check if it was installed correctly. You might have to use *Git Bash*.
+4. Run in the command line: `git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git`
+5. Now you have your own clone. You need to create a new branch. For this, follow the steps:
+  - Run the command: `git fetch` followed by the `git pull` command
+  - The branches have the following naming convention: `project/your_curs.upb.ro_username`. Example: `project/andrei_paul.zamfir`
+  - To create a new branch:
+    - `git checkout -b <branch_name>`
+    - `git push --set-upstream origin project/your_curs.upb.ro_username`
 
-5. To start creating your page for the project, go to the directory: website/versioned_docs/version-fils_en/project/2025 and create a new directory with your tag from Gitlab. Example: andrei_paul.zamfir.
+6. To start creating your page for the project, go to the directory: `website/versioned_docs/version-fils_en/project/2025` and create a new directory with your curs.upb.ro username. Example: `andrei_paul.zamfir`.
 
-6. In that directory you must create a file named index.md which will be your project page. For a better understanding of Markdown syntax look over: https://www.markdownguide.org/cheat-sheet/
+7. In that directory you must create a file named `index.md` which will be your project page. You can take a look at the [Markdown](https://www.markdownguide.org/cheat-sheet/) syntax.
 
 ## Hardware Rules
 
 1. Projects have to use a microcontroller (MCU) that is capable of running Rust code. Examples of MCUs are *nRF52*, *RP2040*, *ESP32* (RISC-V version). 
 2. Usage of a development board is encouraged, but not required, a custom PCB can be built. Example of development boards are:
-  - [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) (RP2040) or [Raspberry Pi Pico W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) for WiFi (The version of Pico is not important, but we encourage the use of version 2.)
+  - [Raspberry Pi Pico 2](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) (RP2350) or [Raspberry Pi Pico 2W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) for WiFi (The version of Pico is not important, but we encourage the use of version 2.)
   - [Adafruit Trinkey QT2040](https://www.adafruit.com/product/5056) (RP2040)
   - [Arduino Nano RP2040 Connect](https://store.arduino.cc/products/arduino-nano-rp2040-connect) (RP2040) - ⚠️ [^arduino_nano_rp2040_connect]
   - [micro:bit v2](https://microbit.org/) (nRF52833)
@@ -78,7 +82,7 @@ It has to run software written in Rust. Students can use:
 5. The presentation of all the milestones is mandatory.
 6. The project topic must be established in week 4 and approved by the lab coordinator by week 6. After week 6, the topic cannot be changed.
 7. The laboratory supervisor may modify the topic or propose another topic if it is not complex enough for this project.
-8. We encourage you not to use prebuild kits, you may be penalized for hardware part.
+8. We encourage you not to use prebuilt kits, you may get less points for hardware part.
 
 ## Requirements
 1. *Complexity:* The project must reflect at least 40 hours of work and contain elements learned during the year.
@@ -88,6 +92,7 @@ It has to run software written in Rust. Students can use:
 ## Example Projects
 
 ### Examples of projects from past years
+1. [Projects from 2024](/docs/fils_en/project/2024)
 1. https://ocw.cs.pub.ro/courses/pm/prj2022
 2. https://ocw.cs.pub.ro/courses/pm/prj2023
 

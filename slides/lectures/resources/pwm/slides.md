@@ -101,7 +101,7 @@ layout: two-cols
 # RP2040's PWM
 
 - generates square signals
-- counts the pulse with of input signals
+- counts the pulse width of input signals
 - 8 PWM units, each with 2 channels (A and B)
 - each PWM channel is connected to a certain pin
 - some channels are connected to two pins

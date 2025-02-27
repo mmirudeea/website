@@ -69,7 +69,7 @@ layout: two-cols
 |  |  |
 |------|-------------|
 | SIO | Single Cycle I/O (implements GPIO)|
-| PWM | Pulse With Modulation |
+| PWM | Pulse Width Modulation |
 | ADC | Analog to Digital Converter |
 | (Q)SPI | (Quad) Serial Peripheral Interface |
 | UART | Universal Async. Receiver/Transmitter |

@@ -48,7 +48,7 @@ suggested hardware
 
 <div>
 
-**2 x Raspberry Pi Pico 2W** + **Raspberry Pi Pico 1**
+**Raspberry Pi Pico 2W** + **Raspberry Pi Pico 1**
 
 <img src="./pico_debug.png" class="w-80 rounded">
 

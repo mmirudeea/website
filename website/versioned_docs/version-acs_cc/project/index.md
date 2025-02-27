@@ -40,8 +40,8 @@ Students will have to build and showcase the hardware with the running software 
  - Run `git fetch` followed by `git pull`.
  - The branches have the following naming convention: project/[first_name]-[last_name]-[project_name]. Example: `project/andrei-paul-zamfir-smart-weather`
  - To create a new branch:
-    - git checkout -b branch_name
-    - git push --set-upstream origin test 
+    - `git checkout -b branch_name`
+    - `git push --set-upstream origin test`
 
 5. To start creating your page for the project, go to the directory: website/versioned_docs/version-acs_cc/project/2025 and create a new directory with your tag from Gitlab. Example: andrei_paul.zamfir.
 

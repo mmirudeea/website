@@ -6,7 +6,7 @@ description: How to install the prerequisites for embassy-rs
 
 # Embassy-rs Setup
 
-Here, we will cover the steps needed in order to be able to compile and flash Rust applications for **RP2040**, the MCU (Microcontroller Unit) found in our **Raspberry Pi Pico W**s.
+Here, we will cover the steps needed in order to be able to compile and flash Rust applications for **RP2350**, the MCU (Microcontroller Unit) found in our **Raspberry Pi Pico 2 W**s.
 
 ## Prerequisites
 
@@ -113,32 +113,50 @@ and no further configuration is required.
 
 ### VSCode Extension
 
-For a better experience, go ahead and install the **Debugger for probe-rs** extension in the Microsoft Extension Marketplace. This will allow us to build and upload a program to the RP2040 directly from VSCode and it will make debugging the program while running on the MCU as easy as debugging a Rust program running on your host machine.
+For a better experience, go ahead and install the **Debugger for probe-rs** extension in the Microsoft Extension Marketplace. This will allow us to build and upload a program to the RP2350 directly from VSCode and it will make debugging the program while running on the MCU as easy as debugging a Rust program running on your host machine.
 
 ## Flashing over USB
 
-This section demonstrates some of the various ways you can build your code and flash it to the board. If you wish to try them out and see how they work, you should first head over to the [Building your first Embassy-rs project](#building-your-first-embassy-rs-project) section, follow the instructions and then come back. You will also find an [example](#mainrs) of code that you can use as your `main.rs` file.
+This section demonstrates some of the various ways you can build your code and flash it to the board. If you wish to try them out and see how they work, you should first head over to the [Building your first Embassy-rs project](#building-your-first-embassy-rs-project) section, follow the instructions and then come back. You will also find an [example](#mainrs) of code that you can use as your `main.rs` file. Note that you will not be able to use `cargo run` just yet.
 
 ### Configuring Cargo
 
 You will notice that some of the options will suggest creating and modifying a `config.toml` file. It is not strictly necessary for flashing, but it is highly recommended, especially since you will need it for debugging anyway.
 
-In order to add the configuration file, you will first have to create a `.cargo/` directory in your project's root folder. Inside it, create the `config.toml` file. You cand find a complete configuration example [here](#configtoml). For more information on this type of file, follow the official [Cargo Book](https://doc.rust-lang.org/cargo/reference/config.html).
+In order to add the configuration file, you will first have to create a `.cargo/` directory in your project's root folder. Inside it, create the `config.toml` file. You cand find a complete configuration example below. For more information on this type of file, follow the official [Cargo Book](https://doc.rust-lang.org/cargo/reference/config.html).
+
+##### config.toml
+```toml
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-rs run --chip RP235x"
+
+[build]
+target = "thumbv8m.main-none-eabihf"
+
+[env]
+DEFMT_LOG = "debug"
+```
 
 ### Compiling
 
-You will need to compile your executable specifically for the RP2040 chip. This chip is based on the **ARM Cortex M0+** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv6-M target (thumbv6m-none-eabi):
+You will need to compile your executable specifically for the RP2350 chip. This chip is based on the **ARM Cortex M33** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv6-M target (thumbv6m-none-eabi):
 
 ```shell
-rustup target add thumbv6m-none-eabi
+rustup target add thumbv8m.main-none-eabihf
 ```
+
+:::warning
+
+This is a very important step, so make sure you follow it. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of Arm will lead to a number of compilation errors.
+
+:::
 
 Now you can build by:
 
 #### 1. Passing the target as a parameter to Cargo:
 
 ```shell
-cargo build --release --target thumbv6m-none-eabi
+cargo build --release --target thumbv8m.main-none-eabihf
 ```
 
 :::info
@@ -147,11 +165,11 @@ You can also use `build` without the `--release` option. This way, the rust comp
 
 :::
 
-#### 2. Using a `.cargo/config.toml` file:
+#### 2. Using the `.cargo/config.toml` file:
 
 ```toml
 [build]
-target = "thumbv6m-none-eabi"
+target = "thumbv8m.main-none-eabihf"
 ```
 
 This allows us to simply run
@@ -164,7 +182,7 @@ without having to specify the target every time.
 
 ### Flashing
 
-To flash a program to the Raspberry Pi Pico via USB, it needs to be in *USB mass storage device mode*. To put it in this mode, you need to **hold the `BOOTSEL` button down**  while connecting it to your PC. Connecting and disconnecting the USB can lead to the port getting damaged, so we conveniently added a reset button to our custom board. Now, to make it reflashable again, just press the two buttons simultaneously.
+To flash a program to the Raspberry Pi Pico 2 via USB, it needs to be in *USB mass storage device mode*. To put it in this mode, you need to **hold the `BOOTSEL` button down**  while connecting it to your PC. Connecting and disconnecting the USB can lead to the port getting damaged, so we conveniently added a reset button to our custom board. Now, to make it reflashable again, just press the two buttons simultaneously.
 
 After connecting the board to your PC and compiling the program, locate the binary in the `target/thumbv6m-none-eabi/release/` (or `target/thumbv6m-none-eabi/debug/` if you didn't use the `--release` option) folder. There are a few ways to flash the binary to the board:
 
@@ -188,7 +206,7 @@ On `Windows`, you may need to run this command in a terminal that has **Admin Pr
 You can run
 
 ```shell
-probe-rs run --chip RP2040 --protocol swd --speed 16000 /path/to/your/binary
+probe-rs run --chip RP235x /path/to/your/binary
 ```
 
 This will flash the board without starting `probe-rs`' debugging functionality.
@@ -199,7 +217,7 @@ If you've already created a `.cargo/config.toml` with a build target, you can ad
 
 ```toml
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-rs run --chip RP2040 --protocol swd --speed 16000"
+runner = "probe-rs run --chip RP235x"
 ```
 
 Now, 
@@ -208,7 +226,7 @@ Now,
 cargo run 
 ```
 
-will automatically call the command from option 2, without having to specify the path to the binary.
+will automatically call the command from option 2, without having to specify the path to the binary. Also, `cargo run` compiles your code first if you've made any changes to it.
 
 :::tip
 As it will be required later in the tutorial, you should also add
@@ -222,10 +240,10 @@ which tells cargo that your program will use **deferred formatting** to more eff
 ##### config.toml
 ```toml
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-rs run --chip RP2040 --protocol swd --speed 16000"
+runner = "probe-rs run --chip RP235x"
 
 [build]
-target = "thumbv6m-none-eabi"
+target = "thumbv8m.main-none-eabihf"
 
 [env]
 DEFMT_LOG = "debug"
@@ -239,17 +257,17 @@ This method can be used from VSCode's **Run and Debug** view. The binary will be
 ## Debugging
 ### With the Raspberry Pi Debug Probe
 
-In order to be able to debug the program running on the board, we will need to connect the **Raspberry Pi Debug Probe** to our **Raspberry Pi Pico W**. Below, you have a picture of the debug kit provided:
+In order to be able to debug the program running on the board, we will need to connect the **Raspberry Pi Debug Probe** to our **Raspberry Pi Pico 2 W**. Below, you have a picture of the debug kit provided:
 
 ![Raspberry Pi Debug probe](assets/the-probe.png)
 
-To connect them, we will use the **3-pin debug to 0.1-inch header (female)** cable. First, carefully insert the **3-pin debug** head in the **right side** connector (marked D). Then you will also need to connect it to the Raspberry Pi Pico W. You will find attached the pinout, take a closer look at the bottom of the image:
+To connect them, we will use the **3-pin debug to 0.1-inch header (female)** cable. First, carefully insert the **3-pin debug** head in the **right side** connector (marked D). Then you will also need to connect it to the Raspberry Pi Pico 2 W. You will find attached the pinout, take a closer look at the bottom of the image:
 
-![Raspberry Pi Pico W pinout](assets/picow-pinout.svg)
+![Raspberry Pi Pico 2 W pinout](assets/pico2w-pinout.svg)
 
 The connections must be:
 
-| Wire | Raspberry Pi Pico W |
+| Wire | Raspberry Pi Pico 2 W |
 |-|-|
 |TX (Orange)|SWCLK|
 |GND (Black)|GND|
@@ -276,22 +294,19 @@ Here is an example of such a file:
 
 ```json
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "preLaunchTask": "rust: cargo build",
             "type": "probe-rs-debug",
             "request": "launch",
-            "name": "launch request",
+            "name": "Pico 2W",
             "cwd": "${workspaceFolder}",
-            "chip": "RP2040",
-            // RP2040 doesn't support connectUnderReset
             "connectUnderReset": false,
-            "speed": 4000,
-            "runtimeExecutable": "probe-rs",
-            "runtimeArgs": [
-                "dap-server"
-            ],
+            "chip": "RP235x",
             "flashingConfig": {
                 "flashingEnabled": true,
                 "haltAfterReset": false,
@@ -299,32 +314,23 @@ Here is an example of such a file:
             "coreConfigs": [
                 {
                     "coreIndex": 0,
-                    // Modify this path to match your project's name
-                    "programBinary": "target/thumbv6m-none-eabi/debug/project_name",
-                    // Comment this line if the svd file is not present
-                    "svdFile": "./.vscode/rp2040.svd",
+                    "programBinary": "./target/thumbv8m.main-none-eabihf/debug/${workspaceFolderBasename}",
+                    "svdFile": "./.vscode/rp2350.svd",
                     "rttEnabled": true,
-                    "options": {
-                        "env": {
-                            "DEFMT_LOG": "debug"
-                        }
-                    },
                 }
             ],
-            "consoleLogLevel": "Info", //Error, Warn, Info, Debug, Trace
-            "wireProtocol": "Swd"
         }
     ]
 }
 ```
 
 :::warning
-Remember to modify the path provided to the `"programBinary"` attribute so that it matches with the one you want to debug. It will most likely have a different name and it might also be located in `release/` instead of `debug/` depending on your build options.  
+If you're not using the `workspaceFolderBasename` variable, remember to modify the path provided to the `"programBinary"` attribute so that it matches with the one you want to debug. The binary will have the same name you gave to the project when running `cargo new` and it might be located in `release/` instead of `debug/` depending on your build options.
 :::
 
 You can find out more about this configuration file and available options, as well as the debugging process itself from the official [probe-rs documentation](https://probe.rs/docs/tools/debugger/).
 
-**On Windows**, you will also have to create a `tasks.json` file in the `.vscode/` folder in order to define the `rust: cargo build` task. Here is what it should contain:
+**On Windows**, you may also have to create a `tasks.json` file in the `.vscode/` folder in order to define the `rust: cargo build` task, in case it is not recognized. Here is what it should contain:
 
 ##### tasks.json
 
@@ -341,17 +347,17 @@ You can find out more about this configuration file and available options, as we
 }
 ```
 
-A recommended step is to download the [`rp2040.svd`](https://raw.githubusercontent.com/raspberrypi/pico-sdk/1.3.1/src/rp2040/hardware_regs/rp2040.svd) file and place it in the `.vscode/` directory, as it gives `probe-rs` and VSCode additional information on the registers and memory regions used by the MCU. If you aren't using this file, the `"svdFile"` attribute should be commented out or removed from `launch.json`.
+A recommended step is to download the [`rp2350.svd`](https://raw.githubusercontent.com/raspberrypi/pico-sdk/refs/heads/master/src/rp2350/hardware_regs/RP2350.svd) file and place it in the `.vscode/` directory, as it gives `probe-rs` and VSCode additional information on the registers and memory regions used by the MCU. If you aren't using this file, the `"svdFile"` attribute should be commented out or removed from `launch.json`.
 
 ### With another Raspberry Pi Pico
 
-Another interesting way to debug programs running on the board is to use a second Raspberry Pi Pico. In fact, the Raspberry Pi Debug Probe itself is based on the same RP2040 MCU, running custom firmware. The custom boards in the labs also use a Pi Pico as a debugger and you can, as well, since the firmware is freely available.
+Another interesting way to debug programs running on the board is to use a second Raspberry Pi Pico. In fact, the Raspberry Pi Debug Probe itself is based on the RP2040 MCU, found in the first iteration of the Pico, running custom firmware. The custom boards in the labs also use an RP2040 as a debugger and you can, as well, since the firmware is freely available.
 
-The first step is to connect the two boards together. We will use a normal Pico (without wifi) as a debugger for this tutorial, but its pinout is almost identical to the Pico W.
+The first step is to connect the two boards together. We will use a normal Pico (without WiFi) as a debugger for this tutorial, but you can essentially use any version of the Pico (1 or 2, with or without WiFi).
 
 ![Raspberry Pi Pico pinout](assets/pico-pinout.svg)
 
-We will refer to our Pico's as Pico A (the debugger) and Pico B (the one running our program). These are the connections you need to make:
+We will refer to our boards as Pico A (the debugger) and Pico B (the one running our program). These are the connections you need to make:
 
 | Pico A | Pico B |
 |-|-|
@@ -367,13 +373,13 @@ You can also try to follow the following wiring diagram if you're using a breadb
 ![Pico to Pico wiring](assets/pico_wiring.png)
 
 :::note
-You will be using the Pico W as the second board, unlike the one depicted here.
+You will be using the Pico 2 W as the second board for the lab, unlike the one depicted here.
 :::
 
-The next step is flashing the firmware to the debugging board. Download the [`debugprobe_on_pico2.uf2`](https://github.com/raspberrypi/debugprobe/releases/tag/debugprobe-v2.2.1) file. Hold the `BOOTSEL` button down while connecting the board to your PC. It should show up as a USB drive named `RPI-RP2`. Next, simply copy the `.uf2.` file to the board to flash it. You should now be able to use the Pico you just flashed as a debugger for the Pico W. 
+The next step is flashing the firmware to the debugging board. Download the [`debugprobe_on_pico.uf2`](https://github.com/raspberrypi/debugprobe/releases/tag/debugprobe-v2.2.1) file (or `debugprobe_on_pico2.uf2` if you're using a Pico 2). Hold the `BOOTSEL` button down while connecting the board you want to use as a debugger to your PC. It should show up as a USB drive named `RPI-RP2`. Next, simply copy the `.uf2.` file to the board to flash it. You should now be able to use the Pico you just flashed as a debugger for the Pico 2 W.
 
 :::info
-Only the board you are using as a debugger should be plugged into the USB port on your machine, since the other one is powered through the `VSYS` pin.
+Only the board you are using as a debugger should be plugged into the USB port on your machine, since the other one is powered through the `VSYS` pin and the two Pico's communicate through the debugging interface.
 :::
 
 ## Building your first Embassy-rs project
@@ -401,7 +407,7 @@ edition = "2021"
 
 ### Crate settings
 
-Because we are running in an embedded environment, our code needs to be *"tailored"* specifically for the microcontroller we intend to use. In our case, it is the **RP2040**, but these general steps apply for any chip, produced by any manufacturer.
+Because we are running in an embedded environment, our code needs to be *"tailored"* specifically for the microcontroller we intend to use. In our case, it is the **RP2350**, but these general steps apply for any chip, produced by any manufacturer.
 
 #### No standard library
 
@@ -417,7 +423,7 @@ Because we are using the **Embassy-rs** framework, we want to let it take care o
 The three files mentioned below (`rust-toolchain.toml`,`memory.x` and `build.rs`) should be found in the root folder of your project (same directory as `Cargo.toml`).
 :::
 
-Our chip is a **Cortex-M0+** that uses the **ThumbV6-M** architecture so we will need to specify the target triple we are compiling for. We will do that using a `rust-toolchain.toml` file, as it allows us to also set the **toolchain release channel** we will use, and the components we require.
+Our chip is a **Cortex-M33** that uses the **ThumbV8-M** architecture so we will need to specify the target triple we are compiling for. We will do that using a `rust-toolchain.toml` file, as it allows us to also set the **toolchain release channel** we will use, and the components we require.
 
 An example of such file is this:
 
@@ -433,40 +439,103 @@ channel = "1.83"
 # The targets for compilation that need to be added. This is used for 
 # cross-compilation, as the executables we are producing need to be
 # run on our boards.
-targets = ["thumbv6m-none-eabi"]
+targets = ["thumbv8m.main-none-eabihf"]
 # The additional componets to be installed along the Rust toolchain
 components = ["rust-src", "rustfmt", "llvm-tools", "clippy"]
 ```
 
 :::tip
 
-Please make sure that you install the Rust ARMv6-M target (thumbv6m-none-eabi).
+Please make sure that you install the Rust ARMv8-M target (thumbv8m.main-none-eabihf).
 
 ```bash
-rustup target add thumbv6m-none-eabi
+rustup target add thumbv8m.main-none-eabihf
 ```
 
 :::
 
 #### Memory layout
 
-We also need to take care of the memory layout of our program when writing code for a microcontroller. These can be found in the datasheet of all the microcontrollers. Bellow, you can find the memory layout for the **RP2040**:
+We also need to take care of the memory layout of our program when writing code for a microcontroller. These can be found in the datasheet of all the microcontrollers. Bellow, you can find the memory layout for the **RP2350**:
 
 ##### `memory.x`
 
 ```linker-script
-/* Memory regions for the linker script */
-/* Address map provided by datasheet: https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf */
 MEMORY {
-    /* Define the memory region for the second stage bootloader */
-    BOOT2 : ORIGIN = 0x10000000, LENGTH = 0x100
-
-    /* Define the memory region for the application to be loaded next */
-    FLASH : ORIGIN = 0x10000100, LENGTH = 2048K - 0x100
-
-    /* Define the memory region for SRAM */
-    RAM   : ORIGIN = 0x20000000, LENGTH = 264K
+    /*
+     * The RP2350 has either external or internal flash.
+     *
+     * 2 MiB is a safe default here, although a Pico 2 has 4 MiB.
+     */
+    FLASH : ORIGIN = 0x10000000, LENGTH = 2048K
+    /*
+     * RAM consists of 8 banks, SRAM0-SRAM7, with a striped mapping.
+     * This is usually good for performance, as it distributes load on
+     * those banks evenly.
+     */
+    RAM : ORIGIN = 0x20000000, LENGTH = 512K
+    /*
+     * RAM banks 8 and 9 use a direct mapping. They can be used to have
+     * memory areas dedicated for some specific job, improving predictability
+     * of access times.
+     * Example: Separate stacks for core0 and core1.
+     */
+    SRAM4 : ORIGIN = 0x20080000, LENGTH = 4K
+    SRAM5 : ORIGIN = 0x20081000, LENGTH = 4K
 }
+
+SECTIONS {
+    /* ### Boot ROM info
+     *
+     * Goes after .vector_table, to keep it in the first 4K of flash
+     * where the Boot ROM (and picotool) can find it
+     */
+    .start_block : ALIGN(4)
+    {
+        __start_block_addr = .;
+        KEEP(*(.start_block));
+        KEEP(*(.boot_info));
+    } > FLASH
+
+} INSERT AFTER .vector_table;
+
+/* move .text to start /after/ the boot info */
+_stext = ADDR(.start_block) + SIZEOF(.start_block);
+
+SECTIONS {
+    /* ### Picotool 'Binary Info' Entries
+     *
+     * Picotool looks through this block (as we have pointers to it in our
+     * header) to find interesting information.
+     */
+    .bi_entries : ALIGN(4)
+    {
+        /* We put this in the header */
+        __bi_entries_start = .;
+        /* Here are the entries */
+        KEEP(*(.bi_entries));
+        /* Keep this block a nice round size */
+        . = ALIGN(4);
+        /* We put this in the header */
+        __bi_entries_end = .;
+    } > FLASH
+} INSERT AFTER .text;
+
+SECTIONS {
+    /* ### Boot ROM extra info
+     *
+     * Goes after everything in our program, so it can contain a signature.
+     */
+    .end_block : ALIGN(4)
+    {
+        __end_block_addr = .;
+        KEEP(*(.end_block));
+    } > FLASH
+
+} INSERT AFTER .uninit;
+
+PROVIDE(start_to_end = __end_block_addr - __start_block_addr);
+PROVIDE(end_to_start = __start_block_addr - __end_block_addr);
 ```
 
 To use the `memory.x` layout file, we will also need to use a build script. Rust facilitates that through the `build.rs` file. Bellow you will find an explained build script you can use.
@@ -495,24 +564,18 @@ fn main() {
     let out = &PathBuf::from(env::var_os("OUT_DIR").unwrap());
     File::create(out.join("memory.x"))
         .unwrap()
-        .write_all(include_bytes!("./memory.x"))
+        .write_all(include_bytes!("memory.x"))
         .unwrap();
     println!("cargo:rustc-link-search={}", out.display());
-    println!("cargo:rerun-if-changed={{layout}}");
 
-    // `--nmagic` is required if memory section addresses are not aligned to 0x10000,
-    // for example the FLASH and RAM sections in your `memory.x`.
-    println!("cargo:rustc-link-arg=--nmagic");
+    // By default, Cargo will re-run a build script whenever
+    // any file in the project changes. By specifying `memory.x`
+    // here, we ensure the build script is only re-run when
+    // `memory.x` is changed.
+    println!("cargo:rerun-if-changed=memory.x");
 
-    // The `link.x` linker script provided by `cortex_m_rt` (minimal runtime for
-    // Cortex-M microcontrollers used by embassy) will include our `memory.x` memory layout.
-    println!("cargo:rustc-link-arg=-Tlink.x");
-
-    // The `link-rp.x` linker script provided by `embassy_rp` that defines the
-    // BOOT2 section.
-    println!("cargo:rustc-link-arg-bins=-Tlink-rp.x");
-
-    // The `defmt.x` linker script provided by `defmt`.
+    println!("cargo:rustc-link-arg-bins=--nmagic");
+    println!("cargo:rustc-link-arg-bins=-Tlink.x");
     println!("cargo:rustc-link-arg-bins=-Tdefmt.x");
 }
 ```
@@ -526,13 +589,13 @@ At this step, we must add the dependencies we will use for our project. Bellow y
 This is an `async/await` executor designed for embedded. To add it as a dependency to your project, run:
 
 ```shell
-cargo add embassy-executor --features arch-cortex-m,executor-thread,executor-interrupt,task-arena-size-32768,defmt
+cargo add embassy-executor --features task-arena-size-98304,arch-cortex-m,executor-thread,executor-interrupt,defmt
 ```
 
+* `task-arena-size-X` - sets the task arena size
 * `arch-cortex-m` - feature to specify we are running on the cortex M architecture
 * `executor-thread` - enable the thread-mode executor (using WFE/SEV in Cortex-M, WFI in other embedded archs)
 * `executor-interrupt` - enable the interrupt-mode executor (available in Cortex-M only)
-* `task-arena-size-X` - sets the task arena size
 * `defmt` - use deferred formatting for logs
 
 We will also need to add the `cortex-m` and `cortex-m-rt` crates as dependencies, as the `#[executor::main]` attribute depends on the minimal startup code for the Cortex M microcontrollers found in this crates. To do that, run:
@@ -547,21 +610,25 @@ cargo add cortex-m-rt
 This crate enables timekeeping, timeouts and delays. Add it by running:
 
 ```shell
-cargo add embassy-time
+cargo add embassy-time --features defmt,defmt-timestamp-uptime
 ```
+
+* `defmt` - use deferred formatting for logs
+* `defmt-timestamp-uptime` will also print a timestamp for each log message
 
 #### `embassy-rp`
 
-This crate is a **Hardware Abstraction Layer** for the **RP2040**. You can add it to your project like so:
+This crate is a **Hardware Abstraction Layer** for the **RP2350**. You can add it to your project like so:
 
 ```shell
-cargo add embassy-rp --features time-driver,critical-section-impl,rp2040,defmt
+cargo add embassy-rp --features time-driver,critical-section-impl,rp235xa,defmt
 ```
 
 * `time-driver` - enable the timer for use with `embassy-time` with a `1MHz` tick rate.
-* `critical-section-impl` - configure the critical section crate to use an implementation that is safe for multicore use on RP2040
-* `rp2040` - this crate also works for other Raspberry MCU's,
+* `critical-section-impl` - configure the critical section crate to use an implementation that is safe for multicore use on RP2350
+* `rp235xa` - this crate also works for other Raspberry MCU's,
 so we need to specify the one we are using
+* `defmt` - use deferred formatting for logs
 
 #### `embassy-usb-logger`
 
@@ -577,17 +644,10 @@ cargo add embassy-usb-logger
 This crate adds a panic handler for the microchip that prints panic messages over **JTAG**, and in order to add it, run:
 
 ```shell
-cargo add panic-probe
+cargo add panic-probe --features print-defmt
 ```
 
-#### `rp-pac`
-
-This crate is a dependency for `embassy-rp`, but we need to explicitly add it to our project to avoid linker errors, as this crate also works for the RP2350 MCU.
-
-```shell
-cargo add rp-pac --features cortex-m-rt,defmt,rp2040,rt
-```
-
+* `print-defmt` - allows panic messages to be printed in the terminal
 Finally, we should add the `defmt` and `defmt-rtt` crates, as we will be using some of the macros defined by the former to send logs back to our host. The latter crate transmits the log messages over the RTT (Real-Time Transfer) protocol.
 
 ```shell
@@ -608,7 +668,13 @@ Here you can find a minimally explained code that prints `"Hello World!"` over t
 use defmt::*;
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer};
+use embassy_rp::block::ImageDef;
 use {defmt_rtt as _, panic_probe as _};
+
+// ImageDef is only needed for the RP2350, not the RP2040
+#[link_section = ".start_block"]
+#[used]
+pub static IMAGE_DEF: ImageDef = ImageDef::secure_exe();
 
 // Async task to send a log message
 #[embassy_executor::task]
@@ -639,10 +705,10 @@ async fn main(spawner: Spawner) {
 }
 ```
 
-You can run this by using
+If you've completed all the steps in this tutorial, you can run this by using
 
 ```shell
 cargo run
 ```
 
-or by starting the `launch request` task at the top of the **Run and Debug** menu.
+or by starting the `Pico 2W` task at the top of the **Run and Debug** menu.

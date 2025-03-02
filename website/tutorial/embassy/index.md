@@ -139,7 +139,7 @@ DEFMT_LOG = "debug"
 
 ### Compiling
 
-You will need to compile your executable specifically for the RP2350 chip. This chip is based on the **ARM Cortex M33** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv8-M target (thumbv8m.main-none-eabihf):
+You will need to compile your executable specifically for the RP2350 chip. This chip is based on the **ARM Cortex M33** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv8-M target (`thumbv8m.main-none-eabihf`):
 
 ```shell
 rustup target add thumbv8m.main-none-eabihf

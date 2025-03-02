@@ -82,7 +82,7 @@ It has to run software written in Rust. Students can use:
 5. The presentation of all the milestones is mandatory.
 6. The project topic must be established in week 4 and approved by the lab coordinator by week 6. After week 6, the topic cannot be changed.
 7. The laboratory supervisor may modify the topic or propose another topic if it is not complex enough for this project.
-8. We encourage you not to use prebuilt kits, you may get less points for hardware part.
+8. We encourage you not to use prebuilt kits, you may get less points for the hardware part.
 
 ## Requirements
 1. *Complexity:* The project must reflect at least 40 hours of work and contain elements learned during the year.

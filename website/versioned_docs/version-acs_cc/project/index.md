@@ -23,7 +23,7 @@ The repository contains:
     - functional diagram
 - software source code
 
-The repositories will be checked by the lab professor at during lab reserved for the project. Uploading code on the last day of the software milestone is not allowed. **The professor will check that students have **submitted regularly commits** to the repository.
+The repositories will be checked by the lab assistant at during lab reserved for the project. Uploading code on the last day of the software milestone is not allowed. **The assistant** will check that students have **submitted regular commits** to the repository.
 
 Students will have to build and showcase the hardware with the running software at PM Fair. On the presentation day, **students will upload the source code to the hardware** and the demo will be done live in front of the committee.
 

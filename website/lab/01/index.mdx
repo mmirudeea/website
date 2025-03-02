@@ -113,27 +113,52 @@ debugging and flashing tool that supports multiple probe types, including
 CMSIS-DAP and J-Link. It offers a simple API, making it a great choice for both 
 manual debugging and automated workflows.
 
-## Flashing firmware
+## Cross-compiling
 
-To run firmware on the Raspberry Pi Pico 2, the 
-compiled program must be transferred to the device's flash (non-volatile) memory. This 
-process is called *flashing*, and it ensures that the firmware remains on the 
-device even after a power reset. 
+Cross-compiling is the process of building software on one system (the host) 
+that is intended to run on a different system (the target). This is necessary 
+when developing for embedded systems like the Raspberry Pi Pico 2 because the 
+target device has a different processor architecture than the development 
+computer. Unlike normal compiling, where the compiled binary runs on the same 
+system that builds it, cross-compiling generates machine code suitable for the 
+target architecture. 
 
-A flashing tool is software that communicates 
-with the device through a debug probe or other interfaces, such as USB or 
-UART, to write the firmware to the correct memory location. Many flashing tools 
-also verify the uploaded firmware to ensure data integrity and provide 
-additional features like chip erasing or memory protection configuration.
+In Rust, this is handled by specifying a target triple. 
+For example, when using `cargo build` for embedded development, Rust compiles 
+the firmware for the microcontroller's architecture and flashes it to the 
+device. 
 
-When developing Rust firmware for the Raspberry Pi Pico 2, `probe-rs` is the 
-proffered flashing tool to upload and debug code. 
+For example, cross-compiling for the Raspberry Pi Pico 2 requires the
+`thumbv8m.main-none-eabihf` triple. It tells the compiler to build code
+for:
+- the **ARMv8-M Mainline** (`thumbv8m.main`) architecture
+- that runs bare meta, **without an operating system** available (`none`)
+- and uses the **Embedded Application Binary Interface** (`eabi`) **with hardware floating point** support
 
-Using `cargo run`, developers can 
-compile their project and flash the firmware onto the target device in a single 
-command. This workflow simplifies development by eliminating the need for 
-separate flashing tools. Under the hood, `cargo run` invokes `probe-rs` to 
-detect the connected debug probe and automatically handle the flashing process. 
+```sh
+cargo build --target thumbv8m.main-none-eabihf
+```
+
+### Using a configuration file
+
+Instead of providing the target triple in the command line every time, `cargo` offers the 
+possibility of writing it in a configuration file called `.cargo/cargo.toml`.
+ 
+```toml
+[build]
+target = "thumbv8m.main-none-eabihf"
+```
+
+This sets the default compilation target to `thumbv8m.main-none-eabihf`,
+ensuring that `cargo` always builds the project for an *ARMv8-M Mainline*
+microcontroller with hardware floating-point support.
+
+With this setting, running `cargo build` or `cargo run` automatically
+compiles for the specified target, making cross-compilation seamless.
+
+:::info
+The target triple for the Raspberry Pi Pico 1 is `thumbv6m-none-eabi`.
+:::
 
 ## Binary format
 
@@ -345,3 +370,392 @@ llvm-objdump <path_to_binary> --section.headers
 :::
 
 [^firmware]: Software that is running on microcontrollers is usually called *firmware*. The words is a combination of the words *firm* and *software* and means the software that the vendor firm of the device has uploaded.
+
+## Empty firmware
+
+An *empty firmware* is a piece of software running on a device that boots and does puts 
+the device in an endless loop. To boot, the firmware has to perform the following:
+- do not depend on the standard library (`#![no_std]`)
+- do not provide the standard `main` function called by the operating system (`#![no_main]`)
+- provide the `.start_block` and `.end_block` sections (or `.bootloader` for the Pico 1);
+- provide the `.interrupt_vector` section with pointers to interrupts;
+- copy the DATA sections from Flash to the correct address in RAM;
+- initialize the BSS section in RAM with 0 values
+- jump to the `main` function and never return.
+
+### The `.interrupt_vector` section
+
+The `.interrupt_section` is provided by `rp235x_hal` crate (or `rp2040_hal` for the Pico 1).
+Importing this crate is enough to provide a valid interrupt vector.
+
+
+```rust
+#![no_std]
+#![no_main]
+
+// we use as _ to avoid a compiler warning
+// saying that the crate is not used
+use rp235x_hal as _;
+```
+
+### The `.start_block` and `.end_blocks`
+
+The `rp235x_hal` crate provides the valid `.start_block` and `.end_block`.
+
+```rust
+use rp235x_hal::block::ImageDef;
+
+#[link_section = ".start_block"]
+#[used]
+pub static IMAGE_DEF: mageDef = ImageDef::secure_exe();
+```
+
+This code creates a static variable `IMAGE_DEF` of type `ImageDef` and places it 
+in the `.start_block` section, a dedicated section for bootloader 
+or secure boot metadata. The `#[used]` attribute ensures the variable is 
+included in the binary, even if it isn't directly referenced, 
+which is crucial for secure boot functionality or other boot-related processes.
+
+The `secure_exe` function creates a `.start_block` that instructs the `BOOTROM` of the 
+Raspberry Pi Pico 2 to start the firmware in secure execution mode. The processor
+always starts in secure execution mode and has to be switched to unsecure mode
+by the firmware.
+
+:::warning
+The `#[used]` attribute is important as linkers will discard code that is
+not used to lower the size of the binary. The `IMAGE_DEF` variable is not 
+directly used by anything in the firmware and might be discarded.
+:::
+
+The `.end_block` is automatically inserted by the linker using the `memory.x` file.
+
+### The `main` function
+
+When writing software that runs on top of an operating system, the operating system
+is responsible for initializing the memory of the software and the calling 
+of the `main` function. 
+
+Embedded firmware that does not run on top of an operating system has to perform the
+memory initialization tasks and calling the `main` function itself.
+
+The Rust Embedded Working Group provides a crate called `cortex_m_rt` (*Cortex-M Runtime*) that
+exposes the macro `entry!` to perform these tasks. The macro is placed on top of a function
+that takes no parameters and does no return (`!`).
+
+```rust
+use cortex_m_rt::entry;
+
+#[entry]
+fn main() -> ! {
+  loop {}
+}
+```
+
+:::info
+The important aspect is the usage of the `#[entry]` macro, 
+while the name of the function does not need to be `main`.
+:::
+
+The `entry!` macro will rewrite the `main` function and add all the initialization code.
+
+:::note
+Different frameworks like `embassy-rs` will use different entry macros.
+:::
+
+## Flashing firmware
+
+To run firmware on the Raspberry Pi Pico 2, the 
+compiled program must be transferred to the device's flash (non-volatile) memory. This 
+process is called *flashing*, and it ensures that the firmware remains on the 
+device even after a power reset. 
+
+A flashing tool is software that communicates 
+with the device through a debug probe or other interfaces, such as USB or 
+*UART*, to write the firmware to the correct memory location. Many flashing tools 
+also verify the uploaded firmware to ensure data integrity and provide 
+additional features like chip erasing or memory protection configuration.
+
+When developing Rust firmware for the Raspberry Pi Pico 2, `probe-rs` is the 
+preferred flashing tool to upload and debug code. 
+
+After building the firmware using `cargo build`, an ELF file will be generated in
+`target/thumbv8m.main-none-eabihf/debug/$app_name`. This file can be flashed to the
+board using:
+
+```sh
+probe-rs flash --chip RP235x target/thumbv8m.main-none-eabihf/debug/$app_name
+```
+
+:::info
+Replace $app_name with the name of the firmware's crate, usually the name of the folder
+where the firmware source resides.
+:::
+
+
+### Using `cargo run`
+
+On a computer, running a Rust program with `cargo run` compiles the source 
+code into an executable and immediately starts it. This command streamlines 
+development by combining compilation and execution into a single step.
+
+A similar process applies when using `cargo run` to develop firmware for the Raspberry 
+Pi Pico 2. Instead of just compiling and running a program on the host computer, 
+`cargo run` cross compiles the firmware and flashes it onto the target device in one 
+step. Under the hood, it uses `probe-rs` to detect the connected debug probe 
+and handle the flashing process automatically. This eliminates the need for 
+separate flashing tools, making firmware development as seamless as running a 
+Rust program on a computer.
+
+To be able to use `cargo run` for flashing firmware, a runner has to be specified in the
+`.cargo/config.toml` file. The following lines have to be added.
+
+```toml
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-rs run --chip RP235x"
+```
+
+:::warning
+Make sure the correct `[target]` is specified in the `.cargo/config.toml` configuration file. See the
+[cross-compiling](#using-a-configuration-file) section.
+:::
+
+This setup makes flashing firmware to the Raspberry Pi Pico 2 as simple
+as running a Rust program on a computer.
+
+## Printing messages
+
+When developing embedded applications, debugging can be challenging due to 
+the lack of standard output (such as `println!`). Printed messages need to be generated 
+on the target device and sent to the host computer
+where they are displayed to a console. 
+
+Two common techniques to 
+retrieve debug information from an embedded system are *semihosting* and  
+*`defmt`*. Both methods provide insight into program execution but work  
+differently and are suited for different use cases.
+
+### Semihosting
+Semihosting is a debugging mechanism that allows an embedded system to 
+communicate with a host computer via a debugger. It enables operations like:  
+- printing debug messages (`println!`)  
+- reading input from the host
+
+:::info
+Semihosting requires a hardware debugger.
+:::
+
+This works in there steps:
+1. The embedded firmware executes a special *semihosting instruction*.  
+2. The debugger software (e.g., `gdb` with `probe-rs`) intercepts the request.  
+3. The debugger software processes the request and returns the result to the firmware.
+
+Semihosting is very simple to implement, but has a big drawback, it is slow 
+and cannot be used in production. 
+
+:::note
+Printing a panic message takes more than 2 seconds.
+:::
+
+#### Printing a message
+
+Semihosting for Cortex-M is implemented by the `cortex_m_semihosting` crate. This
+exposes the `hprintln!` is a macro used for printing messages to the host system. 
+This macro behaves like `println!`, but instead of 
+printing to the terminal, it sends the output to the debugger, which then 
+transmits it to the host system.
+
+```rust
+#![no_std]
+#![no_main]
+
+use cortex_m_rt::entry;
+use cortex_m_semihosting::hprintln;
+
+#[entry]
+fn main() -> ! {
+  hprintln!("Device has started").unwrap();
+  // write the rest of the code here
+  loop {}
+}
+```
+
+:::note
+The `unwrap` method is called on `hprintln!` to handle the result of the logging operation. 
+In real applications, you might want to handle potential 
+errors more gracefully. In this case, if `hprintln!` fails, the device just stop working.
+:::
+
+:::tip
+The main advantage of semihosting is that it works with all the embedded frameworks.
+:::
+
+#### Printing the panic
+
+The Rust language provides a special function called the *panic handler* that gets 
+called in case things go wrong. For instance attempting to divide to 0 will call the
+panic handler.
+
+In embedded systems, the *panic handler* is used to handle unexpected runtime errors.  
+Using `hprintln!` in the panic handler allows developers to print helpful debug  
+messages when the program encounters a panic, making it easier to solve issues. 
+
+When using `#![no_std]`, developers have to define their own panic handler.
+
+```rust
+#![no_std]
+#![no_main]
+
+use cortex_m_rt::entry;
+use cortex_m_semihosting::hprintln;
+
+#[entry]
+fn main() -> ! {
+    // Trigger a panic by dividing by zero (for demonstration purposes)
+    let result = divide_by_zero();
+    hprintln!("Result: {}", result).unwrap();
+
+    loop {}
+}
+
+// Simulate a division by zero panic
+fn divide_by_zero() -> u32 {
+    let a = 1;
+    let b = 0;
+    a / b  // This will trigger a panic
+}
+
+// Define the panic handler
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    // Print a panic message
+    hprintln!("Panic occurred: {:?}", info).unwrap();
+
+    // Enter an infinite loop to halt the system after a panic
+    loop {}
+}
+```
+
+The `divide_by_zero` function is intentionally written to trigger a panic
+(dividing by zero).
+- the panic_handler is defined using the `#[panic_handler]` attribute, when a panic occurs, this handler will be called;
+- inside the panic_handler, `hprintln!` is used to print the panic message (`Panic occurred: ...`) to the host system via semihosting.
+- the program enters an infinite loop (`loop {}`) to halt the system after a panic, preventing the device from continuing to run.
+
+:::info
+Panic handlers are usually defined by the frameworks. `embassy-rs` does define its own panic handler.
+:::
+
+### Using `defmt`
+
+Another drawback if semihosting is that
+all the strings used in the debug messages are stored into the firmware's DATA
+sections and are flashed to the device. All the formating of these strings
+is done by the device.
+
+The [`defmt`](https://github.com/knurling-rs/defmt) crate is a compact logging framework 
+designed for Rust-based embedded systems. Its name comes from *Deferred Formatting*. Instead of sending full log messages, 
+it transmits compressed binary data, which is later decoded on the host.  
+
+This works in two steps:
+1. the firmware sends compressed log data via a debug probe (e.g., using `probe-rs`) or another transport like UART (serial port);
+2. the host tool (`defmt-print`) decodes the data and prints human-readable logs.  
+
+Using `defmt` implies working with its own printing macros: 
+- `error!` used for logging errors, that mean that the firmware cannot conitnue to correctly run;
+- `warn!` used for logging warning messages, that are usually recoverable errors, and the framework can conitnue to run correctly;
+- `info!` use for logging information messages
+- `debug!` used for logging debug messages that should not be displayed under normal functioning;
+- `trace!` used for logging almost all the actions of the firmware, messages that should be enable only when the firmware does not work correctly and needs detailed debugging. 
+
+#### Transports
+
+One of the key features of `defmt` is its flexible transport system, allowing developers 
+to choose how the log data is transmitted.  
+Here, we'll highlight *RTT* (*Real-Time Transfer*) and *UART*.
+
+*RTT* is one of the most powerful transport solutions for embedded debugging. 
+It is a high-speed communication protocol that allows log data to be sent from 
+the embedded system to the host system in real time. RTT works through the 
+debugger's *SWD* (*Serial Wire Debug*) interface, which allows communication 
+between the device and the host without requiring an additional *UART* or *USB* 
+connection. 
+
+:::info
+Using *RTT* requires a debugger.
+
+*RTT* has several key advantages over traditional *UART*. It offers much higher 
+data transfer speeds, making it ideal for applications that need frequent 
+log output or high-throughput debugging. Moreover, *RTT* doesn't require a 
+separate serial interface or special drivers on the host system, as the 
+debugger itself handles the communication. The real-time nature of *RTT* is 
+perfect for debugging critical, time-sensitive systems.
+:::
+
+*UART* is one of the oldest and most commonly used serial communication protocols 
+in embedded systems. It’s well-supported by almost every microcontroller and 
+platform, and it provides a straightforward way to send log data to a host system. 
+In the context of `defmt`, *UART* can be used to transmit log data as ASCII or 
+binary over a serial connection, where it is then decoded by a terminal or 
+host application.
+
+:::info
+While *UART* is slower than RTT, it remains a popular solution due to its simplicity 
+and widespread availability. It can be easily set up on most microcontrollers and 
+is supported by many *USB-to-serial* adapters, making it accessible for both 
+beginners and experienced developers. However, it has limitations in terms of 
+speed and real-time debugging capabilities, especially in cases with large log 
+outputs or higher data transfer requirements.
+:::
+
+#### Example
+
+This example demonstrates how to use `defmt` for logging in an embedded system, 
+handle panics, and send log messages over *RTT*. 
+
+```rust
+#![no_std]
+#![no_main]
+
+use cortex_m_rt::entry;
+use defmt::{error, info};
+// use RTT for defmt transport
+use defmt_rtt as _;
+
+#[entry]
+fn main() -> ! {
+  info!("Device has started");
+  panic!("panic here");
+}
+
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    error!("{:?}", info);
+    loop {}
+}
+```
+
+The `defmt` crate is used for logging, and two macros are employed in this example: `info!` and `error!`. The `info!` macro is used to log informational messages, such as when the device starts up. The `error!` macro is used in the panic handler to log error messages if the system encounters a panic. 
+The logging data is transmitted via *RTT* using the `defmt_rtt` crate, which is imported but not explicitly called. 
+The use of RTT enables real-time, high-speed communication between the embedded system and the host, 
+making it suitable for debugging in time-sensitive applications.
+
+In the `main` function, the program begins by logging the message `"Device has started"` with the `info!` macro. 
+Following this, the `panic!` macro is called, simulating a panic condition. This could be triggered for various 
+reasons, such as an unexpected error or failed condition in the embedded system.
+
+The *panic handler* logs the panic information using the `error!` macro. The `info` parameter passed to the panic handler contains details about the panic, which are logged for debugging purposes. 
+After logging the error, the program enters an infinite loop (`loop {}`) to prevent further execution, 
+effectively halting the system in a controlled manner. This is a common pattern in embedded systems when 
+handling critical errors or panics.
+
+### Semihosting and `defmt`
+
+This table show the advantgaes and disadvantages of both methods.
+
+| Feature       | Semihosting                        | `defmt`                         |
+|--------------|----------------------------------|--------------------------------|
+| **Performance** | Slow (halts CPU)                | Fast (minimal overhead)        |
+| **Output Format** | Plain text (`hprintln!`)        | Compressed binary logs        |
+| **Debugger Required?** | Yes                              | No (can use other transports) |
+| **Memory Usage** | High (standard Rust formatting) | Low (compact binary format)   |
+| **Use Case** | Debugging with full text output  | Real-time logging on embedded devices |

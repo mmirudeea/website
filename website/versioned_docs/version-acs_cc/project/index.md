@@ -71,11 +71,11 @@ It has to run software written in Rust. Students can use:
 
 | Part | Deadline | Points |
 |--------|--------|--------|
-| Documentation Milestone | Lab 9 | 1p |
-| Hardware Milestone | Lab 11 | 1p |
-| Software Milestone | Lab 12 | 1p |
-| PM Faire | TBD | 2p |
-| **Total** |  | **5p** |
+| Documentation Milestone | Lab 9 | 0,4p |
+| Hardware Milestone | Lab 11 | 0,8p |
+| Software Milestone | Lab 12 | 0,8p |
+| PM Faire | TBD | 1p |
+| **Total** |  | **3p** |
 
 ## F.A.Q
 **Q:** Can I use another programming language, not Rust?\

@@ -139,7 +139,7 @@ DEFMT_LOG = "debug"
 
 ### Compiling
 
-You will need to compile your executable specifically for the RP2350 chip. This chip is based on the **ARM Cortex M33** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv6-M target (thumbv6m-none-eabi):
+You will need to compile your executable specifically for the RP2350 chip. This chip is based on the **ARM Cortex M33** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv8-M target (thumbv8m.main-none-eabihf):
 
 ```shell
 rustup target add thumbv8m.main-none-eabihf
@@ -184,7 +184,7 @@ without having to specify the target every time.
 
 To flash a program to the Raspberry Pi Pico 2 via USB, it needs to be in *USB mass storage device mode*. To put it in this mode, you need to **hold the `BOOTSEL` button down**  while connecting it to your PC. Connecting and disconnecting the USB can lead to the port getting damaged, so we conveniently added a reset button to our custom board. Now, to make it reflashable again, just press the two buttons simultaneously.
 
-After connecting the board to your PC and compiling the program, locate the binary in the `target/thumbv6m-none-eabi/release/` (or `target/thumbv6m-none-eabi/debug/` if you didn't use the `--release` option) folder. There are a few ways to flash the binary to the board:
+After connecting the board to your PC and compiling the program, locate the binary in the `target/thumbv8m.main-none-eabihf/release/` (or `target/thumbv8m.main-none-eabihf/debug/` if you didn't use the `--release` option) folder. There are a few ways to flash the binary to the board:
 
 #### 1. Using `elf2uf2-rs`:
 
@@ -417,6 +417,25 @@ Due to the size constraints imposed on us (in our case, `2MB` of flash memory), 
 
 Because we are using the **Embassy-rs** framework, we want to let it take care of the entry point of our program (because it has to do some complex operations, like allocating the `task-arena` and `executor` structures). For the moment, all we will need to do is add the `#![no_main]` attribute to `src/main.rs`.
 
+#### VSCode settings
+
+The rust-analyzer extention might give you an error after you add the two attributes previously mentioned. To get rid of said error, you can add a `settings.json` file to your `.vscode/` directory.
+
+##### settings.json
+
+```json
+{
+    "rust-analyzer.cargo.allTargets": false,
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+    },
+}
+```
+
+The provided configuration will also help you by enabling automatic formatting each time you save your work.
+
 #### Toolchain setting
 
 :::info
@@ -582,14 +601,14 @@ fn main() {
 
 #### Adding the Dependencies
 
-At this step, we must add the dependencies we will use for our project. Bellow you will find the basics you will need for a minimal application, including an `usb_logger` to *"enable"* debugging over serial.
+At this step, we must add the dependencies we will use for our project. Bellow you will find the basics you will need for a minimal application, including an `usb_logger` to *"enable"* debugging over serial. We also have to specify the git version for the `embassy` crates, since the ones on `crates.io` don't work with the `RP2350`.
 
 ##### `embassy-executor`
 
 This is an `async/await` executor designed for embedded. To add it as a dependency to your project, run:
 
 ```shell
-cargo add embassy-executor --features task-arena-size-98304,arch-cortex-m,executor-thread,executor-interrupt,defmt
+cargo add embassy-executor --git https://github.com/embassy-rs/embassy.git --rev 2e7a2b6 --features task-arena-size-98304,arch-cortex-m,executor-thread,executor-interrupt,defmt
 ```
 
 * `task-arena-size-X` - sets the task arena size
@@ -610,7 +629,7 @@ cargo add cortex-m-rt
 This crate enables timekeeping, timeouts and delays. Add it by running:
 
 ```shell
-cargo add embassy-time --features defmt,defmt-timestamp-uptime
+cargo add embassy-time --git https://github.com/embassy-rs/embassy.git --rev 2e7a2b6 --features defmt,defmt-timestamp-uptime
 ```
 
 * `defmt` - use deferred formatting for logs
@@ -621,7 +640,7 @@ cargo add embassy-time --features defmt,defmt-timestamp-uptime
 This crate is a **Hardware Abstraction Layer** for the **RP2350**. You can add it to your project like so:
 
 ```shell
-cargo add embassy-rp --features time-driver,critical-section-impl,rp235xa,defmt
+cargo add embassy-rp --git https://github.com/embassy-rs/embassy.git --rev 2e7a2b6 --features time-driver,critical-section-impl,rp235xa,defmt
 ```
 
 * `time-driver` - enable the timer for use with `embassy-time` with a `1MHz` tick rate.
@@ -636,7 +655,7 @@ USB implementation of the `log` crate. It allows the usage of `info!` macro and 
 
 ```shell
 cargo add log
-cargo add embassy-usb-logger
+cargo add embassy-usb-logger --git https://github.com/embassy-rs/embassy.git --rev 2e7a2b6
 ```
 
 #### `probe-panic`
@@ -704,6 +723,7 @@ async fn main(spawner: Spawner) {
     }
 }
 ```
+If you came here from the [Flashing over USB](#flashing-over-usb) section, you can now go back and continue the tutorial.
 
 If you've completed all the steps in this tutorial, you can run this by using
 

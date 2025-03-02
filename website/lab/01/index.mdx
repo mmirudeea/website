@@ -12,10 +12,11 @@ import TabItem from '@theme/TabItem';
 
 ## Concepts
 
-- What is the microcontroller's *debugging interface*
-- What is a debugger
-- What is debugging software
+- How to debug a microcontroller's firmware
+- How the binary of the firmware looks like and how to inspect it
+- How to cross-compile Rust software
 - How to use *probe-rs* for RP2 processors
+- How to print messages from a microcontroller
 - How to use the Visual Studio Code probe-rs extension
 
 ## Resources
@@ -83,11 +84,16 @@ provides debug cables.
 The firmware running on the debug device is open source and available on [github](https://github.com/raspberrypi/debugprobe). It is written in C and 
 it uses [FreeRTOS](https://www.freertos.org). It is compatible with both versions of the RP2 processors, RP2040 and RP2350.
 
+The details about the wiring are available on the Pico Debug Probe's [website](https://www.raspberrypi.com/documentation/microcontrollers/debug-probe.html#getting-started).
+
 ### Secondary Pico
 
 As the debugger's firmware is open source, an additional Raspberry Pi Pico can be used as a debugger.
 
-TODO connections
+The details about the wiring are available in the [Getting started with Raspberry Pi
+Pico-series](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf) in the *Debug with a second Pico or Pico 2* section. 
+
+![A Pico debugging another Pico](pico_debug.webp)
 
 :::info
 The lab board uses RP2040 processor soldered to the PCB as a debugger. It runs the [debugprobe](https://github.com/raspberrypi/debugprobe) firmware and has 
@@ -994,6 +1000,28 @@ The *panic handler* logs the panic information using the `error!` macro. The `in
 After logging the error, the program enters an infinite loop (`loop {}`) to prevent further execution, 
 effectively halting the system in a controlled manner. This is a common pattern in embedded systems when 
 handling critical errors or panics.
+
+#### Filtering messages
+
+Messages printed by `defmt` can be filetred using the `DEFMT_LOG` environemnt variable. The value
+of this variable represents the lowest priority type of message the will be printed.
+
+| Message | Priority |
+|-|-|
+| `trace!` | 0 |
+| `debug!` | 1 |
+| `info!` | 2 |
+| `warn!` | 3 |
+| `error!` | 4 |
+
+To avoid setting this every time or in the command line, a `.cargo/config.toml` entry can be used.
+
+```toml
+[env]
+DEFMT_LOG = "debug"
+```
+
+This example will ask `cargo run` to only print messages with a priority higher or equal to `debug!`.
 
 ### Semihosting and `defmt`
 

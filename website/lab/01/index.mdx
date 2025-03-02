@@ -1,0 +1,204 @@
+---
+description: Using debug tools to run embassy-rs firmware 
+slug: /lab/01
+---
+
+# 01 - Debug
+
+This lab will teach you how to debug and run programs written in Rust and [embassy](https://embassy.dev) on he Raspberry Pi Pico boards.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Concepts
+
+- What is the microcontroller's *debugging interface*
+- What is a debugger
+- What is debugging software
+- How to use *probe-rs* for RP2 processors
+- How to use the Visual Studio Code probe-rs extension
+
+## Resources
+
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+- Chapter 4 - *Memory*
+  - Section 4.1 - *ROM*
+  - Section 4.2 - *SRAM*
+  - Section 4.3 - *Boot RAM*
+- Chapter 5 - *Bootrom*
+2. [probe-rs's documentation](https://probe.rs/docs/overview/about-probe-rs/)
+3. [rp235x-hal documentation](https://docs.rs/rp235x-hal/latest/rp235x_hal/index.html)
+4. [Embassy documentation](https://embassy.dev/book/dev/runtime.html)
+
+## Debugger
+
+Developing software (*firmware*[^firmware]) on devices is a little different from standard computer applications. The main difference
+is that the software is developed and compiled on the computer and then 
+uploaded and run on a separate device.
+
+Each development board defines its own way of uploading software to it. Some boards, like the Raspberry Pi Picos, provide a *simulated* USB drive
+where users can copy a file, others, like the ESP32 boards, provide a WiFi Access Point and a web interface.
+
+One way that all boards have in common is *debug interface*. Microcontrollers provide a special hardware interface
+for debugging purposes. Using specialized hardware, developers can:
+- stop the processor any time
+- ask the processor to execute one instruction at a time
+- read and write the processor's memory (RAM)
+- read and write the processor's Flash (Storage)
+- read the processor's registers
+- access special debugging interfaces for sending log messages
+
+These functions allow developers to upload programs and observe the program's behavior.
+
+There are several debugging protocols available, the most common of then being JTAG and SWD. The RP2 processors use SWD.
+
+:::warning
+When placed in production, the **debug interface should be disabled**. users of the production device should 
+never be able to access such an interface and tamper with the device's program.
+
+Each micrcontroller offers a way in which de debug interface can be permanently disabled or restricted.
+:::
+
+
+### Raspberry Pi Debug Probe
+
+Professional debuggers, while offering a lot of features, are usually expensive. Raspberry Pi provides the [Debug Probe](https://www.raspberrypi.com/products/debug-probe/), an affordable debug device
+that uses an RP2040 processor. It is similar to a Raspberry Pi Pico board, just that it has a smaller form factor and
+provides debug cables. 
+
+The firmware running on the debug device is open source and available on [github](https://github.com/raspberrypi/debugprobe). It is written in C and 
+it uses [FreeRTOS](https://www.freertos.org). It is compatible with both versions of the RP2 processors, RP2040 and RP2350.
+
+### Secondary Pico
+
+As the debugger's firmware is open source, an additional Raspberry Pi Pico can be used as a debugger.
+
+TODO connections
+
+### Lab Board
+
+The lab board uses RP2040 processor soldered to the PCB as a debugger. It runs the [debugprobe](https://github.com/raspberrypi/debugprobe) firmware and has 
+traces soldered to Raspberry Pi Pico's socket.
+
+## Debugger software
+
+The hardware debuggers require software on the computer to interact with the device. While most of the debugger vendors
+provide their proprietary software, there are a few open source alternatives, like [OpenOCD](https://openocd.org), [PyOCD](https://pyocd.io) and [probe-rs](https://probe.rs).
+
+##
+
+Uploading firmware will be done using the SWD debugging interface of the Raspberry Pi.
+
+## Inspect binaries
+When working in Rust, `rust-objdump` can be used to inspect the compiled output to see sections and interleaved code. This is particularly useful to inspect code and debug.
+
+### Install cargo binutils
+Before you can use `rust-objdump` with Rust projects, you'll need to install `cargo-binutils`.
+
+
+```bash
+cargo install cargo-binutils
+rustup component add llvm-tools
+```
+
+### Check section headers
+
+<Tabs>
+  <TabItem value="rp2350" label="Raspberry Pi Pico 2">
+
+```shell
+rust-objdump --section-headers target/thumbv8m.main-none-eabihf/debug/<executable_name>
+```
+
+```shell
+Sections:
+Idx Name            Size     VMA      LMA      Type
+  0                 00000000 00000000 00000000 
+  1 .vector_table   00000114 10000000 10000000 DATA
+  2 .start_block    00000028 10000114 10000114 DATA
+  3 .text           0000b190 1000013c 1000013c TEXT
+  4 .bi_entries     00000010 1000b2cc 1000b2cc DATA
+  5 .rodata         000030e4 1000b2e0 1000b2e0 DATA
+  6 .data           00000488 20000000 1000e3c4 TEXT
+  7 .gnu.sgstubs    00000000 1000e860 1000e860 DATA
+  8 .bss            000181bc 20000488 20000488 BSS
+  9 .uninit         00000400 20018644 20018644 BSS
+ 10 .end_block      00000000 1000e860 1000e860 DATA
+ 11 .defmt          00000023 00000000 00000000 
+ 12 .debug_abbrev   0000b8bb 00000000 00000000 DEBUG
+ 13 .debug_info     000ea40f 00000000 00000000 DEBUG
+ 14 .debug_aranges  00009a70 00000000 00000000 DEBUG
+ 15 .debug_ranges   00032380 00000000 00000000 DEBUG
+ 16 .debug_str      000eff8d 00000000 00000000 DEBUG
+ 17 .comment        00000099 00000000 00000000 
+ 18 .ARM.attributes 0000003a 00000000 00000000 
+ 19 .debug_frame    0001b444 00000000 00000000 DEBUG
+ 20 .debug_line     0006ed68 00000000 00000000 DEBUG
+ 21 .debug_loc      00001e3a 00000000 00000000 DEBUG
+ 22 .symtab         00007530 00000000 00000000 
+ 23 .shstrtab       00000101 00000000 00000000 
+ 24 .strtab         0000f6ca 00000000 00000000 
+```
+
+  </TabItem>
+  <TabItem value="rp2040" label="Raspberry Pi Pico" default>
+
+```shell
+rust-objdump --section-headers target/thumbv6m-none-eabi/debug/<executable_name>
+```
+
+```shell
+Sections:
+Idx Name            Size     VMA      Type
+  0                 00000000 00000000 
+  1 .vector_table   000000c0 10000100 DATA
+  2 .boot_loader    00000100 10000000 DATA
+  3 .text           00000b10 100001c0 TEXT
+  4 .rodata         000001a4 10000cd0 DATA
+  5 .data           00000000 20000000 DATA
+  6 .gnu.sgstubs    00000000 10000e80 TEXT
+  7 .bss            00000000 20000000 BSS
+  8 .uninit         00000000 20000000 BSS
+  9 .debug_abbrev   00001bce 00000000 DEBUG
+ 10 .debug_info     00025316 00000000 DEBUG
+ 11 .debug_aranges  000014b8 00000000 DEBUG
+ 12 .debug_str      0003c860 00000000 DEBUG
+ 13 .debug_pubnames 000175c6 00000000 DEBUG
+ 14 .debug_pubtypes 00000ee6 00000000 DEBUG
+ 15 .comment        00000073 00000000 
+ 16 .ARM.attributes 00000032 00000000 
+ 17 .debug_frame    00004444 00000000 DEBUG
+ 18 .debug_line     00023790 00000000 DEBUG
+ 19 .debug_ranges   00016df8 00000000 DEBUG
+ 20 .debug_loc      00000074 00000000 DEBUG
+ 21 .symtab         00000970 00000000 
+ 22 .shstrtab       00000103 00000000 
+ 23 .strtab         00000fe4 00000000 
+```
+  
+  </TabItem>
+</Tabs>
+
+
+
+
+
+### Disassemble a specific section
+
+```bash
+rust-objdump --disassemble -j .section_name target/thumbv6m-none-eabi/debug/<executable_name>
+```
+
+:::info
+
+`cargo objdumb` and `rust-objdump` tools use llvm's `objdump` tool.
+Some terminals do not parse parameters proxied to `llvm-objdump` command.
+If this happens please use `llvm-objdump` script directly like so
+
+```shell
+llvm-objdump <path_to_binary> --section.headers
+```
+
+:::
+
+[^firmware]: Software that is running on microcontrollers is usually called *firmware*. The words is a combination of the words *firm* and *software* and means the software that the vendor firm of the device has uploaded.

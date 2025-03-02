@@ -677,6 +677,7 @@ cargo add panic-probe --features print-defmt
 ```
 
 * `print-defmt` - allows panic messages to be printed in the terminal
+
 Finally, we should add the `defmt` and `defmt-rtt` crates, as we will be using some of the macros defined by the former to send logs back to our host. The latter crate transmits the log messages over the RTT (Real-Time Transfer) protocol.
 
 ```shell

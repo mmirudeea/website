@@ -59,6 +59,9 @@ never be able to access such an interface and tamper with the device's program.
 Each micrcontroller offers a way in which de debug interface can be permanently disabled or restricted.
 :::
 
+The Raspberry Pi Pico can be debugged using one of the two pieces of hardware:
+- The Raspberry Pi Debug Probe
+- A secondary Raspberry Pi Pico
 
 ### Raspberry Pi Debug Probe
 
@@ -75,22 +78,162 @@ As the debugger's firmware is open source, an additional Raspberry Pi Pico can b
 
 TODO connections
 
-### Lab Board
-
+:::info
 The lab board uses RP2040 processor soldered to the PCB as a debugger. It runs the [debugprobe](https://github.com/raspberrypi/debugprobe) firmware and has 
 traces soldered to Raspberry Pi Pico's socket.
+:::
+
 
 ## Debugger software
 
-The hardware debuggers require software on the computer to interact with the device. While most of the debugger vendors
-provide their proprietary software, there are a few open source alternatives, like [OpenOCD](https://openocd.org), [PyOCD](https://pyocd.io) and [probe-rs](https://probe.rs).
+Hardware debuggers require specialized software on the host computer (the computer used for development) to 
+communicate with and control the target device (the Raspberry Pi Pico 2 in this case). These software tools provide 
+essential debugging capabilities, such as setting breakpoints, inspecting 
+memory, and stepping through code execution. While most debugger vendors offer 
+proprietary software tailored to their specific hardware, developers often seek 
+more flexible or platform-independent solutions. Fortunately, there are several 
+open-source alternatives that support a wide range of debugging probes and 
+microcontrollers.
 
-##
+One widely used open-source tool is [OpenOCD](https://openocd.org), which 
+provides a powerful and configurable interface for debugging and programming 
+ARM and RISC-V devices, including the Raspberry Pi Pico 2. OpenOCD supports a 
+variety of debug probes and allows integration with GDB for source-level 
+debugging.
 
-Uploading firmware will be done using the SWD debugging interface of the Raspberry Pi.
+Another popular option is [PyOCD](https://pyocd.io), a Python-based tool 
+designed primarily for ARM Cortex-M microcontrollers. It offers an easy-to-use 
+command-line interface, built-in support for CMSIS-DAP debug probes, and 
+seamless integration with debugging environments like GDB and Visual Studio 
+Code.
 
-## Inspect binaries
-When working in Rust, `rust-objdump` can be used to inspect the compiled output to see sections and interleaved code. This is particularly useful to inspect code and debug.
+For developers working in Rust or looking for an alternative that is optimized 
+for modern workflows, [probe-rs](https://probe.rs) provides a Rust-based 
+debugging and flashing tool that supports multiple probe types, including 
+CMSIS-DAP and J-Link. It offers a simple API, making it a great choice for both 
+manual debugging and automated workflows.
+
+## Flashing firmware
+
+To run firmware on the Raspberry Pi Pico 2, the 
+compiled program must be transferred to the device's flash (non-volatile) memory. This 
+process is called *flashing*, and it ensures that the firmware remains on the 
+device even after a power reset. 
+
+A flashing tool is software that communicates 
+with the device through a debug probe or other interfaces, such as USB or 
+UART, to write the firmware to the correct memory location. Many flashing tools 
+also verify the uploaded firmware to ensure data integrity and provide 
+additional features like chip erasing or memory protection configuration.
+
+When developing Rust firmware for the Raspberry Pi Pico 2, `probe-rs` is the 
+proffered flashing tool to upload and debug code. 
+
+Using `cargo run`, developers can 
+compile their project and flash the firmware onto the target device in a single 
+command. This workflow simplifies development by eliminating the need for 
+separate flashing tools. Under the hood, `cargo run` invokes `probe-rs` to 
+detect the connected debug probe and automatically handle the flashing process. 
+
+## Binary format
+
+To be able ro properly run the code, the Raspberry Pi Pico (1 and 2) expects a certain binary format.
+The compiler and the linker, both provided by Rust, have to make sure that the generated
+binary code meets the requirements, otherwise the Raspberry Pi Pico will not start.
+
+### Sections
+
+The binary file is generated as a collection of sections. Each section has:
+- size (in bytes)
+- the address of the section in RAM when the firmware runs (`VMA`, *Virtual Memory Address*) 
+- the address of the section when it is stored into flash (`LMA`, *Load Memory Address*)
+- the type
+
+#### Section types
+| Type | Description |
+|-|-|
+| *TEXT* | Contains the binary code the the processor executes |
+| *DATA* | Contains data used by the firmware, usually variables |
+| *BSS* | Contains uninitialized or initialized with `0` data, usually uninitialized global variables and variables initialized to 0 |
+| *DEBUG* | Contains debug information used by the debugger software. |
+
+:::info
+DEBUG type sections have no addresses (`0x00000000`), as it they are never loaded to the device. These sections
+are used by the debugging software to display meaningful information to developers. Among the information
+store here we can find:
+- source code to binary code mappings
+- variable name mappings
+- function name mappings
+:::
+
+The binary file for the Raspberry Pi Pico 2 is organized to ensure proper 
+execution and booting, with specific sections for the developer's code and 
+variables. The first section that holds the developer’s code is the *`.text`* 
+section. This section contains all the executable instructions that make up 
+the application’s logic. It is located after the *`.start_block`* and 
+*`.vector_table`* sections, and it is placed into flash memory, ready to 
+be loaded and executed when the system starts. This is where the developer's 
+main program logic resides.
+
+Following the *`.text`* section, the *`.data`* section contains 
+initialized global and static variables. These variables are stored in flash 
+memory and are copied into RAM at startup. The developer’s predefined values 
+for global variables are stored here, so they can be used during runtime. 
+In contrast, the *`.bss`* section holds uninitialized variables. These 
+variables are zeroed out during the boot process and are stored in RAM to 
+ensure that the program can access them during execution.
+
+The *`.rodata`* section follows, storing read-only data like string literals 
+and constant values. These values are also stored in flash memory and are used 
+throughout the application without modification. The *`.rodata`* section 
+helps to conserve RAM by storing constant data in the flash memory instead.
+
+Once the developer’s code and variables are in place, the firmware image ends 
+with the *`.end_block`* section. This section marks the end of the firmware 
+and ensures that no additional data is written past this point. It is important 
+for memory management, preventing the accidental overwrite of critical memory 
+regions during updates or execution.
+
+### Inspect binaries
+
+When working in Rust for the Raspberry Pi Pico 2, `rust-objdump` can be used to 
+inspect the compiled binary and examine its memory layout. The output includes 
+various sections that are crucial for embedded development.  
+
+| Section         | Fixed Offset  | Description |
+|----------------|--------------|-------------|
+| *`.vector_table`* | `0x10000000` | Contains the initial stack pointer value and interrupt vector table. Essential for system startup and exception handling, allowing the processor to correctly respond to interrupts. |
+| *`.start_block`* | `0x10000114` | Holds boot metadata, including information needed by the bootloader to validate and execute the firmware correctly. Ensures that the correct application runs after a reset. |
+| *`.text`* | N/A | Stores executable code, typically placed in flash memory. Optimizing this section can reduce flash usage and improve execution efficiency. |
+| *`.rodata`* | N/A | Contains read-only data, such as string literals and constants, stored in flash memory. Helps minimize RAM usage. |
+| *`.data`* | N/A | Includes initialized variables that are stored in flash and copied to RAM during startup. Used for global and static variables requiring predefined values. |
+| *`.bss`* | N/A | Represents uninitialized variables that are zeroed out in RAM before execution. Large `.bss` sections can impact RAM availability. |
+| *`.bi_entries`* | N/A | Contains boot information entries used by the RP2350 ROM bootloader and firmware updater to manage and validate firmware images. |
+| *`.end_block`* | N/A | Marks the end of the firmware image. This section helps bootloaders determine the total size of the firmware and ensures that no unexpected data is included beyond this point. It is used for integrity checks and defining boundaries for updates or memory protection. |
+
+
+#### Pico 1 vs Pico 2
+The primary difference between the Raspberry Pi Pico 1 and Pico 2 in terms of 
+firmware layout is the presence of the *`.boot_loader`* section in the Pico 1, 
+which is not present in the Pico 2. The *`.boot_loader`* section in the Pico 1 
+is located at a fixed offset of `0x10000000` and contains the bootloader code 
+along with necessary metadata for bootstrapping the device. 
+
+The *`.vector_table`*  section in the Pico 1 is placed immediately 
+after the *`.boot_loader`* section, 
+unlike the Pico 2 where it is located at the beginning of the flash memory at 
+`0x00000000`. 
+
+The Pico 2 uses the *`.start_block`* and *`.end_block`* sections 
+to handle boot metadata and firmware boundaries, while the Pico 1 relies on the 
+bootloader for these tasks. Furthermore, the Pico 1 does not have a fixed 
+*`.end_block`* section, which is used in the Pico 2 to mark the end of the 
+firmware image. 
+
+Despite these differences, both devices share a similar overall 
+firmware structure, with the *`.text`*, *`.rodata`*, *`.data`*, and *`.bss`* 
+sections serving similar purposes in both devices.
+
 
 ### Install cargo binutils
 Before you can use `rust-objdump` with Rust projects, you'll need to install `cargo-binutils`.
@@ -104,7 +247,7 @@ rustup component add llvm-tools
 ### Check section headers
 
 <Tabs>
-  <TabItem value="rp2350" label="Raspberry Pi Pico 2">
+  <TabItem value="rp2350" label="Raspberry Pi Pico 2" default>
 
 ```shell
 rust-objdump --section-headers target/thumbv8m.main-none-eabihf/debug/<executable_name>
@@ -141,7 +284,7 @@ Idx Name            Size     VMA      LMA      Type
 ```
 
   </TabItem>
-  <TabItem value="rp2040" label="Raspberry Pi Pico" default>
+  <TabItem value="rp2040" label="Raspberry Pi Pico">
 
 ```shell
 rust-objdump --section-headers target/thumbv6m-none-eabi/debug/<executable_name>

@@ -601,7 +601,9 @@ fn main() {
 
 #### Adding the Dependencies
 
-At this step, we must add the dependencies we will use for our project. Bellow you will find the basics you will need for a minimal application, including an `usb_logger` to *"enable"* debugging over serial. We also have to specify the git version for the `embassy` crates, since the ones on `crates.io` don't work with the `RP2350`.
+At this step, we must add the dependencies we will use for our project. Bellow you will find the basics you will need for a minimal application. 
+
+We have to specify the git version for the `embassy` crates, since the ones on `crates.io` don't work with the `RP2350`.
 
 ##### `embassy-executor`
 
@@ -657,6 +659,14 @@ USB implementation of the `log` crate. It allows the usage of `info!` macro and 
 cargo add log
 cargo add embassy-usb-logger --git https://github.com/embassy-rs/embassy.git --rev 2e7a2b6
 ```
+
+:::note
+
+Since you will have a debugger available on the board in the lab, using it to send log messages to the host is the best choice. Besides being able to set breakpoints, watches and having access to the CPU registers and the call stack, through the debugger you can, perhaps most importantly, transmit panic messages to the host via RTT (Real-Time Transfer). 
+
+You can also use USB logging and let the Pico board communicate directly with the host via a serial port. However, this method severely restricts your ability to debug the program. Every print statement used will slow down the code's execution and panic messages are also lost, since the MCU halts before the panic log is sent.
+
+:::
 
 #### `probe-panic`
 
@@ -732,3 +742,9 @@ cargo run
 ```
 
 or by starting the `Pico 2W` task at the top of the **Run and Debug** menu.
+
+:::note
+
+Remember that there are a few ways to flash your program to the board. The two methods above require a debugger, like the one used in Lab 01. If you don't have access to a debugger, you can also use elf2uf2-rs or drag and drop your executable after connecting your board in USB mass storage device mode.
+
+:::

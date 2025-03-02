@@ -351,8 +351,8 @@ Distance sensor - Sharp
 ![Pinout LDO](images/pinout_ldo.png)   
 Voltage regulator - Texas instruments
 
-![RP2040 pinout](images/pinout_rp2040.png)   
-RP2040 MCU - Raspberry Pi
+![RP2040 pinout](images/pinout_rp2350a.png)   
+RP2350A MCU - Raspberry Pi
 </div>
 
 The pin configuration diagrams are accompanied by pin descriptions. In this sections, the manufacturers present the functionality of every pin.

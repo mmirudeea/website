@@ -1365,6 +1365,17 @@ allows direct observation of GPIO states, timers, UART, and more.
 Please make sure that the project folder contains the correct SVD file.
 :::
 
+#### SVD Files for The Raspberry Pi Pico
+
+| Processor | Crate that provides the SVD File |
+|-|-|
+| *RP2350* | [rp235x_pac](https://github.com/rp-rs/rp235x-pac/tree/main/svd) |
+| *RP2040* | [rp2040_pac](https://github.com/rp-rs/rp2040-pac/tree/main/svd) |
+
+:::tip
+Make sure you download the `.pacthed` versions of the files.
+:::
+
 #### How to Enable Peripheral Debugging
 1. Ensure `"svdFile": "./rp2350.svd"` or `"svdFile": "./rp2040.svd"` is set in `launch.json`.  
 2. Start debugging and hit a **breakpoint**.  

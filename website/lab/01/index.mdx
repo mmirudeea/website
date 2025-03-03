@@ -812,7 +812,7 @@ Printing a panic message takes more than 2 seconds.
 #### Printing a message
 
 Semihosting for Cortex-M is implemented by the `cortex_m_semihosting` crate. This
-exposes the `hprintln!` is a macro used for printing messages to the host system. 
+exposes the `hprintln!`, a macro used for printing messages to the host system. 
 This macro behaves like `println!`, but instead of 
 printing to the terminal, it sends the output to the debugger, which then 
 transmits it to the host system.

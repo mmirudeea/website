@@ -626,7 +626,7 @@ llvm-objdump <path_to_binary> --section.headers
 
 ## Empty firmware
 
-An *empty firmware* is a piece of software running on a device that boots and does puts 
+An *empty firmware* is a piece of software running on a device that boots and puts 
 the device in an endless loop. To boot, the firmware has to perform the following:
 - do not depend on the standard library (`#![no_std]`)
 - do not provide the standard `main` function called by the operating system (`#![no_main]`)

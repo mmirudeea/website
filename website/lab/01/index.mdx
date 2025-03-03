@@ -1079,7 +1079,8 @@ The `cargo add` command adds crates to a project.
   Inspect the binary and see if the required sections are present. (**1p**) Is one of the sections missing? 
   
 :::tip
-Make sure you only use the linker script that actually exist the build script.
+Make sure that the build script only uses linker scripts that exist in the project.
+Some crates, like `cortex-m-rt` and `defmt` provide linker scripts.
 :::
 6. Print a message from the main function using semihosting. Try running 
   the firmware using `probe-rs run target/...$app_name`. Why doesn't it work? Take a look at [Semihosting](#semihosting) (**1p**). 

@@ -1094,7 +1094,7 @@ Make sure you only use the linker script that actually exist the build script.
 - Make sure you enable the `defmt` and `critical-section-impl` features of the `rp235x_hal` crate.
 - Make sure you set the `DEFMT_LOG` variable to `info` when building to see the `info` messages or
   use the `.cargo/config.toml` file (take a lok at [Filtering Messages](#filtering-messages)).
-- Messages are printed together with the location where the messages was issues. To supress this
+- Messages are printed together with the location where the message was issued. To supress this
   use the ` --no-location` parameter for `probe-rs run`.
 :::
 10. Use the `panic-probe` create to display better panics. (**1p**)

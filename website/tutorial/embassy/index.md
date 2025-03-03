@@ -746,6 +746,6 @@ or by starting the `Pico 2W` task at the top of the **Run and Debug** menu.
 
 :::note
 
-Remember that there are a few ways to flash your program to the board. The two methods above require a debugger, like the one used in Lab 01. If you don't have access to a debugger, you can also use `elf2uf2-rs` or drag and drop your executable after connecting your board in *USB mass storage device mode*.
+Remember that there are a few ways to flash your program to the board. The two methods above require a debugger, like the one used in [Lab 01](https://pmrust.pages.upb.ro/docs/acs_cc/lab/01). If you don't have access to a debugger, you can also use `elf2uf2-rs` or drag and drop your executable after connecting your board in *USB mass storage device mode*.
 
 :::

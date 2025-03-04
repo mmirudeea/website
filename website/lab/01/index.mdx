@@ -1045,10 +1045,10 @@ This table show the advantages and disadvantages of both methods.
 ## Exercises
 
 1. Create a new project using `cargo init`. Configure the project using a configuration file
-  to build for the lab board's target. Test it by running `cargo build`. Take a look at [Empty firmware](#empty-firmware)(**1p**). 
+  to build for the lab board's target. Test it by running `cargo build`. Take a look at [Cross-compiling](#cross-compiling)(**1p**). 
 :::tip
-*Make sure you are building a binary that does not depend on `std`, has no `main` function
-and provides a panic handler.*
+All you have to do is to make sure you are building a binary that does not depend on `std`, has no `main` function
+and provides an **empty panic handler**.
 
 To prevent `rust-analyzer` from showing an error on the first line and to automatically
 format your source when saving, create a `.vscode/settings.json` file with:
@@ -1067,13 +1067,12 @@ format your source when saving, create a `.vscode/settings.json` file with:
 2. Inspect the binary and figure out what sections are missing. Explain why each of the sections
   is missing. take a look at [Inspect binaries](#inspect-binaries). (**1p**)
 3. Add the `cortex-m-rt` crate to your project and define a 
-  function as an *entry point* for your firmware. Inspect the binary and see if the required sections
-  are present. (**1p**)
+  function as an *entry point* for your firmware. Inspect the binary and see which of the required sections are present. (**1p**)
 :::tip
 The `cargo add` command adds crates to a project.
 :::
 4. Write a linker script to add the correct sections to your binary. 
-  Take a look at [Linker script](#linker-script). Inspect the binary and see if the 
+  Take a look at [Linker script](#linker-script). Inspect the binary and check if the 
   required sections are present. (**1p**)
 5. Write the build script to instruct the linker to use the linker script. Take a look at [Build script](#build-script).
   Inspect the binary and see if the required sections are present. Is one of the sections missing? (**1p**) 
@@ -1092,7 +1091,7 @@ Some crates, like `cortex-m-rt` and `defmt` provide linker scripts.
   Take a look at [Using `defmt`](#using-defmt) (**1p**)
 :::tip
 - Make sure you add all the necessary linker scripts to the `build.rs` build script.
-- Make sure you enable the `defmt` and `critical-section-impl` features of the `rp235x_hal` crate.
+- Make sure you enable the `defmt` and `critical-section-impl` features of the `rp235x_hal` crate (cargo add --features).
 - Make sure you set the `DEFMT_LOG` variable to `info` when building to see the `info` messages or
   use the `.cargo/config.toml` file (take a look at [Filtering Messages](#filtering-messages)).
 - Messages are printed together with the location where the message was issued. To supress this

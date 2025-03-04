@@ -1091,7 +1091,7 @@ Some crates, like `cortex-m-rt` and `defmt` provide linker scripts.
   Take a look at [Using `defmt`](#using-defmt) (**1p**)
 :::tip
 - Make sure you add all the necessary linker scripts to the `build.rs` build script.
-- Make sure you enable the `defmt` and `critical-section-impl` features of the `rp235x_hal` crate (cargo add --features).
+- Make sure you enable the `defmt` and `critical-section-impl` features of the `rp235x_hal` crate (`cargo add --features`).
 - Make sure you set the `DEFMT_LOG` variable to `info` when building to see the `info` messages or
   use the `.cargo/config.toml` file (take a look at [Filtering Messages](#filtering-messages)).
 - Messages are printed together with the location where the message was issued. To supress this

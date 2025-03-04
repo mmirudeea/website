@@ -104,14 +104,13 @@ const GPIO_IN: *const u32= 0xd000_0004 as *const u32;
 
 let value = unsafe { 
     // write_volatile(GPIO_OE, !(1 << pin));
-    let gpio_oe = read_volatile(GPIO_OE);
+    let mut gpio_oe = read_volatile(GPIO_OE);
     // set bin `pin` of `gpio_oe` to 0 (input)
     gpio_oe = gpio_oe & !(1 << pin);
     write_volatile(GPIO_OE, gpio_oe);
     read_volatile(GPIO_IN) >> pin & 0b1
 };
 ```
-
 
 ---
 layout: two-cols
@@ -143,6 +142,14 @@ let value = unsafe {
 };
 ```
 
+<!--
+_CLR clears just the wanted bits and preserves all others 
+CLR pune 0 si SET pune 1
+-->
+
+<!--
+_
+-->
 
 ---
 layout: two-cols
@@ -171,12 +178,11 @@ unsafe {
   // set bit `pin` of GPIO_OE to 1 (output)
   write_volatile(GPIO_OE_SET, 1 << pin);
   // write_volatile(GPIO_OUT, (value & 0b1) << pin);
-  let gpio_out = read_volatile(GPIO_OUT);
+  let mut gpio_out = read_volatile(GPIO_OUT);
   gpio_out = gpio_out | (value & 0b1) << pin;
   write_volatile(GPIO_OUT, gpio_out);
 };
 ```
-
 
 ---
 layout: two-cols
@@ -242,7 +248,7 @@ layout: two-cols
 use core::ptr::read_volatile;
 use core::ptr::write_volatile;
 
-const GPIOX_CTRL: u32 = 0x4001_4004;
+const GPIOX_CTRL: usize = 0x4001_4004;
 const GPIO_OE_CLR: *mut u32= 0xd000_0028 as *mut u32;
 const GPIO_IN: *const u32= 0xd000_0004 as *const u32;
 
@@ -260,7 +266,6 @@ let value = unsafe {
 ##### GPIOx_CTRL
 Offset: 0x004, 0x00c, ... 0x0ec (0x4 + 8*x)
 <img src="./gpio_ctrl_register.png" class="rounded">
-
 
 ---
 layout: two-cols

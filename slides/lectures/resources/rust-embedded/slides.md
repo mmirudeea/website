@@ -120,7 +120,7 @@ This is how a Rust application would look like
 
 <div grid="~ cols-2 gap-2">
 
-```rust
+```rust {all}
 #![no_std]
 #![no_main]
 
@@ -138,7 +138,7 @@ pub fn panic(_info: &PanicInfo) -> ! {
 }
 ```
 
-```rust{all}{startLine:18}
+```rust {all}{startLine:18}
 #[entry]
 fn main() -> ! {
     let gpio_ctrl = GPIOX_CTRL + 8 * pin as *mut u32;

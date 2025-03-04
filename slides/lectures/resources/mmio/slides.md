@@ -79,20 +79,20 @@ layout: two-cols
 ---
 
 # System Control Registers
-Cortex-M SCR Peripheral @0xe000_0000
+Cortex-M0+[^m33] SCR Peripheral @0xe000_0000
 
 Compute the actual address 
-- 0xe000_0000 + Offset
+$$ e000\_0000_{(16)} + register_{offset} $$
 
 Register Examples:
 - SYST_CSR: **0xe000_e010** (*0xe000_0000 + 0xe010*)
 - CPUID: **0xe000_ed00** (*0xe000_0000 + 0xed00*)
 
-```rust{all|1-2|4|5|6,7}
-const SYS_CTRL: usize = 0xe000_0000;
-const CPUID: usize = 0xed00;
+```rust {all|1-2|4|5|6,7}{lines:false}
+const SYS_CTRL_ADDR: usize = 0xe000_0000;
+const CPUID_OFFSET: usize = 0xed00;
 
-let cpuid_reg = (SYS_CTRL + CPUID) as *const u32;
+let cpuid_reg = (SYS_CTRL_ADDR+CPUID_OFFSET) as *const u32;
 let cpuid_value = unsafe { *cpuid_reg };
 // or
 let cpuid_value = unsafe { cpuid_reg.read() };
@@ -106,6 +106,8 @@ let cpuid_value = unsafe { cpuid_reg.read() };
 
 ![SysCtrl Registers](./sysctrl_registers.png)
 
+[^m33]: Cortex-M33 has some additional registers
+
 ---
 
 # Compiler Optimization
@@ -115,7 +117,7 @@ Write bytes to the `UART` (serial port) data register
 
 ```rust {1,2|3,4,7|5,6|all}
 // we use mut as we need to write to it
-const UART_TX: *mut u8 = 0x4003_4000;
+const UART_TX: *mut u8 = 0x4003_4000 as *mut u8;
 // b".." means ASCII string (Rust uses UTF-8 strings by default)
 for character in b"Hello, World".iter() {
 	// character is &char, so we use *character to get the value
@@ -148,13 +150,13 @@ layout: two-cols
 
 CPUID: **0xe000_ed00** (*0xe000_0000 + 0xed00*)
 
-```rust{all|1|3-4|6|7-10}
+```rust {all|1|3-4|6|7-10}{lines: false}
 use core::ptr::read_volatile;
     
-const SYS_CTRL: usize = 0xe000_0000;
-const CPUID: usize = 0xed00;
+const SYS_CTRL_ADDR: usize = 0xe000_0000;
+const CPUID_OFST: usize = 0xed00;
 
-let cpuid_reg = (SYS_CTRL + CPUID) as *const u32;
+let cpuid_reg = (SYS_CTRL_ADDR + CPUID_OFST) as *const u32;
 unsafe {
 	// avoid compiler optimization
 	read_volatile(cpuid_reg) 
@@ -180,7 +182,7 @@ Write bytes to the `UART` (serial port) data register
 use core::ptr::write_volatile;
 
 // we use mut as we need to write to it
-const UART_TX: *mut u8 = 0x4003_4000;
+const UART_TX: *mut u8 = 0x4003_4000 as *mut u8;
 // b".." means ASCII string (Rust uses UTF-8 strings by default)
 for character in b"Hello, World".iter() {
 	// character is &char, so we use *character to get the value
@@ -222,13 +224,13 @@ layout: two-cols
 # Read the CPUID
 About the MCU
 
-```rust{all|1|3-4|6|7-9|11,12|14,15|17,18|20,21}
+```rust {all|1|3-4|6|7-9|11,12|14,15|17,18|20,21}{lines: false}
 use core::ptr::read_volatile;
 
-const SYS_CTRL: usize = 0xe000_0000;
-const CPUID: usize = 0xed00;
+const SYS_CTRL_ADDR: usize = 0xe000_0000;
+const CPUID_OFST: usize = 0xed00;
 
-let cpuid_reg = (SYS_CTRL + CPUID) as *const u32;
+let cpuid_reg = (SYS_CTRL_ADDR+CPUID_OFST) as *const u32;
 let cpuid_value = unsafe {
     read_volatile(cpuid_reg)
 };
@@ -240,7 +242,7 @@ let variant = (cpuid_value >> 24) & 0b1111_1111;
 let architecture = (cpuid_value >> 16) & 0b1111;
 
 // shift right 4 bits and keep only the last 12 bits
-let part_no = (cpuid_value >> 4) & 0b11_1111_1111;
+let part_no = (cpuid_value >> 4) & 0b1111_1111_1111;
 
 // shift right 0 bits and keep only the last 4 bits
 let revision = (cpuid_value >> 0) & 0b1111;
@@ -253,7 +255,6 @@ Offset: 0xed00
 
 ![CPUID Register](./cpuid_register.png)
 
-
 ---
 layout: two-cols
 ---
@@ -261,24 +262,24 @@ layout: two-cols
 # AIRCR
 Application Interrupt and Reset Control Register
 
-```rust{all|1,2|4,5|10-13|8,17|7,15|7,16|19-21}
+```rust {all|1,2|4,5|10-13|8,17|7,15|7,16|19-21}{lines: false}
 use core::ptr::read_volatile;
 use core::ptr::write_volatile;
 
-const SYS_CTRL: usize = 0xe000_0000;
-const AIRCR: usize = 0xed0c;
+const SYS_CTRL_ADDR: usize = 0xe000_0000;
+const AIRCR_OFST: usize = 0xed0c;
 
-const VECTKEY: u32 = 16;
-const SYSRESETREQ: u32 = 2;
+const VECTKEY_POS: u32 = 16;
+const SYSRESETREQ_POS: u32 = 2;
 
 let aircr_register = (SYS_CTRL + AIRCR) as *mut u32;
 let mut aircr_value = unsafe { 
     read_volatile(aircr_register) 
 };
 
-aircr_value = aircr_value & ~(0xffff << VECTKEY); 
-aircr_value = aircr_value | (0x05fa << VECTKEY);
-aircr_value = aircr_value | (1 << SYSRESETREQ);
+aircr_value = aircr_value & !(0xffff << VECTKEY_POS); 
+aircr_value = aircr_value | (0x05fa << VECTKEY_POS);
+aircr_value = aircr_value | (1 << SYSRESETREQ_POS);
 
 unsafe {
     write_volatile(aircr_register, aircr_value);
@@ -319,7 +320,7 @@ Offset: 0xed0c
 ![AIRCR Register 2](./aircr_register_2.png)
 
 ---
----
+
 # SVD XML File
 System View Description
 
@@ -352,7 +353,7 @@ System View Description
 layout: two-cols
 ---
 
-# tock-registers
+# `tock-registers`
 define registers format
 
 ```rust {1|2,22|3-15|16-32|all}
@@ -413,15 +414,16 @@ register_bitfields! {u32,
 layout: two-cols
 ---
 
-# tock-registers
+# `tock-registers`
 define a structure for the peripheral
 
 ```rust {1|4,17|4,5,16,17|2,8,9|2,12,13|all}{lines:false}
 use tock_registers::register_structs;
 use tock_registers::registers::{ReadOnly, ReadWrite};
 
+// generates a C-style SysCtrl struct
 register_structs! {
-Scr {
+SysCtrl {
 	// we registers up to 0xed00
 	(0x0000 => _reserved1),
 	// we define the CPUID register
@@ -458,36 +460,79 @@ Scr {
 ![SysCtrl Registers](./sysctrl_registers.png)
 
 ---
-layout: two-cols
+
+# Reset the processor
+using `tock-registers`
+
+```rust {1|3-11|13-17|1,14,19|6,8,21,22|all}
+const SYS_CTRL_ADDR: usize = 0xe000_0000;
+
+register_bitfields! {u32,
+    // ...
+    AIRCR [
+        VECTKEY OFFSET(16) NUMBITS(8) [KEY = 0x05fa],
+        ENDIANESS OFFSET(15) NUMBITS(1) [],
+        SYSRESETREQ OFFSET(2) NUMBITS(1) [],
+        VECTCLRACTIVE OFFSET(1) NUMBITS(1) []
+    ]
+}
+
+register_structs! {
+SysCtrl {
+  (0xed0c => aircr: ReadWrite<u32, AIRCR::Register>),
+}
+}
+
+let sys_ctrl = unsafe { &*(SYS_CTRL_ADDR as *const SysCtrl) }; // C: struct SysCtrl *sys_ctrl = SYS_CTRL_ADDR;
+
+sys_ctrl.aircr
+    .modify(AIRCR::VECTKEY::KEY + AIRCR::SYSRESETREQ::SET);
+```
+
+<!--
+let sys_ctrl = SYS_CTRL_ADDR as *const SysCtrl;
+sys_ctrl.aircr needs unsafe! (sys_ctrl is a raw pointer), rust does not allow raw pointer dereference
+
+*sys_ctrl => dereference - requires the unsafe
+&* => take a safe reference to a dereferenced value
+-->
+
+<!--
+--
+
+<!--
+<!--
+struct SysCtrl *sys_ctrl = SYS_CTRL_ADDR;
+-->
+
 ---
 
 # Read the CPUID
+using `tock-registers`
 
-```rust 
-const SCR_PERIPHERAL: u32 = 0xe000_0000;
+```rust {1|2-11|1,12|14-17|7,17,19-23|all}
+const SYS_CTRL_ADDR: usize = 0xe000_0000;
+register_bitfields! {u32,
+    CPUID [
+        IMPLEMENTER OFFSET(24) NUMBITS(8) [],
+        VARIANT OFFSET(20) NUMBITS(4) [],
+        ARCHITECTURE OFFSET(16) NUMBITS(4) [ARMv6M = 0xc, ARMv8M0 = 0xa],
+        PARTNO OFFSET(4) NUMBITS(12) [CORTEX_M0P = 0xc60, CORTEX_M33 = 0xd21],
+        REVISION OFFSET(0) NUMBITS(2) []
+    ],
+    // ...
+}
+let sys_ctrl = unsafe { &*(SYS_CTRL_ADDR as *const SysCtrl) };
 
-let scr = unsafe { &*(SCR_PERIPHERAL as *const Scr) };
+let variant = sys_ctrl.cpuid.read(CPUID::VARIANT);
+let revision = sys_ctrl.cpuid.read(CPUID::REVISION);
+let archtecture = sys_ctrl.cpuid.read(CPUID::ARCHITECTURE);
+let part_no = sys_ctrl.cpuid.read(CPUID::PARTNO);
 
-let variant = scr.cpuid.read(CPUID::VARIANT);
-let revision = scr.cpuid.read(CPUID::REVISION);
-let archtecture = scr.cpuid.read(CPUID::ARCHITECTURE);
+if part_no == CPUID::PARTNO::Value::CORTEX_M0P as u32 {
+  // this is a Cortex-M0+
+} else if part_no == CPUID::PARTNO::Value::CORTEX_M33 as u32 {
+  // this is a Cortex-M33
+} 
 
-let part_no = scr.cpuid.read(CPUID::PARTNO);
-
-if part
-```
-
-::right::
-
-# Reset the MCU
-
-```rust
-const SCR_PERIPHERAL: u32 = 0xe000_0000;
-
-let scr = unsafe { &*(SCR_PERIPHERAL as *const Scr) };
-
-let variant = scr.cpuid.read(CPUID::VARIANT);
-let part_no = scr.cpuid.read(CPUID::PARTNO);
-let revision = scr.cpuid.read(CPUID::REVISION);
-let archtecture = scr.cpuid.read(CPUID::ARCHITECTURE);
 ```

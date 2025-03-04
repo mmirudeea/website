@@ -190,7 +190,7 @@ fn main() {
     let wifi_name_2 = &wifi_name_1;  
     // Borrows wifi_name_1 (immutable reference)
 
-    println!("{}", wifi_name_2); //compiler dropes the referance  
+    println!("{}", wifi_name_2); //compiler dropes the reference  
     println!("{}", wifi_name_1);  
     // Both lines compiles & print expected value
 }

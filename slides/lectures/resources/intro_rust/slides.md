@@ -192,7 +192,7 @@ fn main() {
 
     println!("{}", wifi_name_2); //compiler dropes the reference  
     println!("{}", wifi_name_1);  
-    // Both lines compiles & print expected value
+    // Both lines compile & print expected value
 }
 
 fn main() {

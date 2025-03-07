@@ -1,13 +1,12 @@
 ---
-description: Bare metal MMIO, PAC access and embassy-rs
+description: General Purpose Input and Output using embassy-rs
 slug: /lab/02
-unlisted: true
 ---
 
-# 02 - Memory Mapped IO & GPIO
+# 02 - GPIO
 
 The purpose of this lab is to understand how to start developing in [Rust](https://www.rust-lang.org/) for the
-RP2040 MCU. The lab presents three examples:
+RP2350 MCU. The lab presents three examples:
  - **bare metal** development - writing directly to registers, actually writing a driver
  - **platform access crate** (PAC) - using an automatically generated crate from the MCUs SVD file, actually writing a driver, but with some kind of automation
  - **embassy-rs** - using the Rust standard [`embedded-hal`](https://docs.rs/embedded-hal/latest/embedded_hal/) implemented by the [Embassy-rs](https://embassy.dev/) framework.
@@ -18,9 +17,13 @@ The example of this lab is to blink an LED at a certain time interval.
 
 ## Resources
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-2. **Raspberry Pi Ltd**, *[Raspberry Pi Pico Datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf)*
-3. **Raspberry Pi Ltd**, *[Raspberry Pi Pico W Datasheet](https://datasheets.raspberrypi.com/picow/pico-w-datasheet.pdf)*
+1. *[Embassy Book](https://embassy.dev/book/)* - an overview of the *Embassy* framework
+   1. *For Beginners*
+2. *[`embassy-rp`'s Documentation](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html)* - the API for the RP2040 and RP2350 
+3. **The Rusty Bits**, *[Intro to Embassy : embedded development with async Rust](https://www.youtube.com/watch?v=pDd5mXBF4tY)*
+4. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+5. **Raspberry Pi Ltd**, *[Raspberry Pi Pico Datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf)*
+6. **Raspberry Pi Ltd**, *[Raspberry Pi Pico W Datasheet](https://datasheets.raspberrypi.com/picow/pico-w-datasheet.pdf)*
 
 ## What is GPIO?
 
@@ -56,22 +59,28 @@ There are 3 different ways in which the hardware the Raspberry Pi Pico can be us
 2. Platform Access Crate (PAC)
 3. Bare metal
 
-## Embedded HAL Implementation
+## Embassy Framework
 
-The bare metal and PAC require a lot of time and effort to develop applications.
+Developing bare metal firmware requires a lot of time. 
 
-The Rust [Embedded devices Working Group](https://www.rust-lang.org/governance/wgs/embedded) has designed 
-a  set of standard traits (interfaces) for interacting with an MCU. This is called the **Embedded Hardware Abstraction Layer**, or shortly Embedded HAL. The main purpose is to define a common hardware interface that
+In trying to standardize firmware development, The Rust [Embedded devices Working Group](https://www.rust-lang.org/governance/wgs/embedded) has designed 
+a set of standard traits (interfaces) for interacting with an MCU. This is called the **Embedded Hardware Abstraction Layer**, or shortly Embedded HAL. The main purpose is to define a common hardware interface that
 frameworks, libraries and operating systems can build upon. Regardless of what MCUs the device is using, the upper level software should be as portable as possible.
 
-There are several crates and frameworks that implement the Embedded HAL traits for the RP2040 MCU.
+There are several crates that implement the Embedded HAL traits for the RP2040 MCU. These
+crates are called *HAL Implementations*.
+- [rp2350_hal](https://docs.rs/rp235x-hal/latest/rp235x_hal/) crate, implements just the embedded HAL traits, it is *the bare minimum* for developing RP2350 applications
 - [rp2040_hal](https://docs.rs/rp2040-hal/latest/rp2040_hal/) crate, implements just the embedded HAL traits, it is *the bare minimum* for developing RP2040 applications
 - [embassy-rp](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html) crate implements the Embedded HAL for RP2040 that is used with the [embassy-rs](https://embassy.dev/) framework
 
-### Embassy-rs framework
+Several frameworks are available on top of the *HAL Implementations* to speed things up. The most common used ones are:
+- [RTIC - The hardware accelerated Rust RTOS](https://rtic.rs) - *A concurrency framework for building real-time systems*
+- [Embassy](https://embassy.dev) - *The next-generation framework for embedded applications*
 
-[Embassy-rs](https://embassy.dev/) is a full fledged embedded framework for Rust embedded development.
-Besides the implementation of the embedded HAL for different MCUs (RP2040 included), embassy-rs provides
+### The Software Stack
+
+[Embassy](https://embassy.dev/) is a full fledged embedded framework for Rust embedded development.
+Besides the implementation of the embedded HAL for different MCUs (RP2040 included), Embassy provides
 several functions like timers, BLE and network communication.
 
 <div align="center">
@@ -97,6 +106,128 @@ The crates used by Embassy-rs and their mapping are shown in the table bellow.
 The name *Embassy-rs* is derived form **Emb**edded **Asy**nchronous Rust.
 
 :::
+
+### Empty Embassy Firmware
+
+The Embassy Framework is a collection of creates. Building an empty firmware that uses
+embassy requires:
+- adding the Embassy HAL Implementation for a specific board, in this case RP2350;
+- adding the core Embassy crates, that provide the executor, timers and futures;
+- adding the `cortex-m-rt` and `defmt` crates that Embassy requires.
+
+```toml
+# RP2350 HAL
+embassy-rp = { version = "0.3.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt", "unstable-pac", "time-driver", "critical-section-impl", "rp235xa", "binary-info"] }
+
+# Embedded HAL utilities
+embassy-embedded-hal = { version = "0.3.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt"] }
+
+# Synchronization primitives and data structures with async support
+embassy-sync = { version = "0.6.2", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt"] }
+
+# Async/await executor
+embassy-executor = { version = "0.7.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["task-arena-size-98304", "arch-cortex-m", "executor-thread", "executor-interrupt", "defmt"] }
+
+# Utilities for working with futures, compatible with no_std and not using alloc
+embassy-futures = { version = "0.1.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6" }
+
+# Timekeeping, delays and timeouts
+embassy-time = { version = "0.4.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt", "defmt-timestamp-uptime"] }
+
+# USB device
+embassy-usb = { version = "0.4.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt"] }
+
+# Network stack
+embassy-net = { version = "0.7.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt", "tcp", "udp", "raw", "dhcpv4", "medium-ethernet", "dns"] }
+embassy-net-wiznet = { version = "0.2.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt"] }
+
+# USB logging
+embassy-usb-logger = { version = "0.4.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6" }
+log = "0.4"
+
+# WiFi Chip
+cyw43 = { version = "0.3.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt", "firmware-logs"] }
+cyw43-pio = { version = "0.3.0", git = "https://github.com/embassy-rs/embassy", rev = "2e7a2b6", features = ["defmt"] }
+
+# Defmt support
+defmt = "0.3"
+defmt-rtt = "0.4"
+
+# Low level access to Cortex-M processors
+# cortex-m = { version = "0.7.6", features = ["inline-asm"] }
+cortex-m-rt = "0.7.0"
+
+# Panic handler that exits `probe-run` with an error code
+panic-probe = { version = "0.3", features = ["print-defmt"] }
+```
+
+The `embassy-rp` crate provides support for the Raspberry Pi RP2040 
+microcontroller within the Embassy framework. It includes features such 
+as `defmt` for efficient debugging, `unstable-pac` for accessing low-level 
+peripherals, and `time-driver` for handling time-related operations. 
+The crate also implements `critical-section` for safe concurrency and 
+supports `rp235xa` and `binary-info` for additional RP2040-specific 
+functionality.  
+
+The `embassy-embedded-hal` crate provides embedded-hal-compatible utilities 
+for asynchronous embedded development. It enables easy interaction with 
+hardware peripherals, such as GPIO, SPI, and I2C, while integrating with 
+the Embassy async runtime. It includes `defmt` for lightweight debugging.  
+
+The `embassy-sync` crate offers synchronization primitives and data 
+structures designed for async environments. It includes mutexes, signal 
+primitives, and channel-based communication for safe, cooperative 
+multitasking. The crate is optimized for `no_std` systems and supports 
+`defmt` for debugging.  
+
+The `embassy-executor` crate provides an async/await executor tailored for 
+embedded systems. It supports multitasking via interrupt-based and 
+thread-based execution models, with optimizations for Cortex-M 
+microcontrollers. Features include configurable task arena sizes and 
+`defmt` for debugging.  
+
+The `embassy-futures` crate supplies utilities for working with Rust futures 
+in embedded environments. It is designed to be compatible with `no_std` 
+and avoids dynamic memory allocation, making it lightweight and efficient 
+for constrained devices.  
+
+The `embassy-time` crate handles timekeeping, delays, and timeouts in async 
+applications. It provides a high-precision time driver and supports uptime-based 
+timestamps for logging. The crate is optimized for `no_std` 
+environments and integrates with `defmt`.  
+
+The `embassy-usb` crate provides a USB device stack for embedded systems. It 
+supports USB control, bulk, and interrupt transfers, making it useful for 
+implementing HID, CDC, and other USB classes. It integrates with `defmt` 
+for debugging and logging.  
+
+The `embassy-net` crate implements a network stack with support for TCP, 
+UDP, and raw Ethernet frames. It includes DHCPv4 for automatic IP 
+configuration and DNS resolution. The crate is designed for embedded 
+networking and integrates with `defmt` for efficient debugging.  
+
+The `embassy-net-wiznet` crate adds support for WIZnet Ethernet modules to 
+the Embassy networking stack. It provides an async interface for handling 
+network communication over SPI-connected WIZnet chips, with `defmt` 
+integration for logging.  
+
+The `embassy-usb-logger` crate enables USB-based logging for embedded 
+applications. It provides a mechanism for transmitting log messages over 
+USB, allowing for real-time debugging and monitoring of embedded systems.  
+
+The `log` crate is a lightweight logging facade that allows messages to be 
+recorded using different logging backends. It is widely used in Rust 
+projects, including embedded systems, to enable flexible debugging and 
+monitoring.  
+
+The `cyw43` crate provides support for the CYW43 Wi-Fi chip, commonly found 
+on Raspberry Pi Pico W. It includes firmware logging, `defmt` integration, 
+and an async interface for managing Wi-Fi connections in embedded systems.  
+
+The `cyw43-pio` crate offers PIO (Programmable I/O) support for the CYW43 
+Wi-Fi chip, enabling efficient SPI communication between the microcontroller 
+and the Wi-Fi module. It includes `defmt` logging for debugging low-level 
+interactions.  
 
 ### Entry
 
@@ -145,7 +276,7 @@ pin.set_low();
 :::tip
 
 While the device initialization is specific to every hardware device (the example uses the 
-`embassy_rp` crate that is for RP2040), the pin initialization and usage is portable. It
+`embassy_rp` crate that is for RP2350 and RP2040), the pin initialization and usage is portable. It
 uses the same code, regardless of the MCU used.
 
 :::

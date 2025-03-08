@@ -111,7 +111,7 @@ The **IoT** stream has to use the **WiFi** capability.
 | Documentation Milestone | Lab 9 | 0.5p |
 | Hardware Milestone | Lab 11 | 0.5p |
 | Software Milestone | Lab 12 | 0.5p |
-| PM Faire | TBD | 1.5p |
+| PM Fair | TBD | 1.5p |
 | **Total** |  | **3p** |
 
 ## F.A.Q

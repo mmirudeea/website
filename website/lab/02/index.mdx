@@ -5,11 +5,18 @@ slug: /lab/02
 
 # 02 - GPIO
 
+import { useActiveVersion } from '@docusaurus/plugin-content-docs/client';
+
+export function ElectronicsTutorial({title, anchor}) {
+  const version = useActiveVersion();
+  return <a href={`/docs/${version?.name}/tutorial/electronics${anchor?"#"+anchor:""}`}>{title?title:"Electronics"}</a>;
+}
+
 The purpose of this lab is to understand how to start developing in [Rust](https://www.rust-lang.org/) for the
 RP2350 MCU. The lab presents three examples:
  - **bare metal** development - writing directly to registers, actually writing a driver
  - **platform access crate** (PAC) - using an automatically generated crate from the MCUs SVD file, actually writing a driver, but with some kind of automation
- - **embassy-rs** - using the Rust standard [`embedded-hal`](https://docs.rs/embedded-hal/latest/embedded_hal/) implemented by the [Embassy-rs](https://embassy.dev/) framework.
+ - **embassy-rs** - using the Rust standard [`embedded-hal`](https://docs.rs/embedded-hal/latest/embedded_hal/) implemented by the [Embassy](https://embassy.dev/) framework.
 
 :::info
 The example of this lab is to blink an LED at a certain time interval.
@@ -55,7 +62,7 @@ It is the role of the *IO Bank0* to multiplex and connect the peripherals to the
 
 There are 3 different ways in which the hardware the Raspberry Pi Pico can be used:
 
-1. Embassy-rs framework, with the Embedded HAL implementation
+1. Embassy framework, with the Embedded HAL implementation
 2. Platform Access Crate (PAC)
 3. Bare metal
 
@@ -87,7 +94,7 @@ several functions like timers, BLE and network communication.
 ![Rust EMbedded Stack](images/rust_embedded_stack.svg)
 </div>
 
-The crates used by Embassy-rs and their mapping are shown in the table bellow.
+The crates used by Embassy and their mapping are shown in the table bellow.
 
 | Crate | Position |
 |-------|----------|
@@ -103,13 +110,13 @@ The crates used by Embassy-rs and their mapping are shown in the table bellow.
 
 :::info
 
-The name *Embassy-rs* is derived form **Emb**edded **Asy**nchronous Rust.
+The name *Embassy* is derived form **Emb**edded **Asy**nchronous Rust.
 
 :::
 
-### Empty Embassy Firmware
+### *Empty* Embassy Firmware
 
-The Embassy Framework is a collection of creates. Building an empty firmware that uses
+The Embassy Framework is a collection of creates. Building an *empty* firmware that uses
 embassy requires:
 - adding the Embassy HAL Implementation for a specific board, in this case RP2350;
 - adding the core Embassy crates, that provide the executor, timers and futures;
@@ -231,10 +238,13 @@ interactions.
 
 ### Entry
 
-Embassy-rs is a framework built on top of `cortex-m-rt` and provides its own method of defining
+Embassy is a framework built on top of `cortex-m-rt` and provides its own method of defining
 the entrypoint and bootloader.
 
 ```rust
+#![no_main]
+#![no_std]
+
 use embassy_executor::Spawner;
 
 #[embassy_executor::main]
@@ -248,13 +258,13 @@ right in and use them.
 
 :::note
 
-Embassy-rs is designed to work in an asynchronous way and this is why the `main` function is defined as `async`. For the time being, just take it as a must and ignore it.
+Embassy is designed to work in an asynchronous way and this is why the `main` function is defined as `async`. For the time being, just take it as a must and ignore it.
 
 :::
 
 ### Configure GPIO Output
 
-Embassy-rs provides one single function that returns the GPIO `Output` pin and hides the configuration
+Embassy provides one single function that returns the GPIO `Output` pin and hides the configuration
 details from developers.
 
 The `pin` variable implements the embadded HAL [`OutputPin`](https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.OutputPin.html) trait.
@@ -299,13 +309,13 @@ if pin.is_high() {
 
 :::warning 
 
-For a correct use of the buttons, use pull-up, pull-down resistors depending on the mode of operation of the button. Check [01 - Hardware Introduction](https://embedded-rust-101.wyliodrin.com/docs/lab/01#buttons)
+For a correct use of the buttons, use pull-up, pull-down resistors depending on the mode of operation of the button. Check <ElectronicsTutorial title="Buttons" anchor="buttons"/> section from the <ElectronicsTutorial/>.
 
 :::
 
 ### Waiting
 
-Embassy-rs provides support for suspending the execution of the software for an amount of time. It uses
+Embassy provides support for suspending the execution of the software for an amount of time. It uses
 the [`Timer`](https://docs.rs/embassy-time/0.3.0/embassy_time/struct.Timer.html) structure from the
 [`embassy_time`](https://docs.rs/embassy-time/latest/embassy_time/) crate.
 
@@ -320,6 +330,161 @@ Timer::after_secs(1).await;
 
 If the MCU provides timers, the Embassy framework will use them to suspend the software. This is very efficient.
 
+:::
+
+## The lab board
+
+This lab makes you of the hardware available on the lab board. The board provides:
+- Raspberry Pi Pico/2 Slot
+- RP2040 Debugger
+- 4 buttons
+- 5 LEDs
+- potentiometer
+- buzzer
+- photoresistor
+- I2C EEPROM
+- BMP280 Pressure & Temp. sensor
+- SPI LCD Display
+- SD Card Reader
+- USB-C connector
+- servo connectors
+
+![Lab Board](images/lab_board.png)
+
+:::danger
+Please make sure you use the *USB-C connector** to connect the board to the computer.
+:::
+
+### Wiring
+
+All the electronic components, sensors and actuators, have the power pins hard wired
+to the board. This means that all the components receive power from the board
+and do not have to be powered separately.
+
+The data pins of the components are not wired and have to be connected to the
+Raspberry Pi Pico using [jumper wires](https://en.wikipedia.org/wiki/Jump_wire).
+
+### Raspberry Pi Pico Pins
+
+Each pin on the Raspberry PI Pico 2 is connected to **two-hole connectors** positioned 
+along the sides of the socket, marked with labels like **GP0, GP1, GP2**, etc. 
+These holes provide an easy way to access the **GPIO (General-Purpose Input/Output) 
+pins** of the Pico 2.
+
+![Lab Board Connectors](./images/lab_board_gp.png)
+
+You have to use jumper wires to interface with the Pico 2’s GPIO pins as follows:
+1. Insert a **male jumper wire** into one of the pin holes corresponding to the desired GPIO pin.
+2. Connect **the other end** of the jumper wire to an external circuit, such as a breadboard, 
+    another microcontroller, or a peripheral device. In this case, it will be LEDs or Switches.
+3. Use the **second hole** of the same pin as an additional connection point, 
+    allowing multiple devices to share the same GPIO.
+
+
+### LEDs and Switches
+
+The board provides three single colored LEDs, red, green and blue. Each one of them
+uses one pin for control. Each LED connector has one single hole on the board,
+marked with `RED`, `GREEN` and `BLUE` respectively. These are located in the **Connectors**
+section of the board.
+
+The fours switches that the lab board provides are signaled with labels
+`SW4`, `SW5`, `SW6` and `SW7` in the connectors section.
+
+
+![Lab Board Connectors](./images/lab_board_connectors.png)
+
+:::warning
+Switches on the lab board have a Pull Up resistor. This means that:
+1. The values it provides may be counter-intuitive.
+
+| Position | Value |
+|-|-|
+| Pressed | `LOW` |
+| Released | `HIGH` |
+
+2. Pins that connect to switches have to be set up as `Pull::Up`.
+:::
+
+### Example
+
+To wire the green LED to pin 0 of the Raspberry Pi Pico 2, a jumper cable is required
+between holes `GREEN` and `GP0`.
+
+![Lab Board Connectors](./images/lab_board_wired.png)
+
+
+## Exercises
+
+1. Write an *empty* firmware that uses the Embassy Framework and `defmt`. (**1p**)
+Make sure you follow these steps:
+- create a new Rust project using `cargo init`;
+- add the `.cargo/config.toml` file that instructs `cargo` to [cross-compile](./01#using-a-configuration-file) for the `thumbv8m.main-none-eabihf`
+  architecture, add `probe-rs run` as a [runner](./01#using-cargo-run) and set [`defmt` messages filtering](./01#filtering-messages) to `DEBUG`;
+- add the [linker script](./01#linker-script) file called `memory.x`;
+- add the [build script](./01#build-script) file called `build.rs`;
+- add the required *Embassy* dependencies - take a look at [*Empty* Embassy Firmware](#empty-embassy-firmware) - take a look at [*Empty* Firmware](./01#empty-firmware);
+- use `defmt_rtt` as a logger, make sure you import it even if you are not using it directly `use ... as _`;
+- use `panic-probe` to provide a panic handler, make sure you import it even if you are not using it directly `use ... as _`;
+- ask the Rust compiler not to depend on the standard library, 
+    not to provide a main function and 
+    add the *Embassy* [entry](#entry);
+- write the code to print the `info!` message "Device started".
+
+Please make sure you comment out (using `#` in from of the line) all the Embassy's crates 
+that you do not plan to use.
+
+:::info
+For sure, you will  not use USB and WiFi. This is a trial
+and error job, just comment out all the creates that you think you won't use and
+add them back if the compiler asks for them.
+:::
+
+To prevent `rust-analyzer` from showing an error on the first line and to automatically
+format your source when saving, create a `.vscode/settings.json` file with:
+
+:::tip
+```json
+{
+    "rust-analyzer.cargo.allTargets": false,
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "file",
+    },
+}
+```
+:::
+
+2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 0 (GP0). (**2p**)
+
+:::danger 
+
+Please make sure the lab professor verifies your circuit before it is powered up.
+
+:::
+
+2. Write a program using Embassy that blinks the LED connected to GPIO pin 0 (GP0) 
+every 300ms. (**2p**)
+
+:::note
+
+For the purpose of this lab, please use `await` as is, think that for 
+using the `Timer`, you have to add `.await` after the `after` function.
+
+:::
+
+3. Write a program using Embassy that will write the
+message "The button was pressed" to the console every time button SW5 is pressed. 
+Make sure you connect the switch SW5 to a Raspberry Pi Pico pin. (**2p**)
+
+4. Write a Rust program using Embassy that toggles the LED every time button SW5 is pressed. (**1p**)
+
+5. Instead of constantly sampling for the button value, use the [`wait_for_`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_low) functions to 
+wait for the value to change.
+
+:::tip
+Do not forget to write the `.await` keyword at the end of an `async` function call.
 :::
 
 ## Platform Access Crate (PAC)
@@ -359,24 +524,6 @@ Blinking an LED in PAC or bare metal programming means following these steps:
  6. Toggle the pin's value through the *SIO*'s registers
  7. Wait for an amount of time
  8. Loop through steps 6 and 7
-
-### no-std
-
-As the code written runs on an MCU without any framework or operating system,
-the Rust compiler cannot rely on the `std` library. The two macros directives
-ask the compiler not to link the `std` library and not to expect `main`
-function.
-
-```rust
-#![no_main]
-#![no_std]
-```
-
-:::warning
-
-The bare metal code has to start with these two directives.
-
-:::
 
 ### Bootloader
 
@@ -795,198 +942,7 @@ For a better understanding, please read subchapters 1.4.3, 2.1.12, 2.14, 2.19.1,
 
 :::
 
-## Build and flash
-
-### Build
-
-To build a program for the Raspberry Pi Pico, run the following command in the crate's root folder (where the `Cargo.toml` file and `src` folder are):
-
-```shell
-cargo build
-```
-
-
-This will create the binary file inside `target/thumbv6m-none-eabi/debug/`.
-
-:::note
-
-If the crate is part of a workspace (as it is the lab template), the `target` folder is located in the workspace's root instead of the crate's root. 
-
-:::
-
-### Flash
-
-To load your program to the Raspberry Pi Pico, connect the board through USB to your computer while holding down the `BOOTSEL` button. It should appear as an external drive on your system. Afterwards, you can run the following command (also from the crate's root folder):
-
-```shell
-elf2uf2-rs -d target/thumbv6m-none-eabi/debug/<crate_name>
-```
-
-This will upload your program to the Pico.
-
-:::note
-
-If you are running this command from within a crate inside of a workspace, don't forget to navigate to the target folder by using `../../`
-Example:
-```shell
-elf2uf2-rs -d ../../target/thumbv6m-none-eabi/debug/<crate_name>
-```
-
-:::
-
-:::note
-
-If the above command doesn't work, try these steps instead:
-
-- run this command: 
-```shell
-elf2uf2-rs target/thumbv6m-none-eabi/debug/<crate_name>
-```
-
-- drag and drop the `.uf2` file located in the `target/thumbv6m-none-eabi/debug/` folder to the RP external drive
-
-:::
-
-### Serial console
-
-To see messages from the Pico over the serial port, add the `-s` argument to the flash command:
-
-```shell
-elf2uf2-rs -s -d /target/thumbv6m-none-eabi/debug/<crate_name>
-```
-
-This will allow us to see messages sent over serial from the board.
-
-### Troubleshooting
-
-#### Link error - reset vector is missing
-
-In case you get an error similar to this:
-
-<div align="center">
-![Reset Vectors Missing](images/reset_vector_missing_error.png)
-</div>
-
-That means that you most probably forgot to add the *entry point* to your program. Make sure you add `#[entry]` before your main function so that the MCU knows to call it at startup.
-
-#### Flash succeeds, the application does not start
-
-In case your code doesn't seem to get uploaded correctly or the board goes into `BOOTSEL` mode as soon as you plug it into your computer, it might be time to debug. To install required dependencies for debugging, run these commands:
-
-```shell
-rustup component add llvm-tools
-
-cargo install cargo-binutils
-```
-
-Now, you can run this command:
-
-```shell
-rust-objdump --section-headers target/thumbv6m-none-eabi/debug/<crate_name>
-```
-
-This will let us see the layout of the binary file, or the memory of the program that we are about to flash to the board.
-
-<div align="center">
-![Rust ObjDump](images/objdump.png)
-</div>
-
-We need to make sure that it contains the `.boot_loader` section, or else our program will never run.
-
-Further reading: [Embassy Tutorial](../tutorials/embassy)
-
-## Exercises
-
-1. Use [KiCad](https://www.kicad.org/) to design a simple circuit that connects an LED to GPIO 0 (GP0). (**1p**)
-
-:::warning 
-
-The maximum current that GPIO pins output depends on the MCU. To be sure that the LED will work normally and there is no risk of destruction, a resistor has to be added to limit the current level *below* the maximum GPIO output current.
-
-:::
-
-2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 0 (GP0). (**2p**)
-
-:::danger 
-
-Please make sure the lab professor verifies your circuit before it is powered up.
-
-:::
-
-3. Write a program using Embassy that blinks the LED connected to GPIO pin 0 (GP0) every 300ms. (**2p**)
-
-:::note
-
-For the purpose of this lab, please use `await` as is, think that for using the `Timer`, you have to add `.await` after the `after` function.
-
-:::
-
-4. Write a program using `embassy-rs` that will write the message "The button was pressed" to the console every time button A is pressed. Take a look at the Pico Explorer Base's pinout to determine the pin to which button A is connected. (**2p**)
-
-<div align="center">
-![Pico Explorer Pinout](../images/explorer_pins.jpg)
-</div>
-
-:::info
-
-The Raspberry Pi Pico does not have an integrated debugger, so writing messages to the console is done
-with a simulated serial port over the USB. This implies the usage of a USB driver.
-
-```rust
-use embassy_rp::usb::{Driver, InterruptHandler};
-use embassy_rp::{bind_interrupts, peripherals::USB};
-use log::info;
-
-// Use for the serial over USB driver
-bind_interrupts!(struct Irqs {
-    USBCTRL_IRQ => InterruptHandler<USB>;
-});
-
-
-// The task used by the serial port driver 
-// over USB
-#[embassy_executor::task]
-async fn logger_task(driver: Driver<'static, USB>) {
-    embassy_usb_logger::run!(1024, log::LevelFilter::Info, driver);
-}
-
-#[embassy_executor::main]
-async fn main(spawner: Spawner) {
-    let peripherals = embassy_rp::init(Default::default());
-
-    // Start the serial port over USB driver
-    let driver = Driver::new(peripherals.USB, Irqs);
-    spawner.spawn(logger_task(driver)).unwrap();
-
-    // ...
-
-    info!("message");
-}
-```
-
-:::warning
-
-Make sure you sleep while looping to read the button's value, otherwise 
-the USB driver's task will not be able to run and the messages will 
-not be printed.
-
-:::
-
-:::
-
-5. Write a Rust program using `embassy-rs` that toggles the LED every time button A is pressed. (**1p**)
-
-6. Write a Rust program that sets on HIGH the LED connected to GPIO pin 0 (GP0). (**1p**)
-   1. use the `rp2040-pac` crate
-   2. use bare metal
-
-7. Write a Rust program that blinks the LED connected to GPIO pin 0 (GP0) every 300ms. (**1p**)
-   1. use the `rp2040-pac` crate - write a `PinDriver` that implements the [`OutputPin`](https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.OutputPin.html) trait
-   2. use bare metal - write a `PinDriver` that implements the [`OutputPin`](https://docs.rs/embedded-hal/latest/embedded_hal/digital/trait.OutputPin.html) trait
-
-## Advanced topics
-
-### Debouncing techniques for stable input reading.
+## Debouncing techniques for stable input reading.
 
 Noise is produced whenever a pushbutton or other switch is moved. Because the switch contact is made of metal and has some elasticity, there is some noise (contact). The switch literally bounces a few times once it makes contact with a metal surface when it is shifted into a new position. This contact is known as bounce. 
 
@@ -996,4 +952,4 @@ Noise is produced whenever a pushbutton or other switch is moved. Because the sw
 
 The image above shows the signal produced by a button when pressed.
 
-The most correct way to correct the bouncing problem is the hardware one, but there are also software methods to correct the problem. For more details and examples, consult the documentation from Embassy-rs and the examples provided by them.
+The most correct way to correct the bouncing problem is the hardware one, but there are also software methods to correct the problem. For more details and examples, consult the documentation from Embassy and the examples provided by them.

@@ -44,7 +44,7 @@ General-Purpose Input/Output, or GPIO, is an essential part of embedded systems 
 
 GPIO pins can be used as outputs (LEDs, motors, buzzers) or as inputs (buttons, sensors).
 
-The R02040 has three peripherals that control the GPIO pins:
+The RP2040 and RP2350 have three peripherals that control the GPIO pins:
  1. *Pads* - control the actual physical pin or pad that the processor has outside. They control the electrical parameters, like maximum current or pull up and pull down resistors
  2. *IO Bank0* - connects and multiplexes the peripheral's pins to the output pads. Several peripherals use the same output pad to communicate with the exterior. For example, in the image below, `GPIO0` can be used either for:
     * `SIO` - the `GPIO` function
@@ -53,7 +53,7 @@ The R02040 has three peripherals that control the GPIO pins:
     * `UART0_TX` - the transmit pin for the `UART0` (serial port 0) peripheral
  3. *SIO* - that controls the interior MCU's pins. This is the peripheral that developers use to read and write the value of the pins.
 
-![Pico Pinout](images/pico-pinout.svg)
+![Pico2W Pinout](images/pico2w-pinout.svg)
 
 Every pin of the MCU can perform multiple functions. Several peripherals need to use input and output pins.
 It is the role of the *IO Bank0* to multiplex and connect the peripherals to the pins.

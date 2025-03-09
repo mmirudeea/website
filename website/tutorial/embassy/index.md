@@ -278,127 +278,194 @@ You will need to compile your executable specifically for the **RP2350** or the 
 
 <Tabs>
     <TabItem value="pico2_target" label="Raspberry Pi Pico 2">
-    ARMv8-M for the **RP235x**
+    
+        ARMv8-M for the **RP235x**
         ```shell
         rustup target add thumbv8m.main-none-eabihf
         ```
+        :::warning
+
+        This is a very important step, so make sure you follow it and choose the right target. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of Arm will lead to a number of compilation errors.
+
+        :::
+
+        Now you can build by:
+
+        #### 1. Passing the target as a parameter to Cargo:
+
+        ```shell
+        cargo build --release --target thumbv8m.main-none-eabihf
+        ```
+
+        :::info
+
+        You can also use `build` without the `--release` option. This way, the rust compiler will not apply any optimisations to your code and a `debug` build will be generated. 
+
+        :::
+
+        #### 2. Using the `.cargo/config.toml` file:
+
+        ```toml
+        [build]
+        target = "thumbv8m.main-none-eabihf"
+        ```
+
+        This allows us to simply run
+
+        ```shell
+        cargo build
+        ```
+
+        without having to specify the target every time. 
+
     </TabItem>
     <TabItem value="pico_target" label="Raspberry Pi Pico">
-    ARMv6-M for the **RP2040**
+        ARMv6-M for the **RP2040**
         ```shell
-        rustup target add thumbv6m-none-eabihf
+        rustup target add thumbv6m-none-eabi
         ```
+        :::warning
+
+        This is a very important step, so make sure you follow it and choose the right target. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of Arm will lead to a number of compilation errors.
+
+        :::
+
+        Now you can build by:
+
+        #### 1. Passing the target as a parameter to Cargo:
+
+        ```shell
+        cargo build --release --target thumbv6m-none-eabi
+        ```
+
+        :::info
+
+        You can also use `build` without the `--release` option. This way, the rust compiler will not apply any optimisations to your code and a `debug` build will be generated. 
+
+        :::
+
+        #### 2. Using the `.cargo/config.toml` file:
+
+        ```toml
+        [build]
+        target = "thumbv6m-none-eabi"
+        ```
+
+        This allows us to simply run
+
+        ```shell
+        cargo build
+        ```
+
+        without having to specify the target every time. 
+
     </TabItem>
 </Tabs>
 
-:::warning
-
-This is a very important step, so make sure you follow it. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of Arm will lead to a number of compilation errors.
-
-:::
-
-Now you can build by:
-
-#### 1. Passing the target as a parameter to Cargo:
-
-```shell
-cargo build --release --target thumbv8m.main-none-eabihf
-```
-
-:::info
-
-You can also use `build` without the `--release` option. This way, the rust compiler will not apply any optimisations to your code and a `debug` build will be generated. 
-
-:::
-
-#### 2. Using the `.cargo/config.toml` file:
-
-```toml
-[build]
-target = "thumbv8m.main-none-eabihf"
-```
-
-This allows us to simply run
-
-```shell
-cargo build
-```
-
-without having to specify the target every time. 
-
 ### Flashing
 
-To flash a program to the Raspberry Pi Pico 2 via USB, it needs to be in *USB mass storage device mode*. To put it in this mode, you need to **hold the `BOOTSEL` button down**  while connecting it to your PC. Connecting and disconnecting the USB can lead to the port getting damaged, so we conveniently added a reset button to our custom board. Now, to make it reflashable again, just press the two buttons simultaneously.
+There are multiple ways to flash a program to the Raspberry Pi Pico. Even though we will present some methods which do not require a debugger, we highly recommend using one, be it the official Raspberry Pi Debug Probe or a secondary Pi Pico.
 
-After connecting the board to your PC and compiling the program, locate the binary in the `target/thumbv8m.main-none-eabihf/release/` (or `target/thumbv8m.main-none-eabihf/debug/` if you didn't use the `--release` option) folder. There are a few ways to flash the binary to the board:
+:::warning
 
-#### 1. Using `elf2uf2-rs`:
+The team will only privde you with support for your project if you are using a debugger!
 
-Run this command:
-
-```shell
-elf2uf2-rs -d -s /path/to/your/binary
-```
-
-* `-d` to automatically deploy to a mounted Pico
-* `-s` to open the Pico as a serial device after deploy and print serial output
-  
-:::note
-On `Windows`, you may need to run this command in a terminal that has **Admin Privileges**.
 :::
 
-#### 2. Using `probe-rs`:
+After your program is compiled, you will have to identify the path to the binary, which can vary depending on your target architecture and build flags. For example, the binary for a debug build compiled for the RP2350 will be located in `target/thumbv8m.main-none-eabihf/debug/`, while a release build for the RP2040 will generate a binary in `target/thumbv6m-none-eabi/release/`.
 
-You can run
+<Tabs>
+    <TabItem value="flashing_pico2" label="Raspberry Pi Pico 2" default>
 
-```shell
-probe-rs run --chip RP235x /path/to/your/binary
-```
+        #### 1. Using `probe-rs`:
 
-This will flash the board without starting `probe-rs`' debugging functionality.
+        You can run
 
-#### 3. Configuring Cargo to do it
+        ```shell
+        probe-rs run --chip RP235x /path/to/your/binary
+        ```
 
-If you've already created a `.cargo/config.toml` with a build target, you can add these lines to the file:
+        This will flash the board without starting `probe-rs`' debugging functionality.
 
-```toml
-[target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-rs run --chip RP235x"
-```
+        #### 2. Configuring Cargo to do it
 
-Now, 
+        If you've already created a `.cargo/config.toml` with a build target, you can add these lines to the file:
 
-```shell
-cargo run 
-```
+        ```toml
+        [target.'cfg(all(target_arch = "arm", target_os = "none"))']
+        runner = "probe-rs run --chip RP235x"
+        ```
 
-will automatically call the command from option 2, without having to specify the path to the binary. Also, `cargo run` compiles your code first if you've made any changes to it.
+        Now, 
 
-:::tip
-As it will be required later in the tutorial, you should also add
+        ```shell
+        cargo run 
+        ```
 
-```toml
-[env]
-DEFMT_LOG = "debug"
-```
+        will automatically call the command from option 2, without having to specify the path to the binary. Also, `cargo run` compiles your code first if you've made any changes to it.
 
-which tells cargo that your program will use **deferred formatting** to more efficiently send logs to the host machine via a serial interface. You can learn more about `defmt` [here](https://defmt.ferrous-systems.com/). At this point, your configuration file should look like this:
-##### config.toml
-```toml
-[target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-rs run --chip RP235x"
+        :::tip
+        As it will be required later in the tutorial, you should also add
 
-[build]
-target = "thumbv8m.main-none-eabihf"
+        ```toml
+        [env]
+        DEFMT_LOG = "debug"
+        ```
 
-[env]
-DEFMT_LOG = "debug"
-```
-:::
+        which tells cargo that your program will use **deferred formatting** to more efficiently send logs to the host machine via a serial interface. You can learn more about `defmt` [here](https://defmt.ferrous-systems.com/). At this point, your configuration file should look like this:
+        ##### config.toml
+        ```toml
+        [target.'cfg(all(target_arch = "arm", target_os = "none"))']
+        runner = "probe-rs run --chip RP235x"
 
-#### 4. Using the **Debugger for probe-rs** extension
+        [build]
+        target = "thumbv8m.main-none-eabihf"
 
-This method can be used from VSCode's **Run and Debug** view. The binary will be flashed to the board by `probe-rs` and the debugging mode will be running by default. However, this option requires further configuration of the project which will be detailed in the next section of this tutorial. 
+        [env]
+        DEFMT_LOG = "debug"
+        ```
+        :::
+
+        #### 3. Using the **Debugger for probe-rs** extension
+
+        This method can be used from VSCode's **Run and Debug** view. The binary will be flashed to the board by `probe-rs` and the debugging mode will be running by default. However, this option requires further configuration of the project which will be detailed in the next section of this tutorial. 
+
+        #### 4. Using `elf2uf2-rs` (no debugger):
+        
+        Your board will have to be in **USB Mass Storage Device mode**. To put it in this mode, you need to **hold the `BOOTSEL` button down while connecting it to your PC. Your system should now see the Pico as a storage device.
+
+        :::warning
+        
+        Frequently connecting and disconnecting the USB could damage the port on the board, as well as the one on your computer! You can add a reset button to avoid this issue. Check out this [short tutorial](https://www.raspberrypi.com/news/how-to-add-a-reset-button-to-your-raspberry-pi-pico/) for more details.
+
+        :::
+
+        Run this command:
+
+        ```shell
+        elf2uf2-rs -d /path/to/your/binary
+        ```
+
+        * `-d` to automatically deploy to a mounted Pico
+        
+        :::note
+        On `Windows`, you may need to run this command in a terminal that has **Admin Privileges**.
+        :::
+
+        You can also use the command without the `-d` option to generate a `uf2` file next to your binary. Open the Pico storage device and simply drag and drop the `uf2` file. The board should disconnect, reset and start running your program if everything went well.
+
+        #### 5. Using `picotool` (no debugger)
+
+        Connect the Pico to your PC and put it in **USB Mass Storage Device mode**.
+
+    </TabItem>
+    <TabItem value="flashing_pico" label="Raspberry Pi Pico" default>
+
+    </TabItem>
+
+
+
+</Tabs>
 
 ## Debugging
 ### With the Raspberry Pi Debug Probe

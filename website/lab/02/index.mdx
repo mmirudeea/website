@@ -380,6 +380,11 @@ You have to use jumper wires to interface with the Pico 2’s GPIO pins as follo
 3. Use the **second hole** of the same pin as an additional connection point, 
     allowing multiple devices to share the same GPIO.
 
+:::warning
+Pins `GP0` and `GP1` should only be used for UART (Serial) communication
+as they are connected to the lab board's debugger chip.
+:::
+
 
 ### LEDs and Switches
 
@@ -395,15 +400,16 @@ The four switches that the lab board provides are signaled with labels
 ![Lab Board Connectors](./images/lab_board_connectors.png)
 
 :::warning
-Switches on the lab board have a Pull Up resistor. This means that:
-1. The values it provides may be counter-intuitive.
+Switches on the lab board have a pull-up resistor. This means that:
+1. The values it provides may be counter-intuitive:
 
 | Position | Value |
 |-|-|
 | Pressed | `LOW` |
 | Released | `HIGH` |
 
-2. Pins that connect to switches have to be set up as `Pull::None`.
+2. Pins that connect to switches have to be set up as `Pull::None` to disable the Raspberry Pi 2 Pico's
+    internal pull resistor.
 :::
 
 ### Example

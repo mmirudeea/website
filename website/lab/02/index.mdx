@@ -456,7 +456,7 @@ format your source when saving, create a `.vscode/settings.json` file with:
 ```
 :::
 
-2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 0 (GP0). (**2p**)
+2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 2 (GP2). (**2p**)
 
 :::danger 
 
@@ -464,7 +464,7 @@ Please make sure the lab professor verifies your circuit before it is powered up
 
 :::
 
-2. Write a program using Embassy that blinks the LED connected to GPIO pin 0 (GP0) 
+3. Write a program using Embassy that blinks the LED connected to GPIO pin 2 (GP2) 
 every 300ms. (**2p**)
 
 :::note
@@ -474,14 +474,14 @@ using the `Timer`, you have to add `.await` after the `after` function.
 
 :::
 
-3. Write a program using Embassy that will write the
+4. Write a program using Embassy that will write the
 message "The button was pressed" to the console every time button SW5 is pressed. 
 Make sure you connect the switch SW5 to a Raspberry Pi Pico pin. (**2p**)
 
-4. Write a Rust program using Embassy that toggles the LED every time button SW5 is pressed. (**1p**)
+5. Write a Rust program using Embassy that toggles the LED every time button SW5 is pressed. (**1p**)
 
-5. Instead of constantly sampling for the button value, use the [`wait_for_`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_low) functions to 
-wait for the value to change.
+6. Instead of constantly sampling for the button value, use the [`wait_for_`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_low) functions to 
+wait for the value to change. (**2p**)
 
 :::tip
 Do not forget to write the `.await` keyword at the end of an `async` function call.

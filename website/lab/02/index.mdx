@@ -1,5 +1,5 @@
 ---
-description: General Purpose Input and Output using embassy-rs
+description: General Purpose Input and Output using the Embassy Framework
 slug: /lab/02
 ---
 
@@ -12,15 +12,16 @@ export function ElectronicsTutorial({title, anchor}) {
   return <a href={`/docs/${version?.name}/tutorial/electronics${anchor?"#"+anchor:""}`}>{title?title:"Electronics"}</a>;
 }
 
-The purpose of this lab is to understand how to start developing in [Rust](https://www.rust-lang.org/) for the
-RP2350 MCU. The lab presents three examples:
- - **bare metal** development - writing directly to registers, actually writing a driver
- - **platform access crate** (PAC) - using an automatically generated crate from the MCUs SVD file, actually writing a driver, but with some kind of automation
- - **embassy-rs** - using the Rust standard [`embedded-hal`](https://docs.rs/embedded-hal/latest/embedded_hal/) implemented by the [Embassy](https://embassy.dev/) framework.
+The purpose of this lab is to understand how to start developing firmware in [Rust](https://www.rust-lang.org/) 
+with Embassy for the RP2350 MCU.
 
-:::info
-The example of this lab is to blink an LED at a certain time interval.
-:::
+## Concepts
+
+- How to setup an empty project that uses Embassy;
+- How to use the lab board;
+- How to use GPIO pins from Embassy;
+- How to use the lab board's LEDs
+- How to use the lab board's switches
 
 ## Resources
 
@@ -28,9 +29,12 @@ The example of this lab is to blink an LED at a certain time interval.
    1. *For Beginners*
 2. *[`embassy-rp`'s Documentation](https://docs.embassy.dev/embassy-rp/git/rp2040/index.html)* - the API for the RP2040 and RP2350 
 3. **The Rusty Bits**, *[Intro to Embassy : embedded development with async Rust](https://www.youtube.com/watch?v=pDd5mXBF4tY)*
+
+### Extra Resources
+
 4. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
-5. **Raspberry Pi Ltd**, *[Raspberry Pi Pico Datasheet](https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf)*
-6. **Raspberry Pi Ltd**, *[Raspberry Pi Pico W Datasheet](https://datasheets.raspberrypi.com/picow/pico-w-datasheet.pdf)*
+5. **Raspberry Pi Ltd**, *[Raspberry Pi Pico 2 Datasheet](https://datasheets.raspberrypi.com/pico/pico-2-datasheet.pdf)*
+6. **Raspberry Pi Ltd**, *[Raspberry Pi Pico 2W Datasheet](https://datasheets.raspberrypi.com/picow/pico-2-w-datasheet.pdf)*
 
 ## What is GPIO?
 

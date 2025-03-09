@@ -4,9 +4,12 @@ slug: /tutorials/embassy
 description: How to install the prerequisites for embassy-rs
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Embassy-rs Setup
 
-Here, we will cover the steps needed in order to be able to compile and flash Rust applications for **RP2350**, the MCU (Microcontroller Unit) found in our **Raspberry Pi Pico 2 W**s.
+Here, we will cover the steps needed in order to be able to compile and flash Rust applications for the **RP2350**, the MCU (Microcontroller Unit) found in our **Raspberry Pi Pico 2 W**s, as well as the **RP2040**, found in the original **Pi Pico**.
 
 ## Prerequisites
 
@@ -14,7 +17,8 @@ Here, we will cover the steps needed in order to be able to compile and flash Ru
 
 In order to install the tools needed to compile Rust code, follow the next steps, depending on your operating system.
 
-#### Linux
+<Tabs>
+    <TabItem value="linux_rustup" label="Linux" default>
 
 Run the this command in terminal:
 
@@ -23,9 +27,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 This downloads and runs `rustup-init.sh`, which in turn downloads and runs the correct version of the `rustup-init` executable for your platform.
-
-
-#### Windows
+    </TabItem>
+    <TabItem value="windows_rustup" label="Windows" default>
 
 Download the respective executable:
 
@@ -36,6 +39,10 @@ Download the respective executable:
 You may be prompted to install [Visual Studio C++ Build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/). If so, follow the instructions from the previous link.
 :::
 
+
+    </TabItem>
+</Tabs>
+
 The last step is to run `rustup --version` in terminal. If everything went well, you should see an output similar to this:
 
 ```shell
@@ -43,14 +50,112 @@ rustup 1.27.1 (54dd3d00f 2024-04-24)
 info: This is the version for the rustup toolchain manager, not the rustc compiler.
 info: The currently active `rustc` version is `rustc 1.83.0 (90b35a623 2024-11-26)`
 ```
-
 :::note
 The command might not be recognised unless you restart VSCode if you're using the integrated PowerShell terminal on Windows. Simply killing the terminal and opening a new one is not always enough.
 :::
 
-### `elf2uf2-rs`
+### `picotool`
+This tool can be used to work with binaries built for both the **RP2350** and the **RP2040** MCU's. It can also interact with Pico boards while in `BOOTSEL` mode, which you'll learn about later in this tutorial.
 
-This is one of the tools we will need in order to program the board over USB. In order to install it, run the following in your terminal:
+If you're using a **Raspbery Pi Pico 1 (W)**, you can also use [`elf2uf2-rs`](#elf2uf2-rs-rp2040-only), which is much easier to set up. For `picotool`, you will need to clone the GitHub repository and build the executable yourself.
+
+First, you will need to clone the `pico-sdk` repository:
+
+```shell
+git clone https://github.com/raspberrypi/pico-sdk.git
+``` 
+
+Make sure you remember the path to this new directory, as you will have to export it as an environment variable later. Next, you can clone the `picotool` repository:
+
+```shell
+git clone https://github.com/raspberrypi/picotool.git
+``` 
+
+<Tabs>
+    <TabItem value="linux_picotool" label="Linux" default>
+        
+        :::info
+            Before building `picotool`, you need to install a few dependencies. You can run the following command in your terminal in order to get them:
+
+            ```shell
+            sudo apt install build-essential pkg-config libusb-1.0-0-dev cmake
+            ```
+        :::
+
+        In order to run `picotool` without `sudo`, you can add the provided udev rules. While in the `picotool/` directory, run this command in your terminal:
+
+        ```shell
+        sudo cp udev/99-picotool.rules /etc/udev/rules.d/
+        ```
+
+        Then, run
+
+        ```shell
+        udevadm control --reload # to ensure the new rules are used
+        udevadm trigger # to ensure the new rules are applied to already added devices
+        ```
+        
+        Next, use the following commands to build the binary:
+
+        ```shell
+        export PICO_SDK_PATH=path/to/pico-sdk
+        mkdir build
+        cd build
+        cmake ../
+        make
+        ```
+
+        You should now be able to find a `picotool` command-line binary in the `picotool/build/` directory. Try running
+
+        ```shell
+        picotool version
+        ```
+
+        while in this directory to make sure that `picotool` was built correctly. You should see an output similar to this:
+
+        ```shell
+        ~/PM/picotool/build$ picotool version
+        picotool v2.1.1 (Linux, GNU-9.4.0, Release)
+        ```
+
+        :::info
+        At this point, you can only run the executable in the terminal from the `build/` directory, or by specifying the full (or relative) path to the binary. This isn't very convenient, so a recommended step is to add this directory to your `PATH` variable. You can use this command:
+
+        ```shell
+        echo `export PATH=$PATH:/full/path/to/picotool/build` >> ~/.bashrc
+        ```
+
+        This will add the `export PATH` command to the `.bashrc` script, which runs every time a new Bash session is initiated. Make sure you use the **full path**, as in `/home/$USER/picotool/build`, and not `~/picotool/build`! To check that everything went well, restart your terminal or run
+
+        ```shell
+        source ~/.bashrc
+        ```
+
+        in order to rerun the script for this Bash session. Now run
+
+        ```shell
+        cd
+        picotool version
+        ```
+
+        and you should receive the same output as earlier.
+        :::
+
+
+
+    </TabItem>
+    <TabItem value="windows_picotool" label="Windows" default>
+        WIP Windows
+    </TabItem>
+</Tabs>
+
+:::note
+If you want to learn more about `picotool` or are having any trouble with your setup, you can check out the [GitHub page](https://github.com/raspberrypi/picotool) and the **Appendix B: Picotool** section of [Getting started with Raspberry Pi Pico-series](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf).
+:::
+
+### `elf2uf2-rs` (**RP2040** only)
+
+This is another tool that we can use in order to program an **RP2040** based board over USB. In order to install it, run the following in your terminal:
 
 ```shell
 cargo install elf2uf2-rs
@@ -72,44 +177,54 @@ Options:
   -h, --help     Print help
 ```
 
+:::warning
+
+If you try to flash a Pico 2 (W) using the `elf2uf2-rs` tool, the program will not run on the board. The **RP2350** requires a different binary structure that `elf2uf2-rs` can't generate properly. You will have to use [`picotool`](#picotool-for-rp2350) instead.
+
+:::
+
 ### `probe-rs`
 
 This tool is an embedded debugging and target interaction toolkit. It enables its user to program and debug microcontrollers via a debug probe.
 
-#### Linux
+<Tabs>
+    <TabItem value="linux_probe-rs" label="Linux" default>
+            
+        :::info 
 
-:::info 
+        Before installing probe-rs, you need to install  `pkg-config`, `libudev`, `cmake` and `git`. You can get them by running the following in your terminal. If any of these programs are already installed on your machine, you can omit them from the command.
+        ```shell
+        sudo apt-get install pkg-config libudev-dev cmake git
+        ```
 
-Before installing probe-rs, you need to install  `pkg-config`, `libudev`, `cmake` and `git`. You can get them by running the following in your terminal. If any of these programs are already installed on your machine, you can omit them from the command.
-```shell
-sudo apt-get install pkg-config libudev-dev cmake git
-```
+        :::
 
-:::
+        ```shell
+        cargo install probe-rs-tools --locked
+        ```
 
-```shell
-cargo install probe-rs-tools --locked
-```
+        You will also need to add this [`udev`](https://probe.rs/files/69-probe-rs.rules) file in `/etc/udev/rules.d`. Then, run:
 
-You will also need to add this [`udev`](https://probe.rs/files/69-probe-rs.rules) file in `/etc/udev/rules.d`. Then, run:
+        ```shell
+        udevadm control --reload
+        udevadm trigger
+        ```
 
-```shell
-udevadm control --reload # to ensure the new rules are used.
+    </TabItem>
+    <TabItem value="windows_probe-rs" label="Windows" default>
 
-udevadm trigger # to ensure the new rules are applied to already added devices.
-```
+        :::info
+        You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`. Make sure you choose the latest **stable** version, under the Latest Release section.
+        :::
 
-#### Windows
+        Once `cmake` is set up, you can run
+        ```shell
+        cargo install probe-rs-tools --locked
+        ```
+        and no further configuration is required.
 
-:::info
-You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`. Make sure you choose the latest **stable** version, under the Latest Release section.
-:::
-
-Once `cmake` is set up, you can run
-```shell
-cargo install probe-rs-tools --locked
-```
-and no further configuration is required.
+    </TabItem>
+</Tabs>
 
 ### VSCode Extension
 
@@ -126,24 +241,55 @@ You will notice that some of the options will suggest creating and modifying a `
 In order to add the configuration file, you will first have to create a `.cargo/` directory in your project's root folder. Inside it, create the `config.toml` file. You cand find a complete configuration example below. For more information on this type of file, follow the official [Cargo Book](https://doc.rust-lang.org/cargo/reference/config.html).
 
 ##### config.toml
-```toml
-[target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-rs run --chip RP235x"
 
-[build]
-target = "thumbv8m.main-none-eabihf"
+<Tabs>
+    <TabItem value="pico2_config_toml" label="Raspberry Pi Pico 2" default>
 
-[env]
-DEFMT_LOG = "debug"
-```
+        ```toml
+        [target.'cfg(all(target_arch = "arm", target_os = "none"))']
+        runner = "probe-rs run --chip RP235x"
 
+        [build]
+        target = "thumbv8m.main-none-eabihf"
+
+        [env]
+        DEFMT_LOG = "debug"
+        ```
+    
+    </TabItem>
+    <TabItem value="pico_config_toml" label="Raspberry Pi Pico" default>
+
+        ```toml
+        [target.'cfg(all(target_arch = "arm", target_os = "none"))']
+        runner = "probe-rs run --chip RP2040"
+
+        [build]
+        target = "thumbv6m-none-eabihf"
+
+        [env]
+        DEFMT_LOG = "debug"
+        ```
+
+    </TabItem>
+</Tabs>
 ### Compiling
 
-You will need to compile your executable specifically for the RP2350 chip. This chip is based on the **ARM Cortex M33** architecture, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the Rust ARMv8-M target (`thumbv8m.main-none-eabihf`):
+You will need to compile your executable specifically for the **RP2350** or the **RP2040** chips. The former is based on the **ARM Cortex M33** architecture, while the latter uses **ARM Cortex M0+**, so we will need to specify our target when compiling. We can do that in multiple ways, but first we will need to install the appropriate Rust ARM target:
 
-```shell
-rustup target add thumbv8m.main-none-eabihf
-```
+<Tabs>
+    <TabItem value="pico2_target" label="Raspberry Pi Pico 2">
+    ARMv8-M for the **RP235x**
+        ```shell
+        rustup target add thumbv8m.main-none-eabihf
+        ```
+    </TabItem>
+    <TabItem value="pico_target" label="Raspberry Pi Pico">
+    ARMv6-M for the **RP2040**
+        ```shell
+        rustup target add thumbv6m-none-eabihf
+        ```
+    </TabItem>
+</Tabs>
 
 :::warning
 
@@ -194,8 +340,8 @@ Run this command:
 elf2uf2-rs -d -s /path/to/your/binary
 ```
 
-* `-d` to automatically deploy to a mounted pico
-* `-s` to open the pico as a serial device after deploy and print serial output
+* `-d` to automatically deploy to a mounted Pico
+* `-s` to open the Pico as a serial device after deploy and print serial output
   
 :::note
 On `Windows`, you may need to run this command in a terminal that has **Admin Privileges**.

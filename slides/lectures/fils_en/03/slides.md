@@ -5,13 +5,13 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## PWM and ADC
+  ## Interrupts, PWM and ADC
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 04 - PWM and ADC
+title: MA - 03 - Interrupts, PWM and ADC
 mdc: true
 layout: cover
 themeConfig:
@@ -21,18 +21,25 @@ exportFilename: ma-04
 background:
 ---
 
-# PWM and ADC
+# Interrupts, PWM and ADC
 Lecture 4
 
 ---
 
-# PWM and ADC
+# Interrupts, PWM and ADC
 
+- Interrupts
 - Counters
 - Timers and Alarms
 - About Analog and Digital Signals
 - Pulse Width Modulation (PWM)
 - Analog to Digital Converters (ADC)
+
+<!-- Interrupts -->
+
+---
+src: ../../resources/interrupts/slides.md
+---
 
 <!-- Timers -->
 

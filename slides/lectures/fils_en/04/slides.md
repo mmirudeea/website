@@ -5,57 +5,57 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## PWM and ADC
+  ## Asynchronous Development
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 04 - PWM and ADC
+title: MA - 05 - Asynchronous Development
 mdc: true
 layout: cover
 themeConfig:
   primary: '#0060df'
 download: true
-exportFilename: ma-04
+exportFilename: ma-05
 background:
 ---
 
-# PWM and ADC
-Lecture 4
+# Asynchronous Development
+Lecture 5
 
 ---
-
-# PWM and ADC
-
-- Counters
-- Timers and Alarms
-- About Analog and Digital Signals
-- Pulse Width Modulation (PWM)
-- Analog to Digital Converters (ADC)
-
-<!-- Timers -->
-
----
-src: ../../resources/timers/slides.md
 ---
 
-<!-- Signals -->
+# Asynchronous Development
+
+- Concurrency
+- Asynchronous Executor
+- `Future`s
+- Communication between tasks
+
+<!-- Concurrency -->
 
 ---
-src: ../../resources/signals/basic.md
+src: ../../resources/concurrency/slides.md
 ---
 
-<!-- PWM -->
+<!-- Executor -->
 
 ---
-src: ../../resources/pwm/slides.md
+src: ../../resources/executor/slides.md
 ---
 
-<!-- ADC -->
+<!-- Future -->
 
 ---
-src: ../../resources/adc/slides.md
+src: ../../resources/future/slides.md
+---
+
+<!-- Communication -->
+
+---
+src: ../../resources/communication/slides.md
 ---
 
 ---
@@ -63,9 +63,7 @@ src: ../../resources/adc/slides.md
 # Conclusion
 we talked about
 
-- Counters
-- SysTick
-- Timers and Alarms
-- PWM
-- Analog and Digital
-- ADC
+- Preemptive & Cooperative Concurrency
+- Asynchronous Executor
+- `Future`s and how Rust rewrites `async` function
+- Communication between tasks

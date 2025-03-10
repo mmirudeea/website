@@ -5,58 +5,50 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## UART & SPI
+  ## I2C & USB 2.0
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 03 - UART & SPI
+title: MA - 07 - I2C & USB 2.0
 mdc: true
 layout: cover
 themeConfig:
   primary: '#0060df'
 download: true
-exportFilename: ma-06
+exportFilename: ma-07
 background:
 ---
 
-# UART & SPI
-Lecture 6
+# I2C & USB 2.0
+Lecture 7
 
 ---
 
-# UART & SPI
+# I2C & USB 2.0
 used by RP2040
 
-- Direct Memory Access
 - Buses
-  - Universal Asynchronous Receiver and Transmitter
-  - Serial Peripheral Interface
-- Analog and Digital Sensors
+  - Inter-Integrated Circuit
+  - Universal Serial Bus v2.0
 
-<!-- DMA -->
-
----
-src: ../../resources/dma/slides.md
----
-
-<!-- UART -->
+<!-- I2C -->
 
 ---
-src: ../../resources/uart/slides.md
+src: ../../resources/i2c/slides.md
 ---
 
-<!-- SPI -->
+<!-- USB -->
 
 ---
-src: ../../resources/spi/slides.md
+src: ../../resources/usb/slides.md
 ---
 
 <!-- Sensors -->
 
 ---
-src: ../../resources/sensors/slides.md
+src: ../../resources/sensors_i2c/slides.md
 ---
 
 ---
@@ -64,8 +56,6 @@ src: ../../resources/sensors/slides.md
 # Conclusion
 we talked about
 
-- Direct Memory Access
 - Buses
-  - Universal Asynchronous Receiver and Transmitter
-  - Serial Peripheral Interface
-- Analog and Digital Sensors
+  - Inter-Integrated Circuit
+  - Universal Serial Bus v2.0

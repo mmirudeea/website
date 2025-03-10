@@ -5,38 +5,57 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## Exceptions and Interrupts
+  ## PWM and ADC
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 03 - Exceptions and Interrupts
+title: MA - 04 - PWM and ADC
 mdc: true
 layout: cover
 themeConfig:
   primary: '#0060df'
 download: true
-exportFilename: ma-03
+exportFilename: ma-04
 background:
 ---
 
-# Exceptions and Interrupts
-Lecture 3
+# PWM and ADC
+Lecture 4
 
 ---
 
-# Exceptions and Interrupts
-used by RP2040
+# PWM and ADC
 
-- Exceptions
-- Interrupts
-- Boot
+- Counters
+- Timers and Alarms
+- About Analog and Digital Signals
+- Pulse Width Modulation (PWM)
+- Analog to Digital Converters (ADC)
 
-<!-- Exceptions -->
+<!-- Timers -->
 
 ---
-src: ../../resources/exceptions/slides.md
+src: ../../resources/timers/slides.md
+---
+
+<!-- Signals -->
+
+---
+src: ../../resources/signals/basic.md
+---
+
+<!-- PWM -->
+
+---
+src: ../../resources/pwm/slides.md
+---
+
+<!-- ADC -->
+
+---
+src: ../../resources/adc/slides.md
 ---
 
 ---
@@ -44,6 +63,9 @@ src: ../../resources/exceptions/slides.md
 # Conclusion
 we talked about
 
-- Exceptions
-- Interrupts
-- How the RP2040 boots and loads the software
+- Counters
+- SysTick
+- Timers and Alarms
+- PWM
+- Analog and Digital
+- ADC

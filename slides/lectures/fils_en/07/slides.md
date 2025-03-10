@@ -5,50 +5,38 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## I2C & USB 2.0
+  ## Exceptions and Interrupts
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 07 - I2C & USB 2.0
+title: MA - 03 - Exceptions and Interrupts
 mdc: true
 layout: cover
 themeConfig:
   primary: '#0060df'
 download: true
-exportFilename: ma-07
+exportFilename: ma-03
 background:
 ---
 
-# I2C & USB 2.0
-Lecture 7
+# Exceptions and Interrupts
+Lecture 3
 
 ---
 
-# I2C & USB 2.0
+# Exceptions and Interrupts
 used by RP2040
 
-- Buses
-  - Inter-Integrated Circuit
-  - Universal Serial Bus v2.0
+- Exceptions
+- Interrupts
+- Boot
 
-<!-- I2C -->
-
----
-src: ../../resources/i2c/slides.md
----
-
-<!-- USB -->
+<!-- Exceptions -->
 
 ---
-src: ../../resources/usb/slides.md
----
-
-<!-- Sensors -->
-
----
-src: ../../resources/sensors_i2c/slides.md
+src: ../../resources/exceptions/slides.md
 ---
 
 ---
@@ -56,6 +44,6 @@ src: ../../resources/sensors_i2c/slides.md
 # Conclusion
 we talked about
 
-- Buses
-  - Inter-Integrated Circuit
-  - Universal Serial Bus v2.0
+- Exceptions
+- Interrupts
+- How the RP2040 boots and loads the software

@@ -5,57 +5,58 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## Asynchronous Development
+  ## UART & SPI
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 05 - Asynchronous Development
+title: MA - 03 - UART & SPI
 mdc: true
 layout: cover
 themeConfig:
   primary: '#0060df'
 download: true
-exportFilename: ma-05
+exportFilename: ma-06
 background:
 ---
 
-# Asynchronous Development
-Lecture 5
+# UART & SPI
+Lecture 6
 
 ---
----
 
-# Asynchronous Development
+# UART & SPI
+used by RP2040
 
-- Concurrency
-- Asynchronous Executor
-- `Future`s
-- Communication between tasks
+- Direct Memory Access
+- Buses
+  - Universal Asynchronous Receiver and Transmitter
+  - Serial Peripheral Interface
+- Analog and Digital Sensors
 
-<!-- Concurrency -->
-
----
-src: ../../resources/concurrency/slides.md
----
-
-<!-- Executor -->
+<!-- DMA -->
 
 ---
-src: ../../resources/executor/slides.md
+src: ../../resources/dma/slides.md
 ---
 
-<!-- Future -->
+<!-- UART -->
 
 ---
-src: ../../resources/future/slides.md
+src: ../../resources/uart/slides.md
 ---
 
-<!-- Communication -->
+<!-- SPI -->
 
 ---
-src: ../../resources/communication/slides.md
+src: ../../resources/spi/slides.md
+---
+
+<!-- Sensors -->
+
+---
+src: ../../resources/sensors/slides.md
 ---
 
 ---
@@ -63,7 +64,8 @@ src: ../../resources/communication/slides.md
 # Conclusion
 we talked about
 
-- Preemptive & Cooperative Concurrency
-- Asynchronous Executor
-- `Future`s and how Rust rewrites `async` function
-- Communication between tasks
+- Direct Memory Access
+- Buses
+  - Universal Asynchronous Receiver and Transmitter
+  - Serial Peripheral Interface
+- Analog and Digital Sensors

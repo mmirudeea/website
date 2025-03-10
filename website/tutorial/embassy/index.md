@@ -13,14 +13,14 @@ Here, we will cover the steps needed in order to be able to compile and flash Ru
 
 ## Prerequisites
 
-### Rust Toolchain
+### 1. Rust Toolchain
 
 In order to install the tools needed to compile Rust code, follow the next steps, depending on your operating system.
 
 <Tabs>
     <TabItem value="linux_rustup" label="Linux" default>
 
-Run the this command in terminal:
+Run this command in terminal:
 
 ```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -30,15 +30,14 @@ This downloads and runs `rustup-init.sh`, which in turn downloads and runs the c
     </TabItem>
     <TabItem value="windows_rustup" label="Windows" default>
 
-Download the respective executable:
+        Download the respective executable:
 
-* [RUSTUP-INIT.exe - 64bit](https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe)
-* [RUSTUP-INIT.exe - 32bit](https://static.rust-lang.org/rustup/dist/i686-pc-windows-msvc/rustup-init.exe)
+        * [RUSTUP-INIT.exe - 64bit](https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe)
+        * [RUSTUP-INIT.exe - 32bit](https://static.rust-lang.org/rustup/dist/i686-pc-windows-msvc/rustup-init.exe)
 
-:::note
-You may be prompted to install [Visual Studio C++ Build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/). If so, follow the instructions from the previous link.
-:::
-
+        :::note
+        You may be prompted to install [Visual Studio C++ Build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/). If so, follow the instructions from the previous link.
+        :::
 
     </TabItem>
 </Tabs>
@@ -54,8 +53,56 @@ info: The currently active `rustc` version is `rustc 1.83.0 (90b35a623 2024-11-2
 The command might not be recognised unless you restart VSCode if you're using the integrated PowerShell terminal on Windows. Simply killing the terminal and opening a new one is not always enough.
 :::
 
-### `picotool`
-This tool can be used to work with binaries built for both the **RP2350** and the **RP2040** MCU's. It can also interact with Pico boards while in `BOOTSEL` mode, which you'll learn about later in this tutorial.
+### 2. `probe-rs`
+
+This tool is an embedded debugging and target interaction toolkit. It enables its user to program and debug microcontrollers via a debug probe.
+
+<Tabs>
+    <TabItem value="linux_probe-rs" label="Linux" default>
+            
+        :::info 
+
+        Before installing probe-rs, you need to install  `pkg-config`, `libudev`, `cmake` and `git`. You can get them by running the following in your terminal. If any of these programs are already installed on your machine, you can omit them from the command.
+        ```shell
+        sudo apt-get install pkg-config libudev-dev cmake git
+        ```
+
+        :::
+
+        ```shell
+        cargo install probe-rs-tools --locked
+        ```
+
+        You will also need to add this [`udev`](https://probe.rs/files/69-probe-rs.rules) file in `/etc/udev/rules.d`. Then, run:
+
+        ```shell
+        udevadm control --reload
+        udevadm trigger
+        ```
+
+    </TabItem>
+    <TabItem value="windows_probe-rs" label="Windows" default>
+
+        :::info
+        You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`. Make sure you choose the latest **stable** version, under the Latest Release section.
+        :::
+
+        Once `cmake` is set up, you can run
+
+        ```shell
+        cargo install probe-rs-tools --locked
+        ```
+        and no further configuration is required.
+
+    </TabItem>
+</Tabs>
+
+### VSCode Extension
+
+For a better experience, go ahead and install the **Debugger for probe-rs** extension in the Microsoft Extension Marketplace. This will allow us to build and upload a program to the RP2350 or the RP2040 directly from VSCode and it will make debugging the program while running on the MCU as easy as debugging a Rust program running on your host machine.
+
+### 3. `picotool` (optional)
+This tool can be used to work with binaries built for both the **RP2350** and the **RP2040** MCU's. It can also interact with Pico boards while in `BOOTSEL` mode, which you'll learn about later in this tutorial. However, you won't need this tool if you have a debugger (either a Raspberry Pi Debug Probe or a second Pi Pico).
 
 If you're using a **Raspbery Pi Pico 1 (W)**, you can also use [`elf2uf2-rs`](#elf2uf2-rs-rp2040-only), which is much easier to set up. For `picotool`, you will need to clone the GitHub repository and build the executable yourself.
 
@@ -98,7 +145,7 @@ git clone https://github.com/raspberrypi/picotool.git
         Next, use the following commands to build the binary:
 
         ```shell
-        export PICO_SDK_PATH=path/to/pico-sdk
+        export PICO_SDK_PATH=path/to/pico-sdk/
         mkdir build
         cd build
         cmake ../
@@ -144,8 +191,81 @@ git clone https://github.com/raspberrypi/picotool.git
 
 
     </TabItem>
-    <TabItem value="windows_picotool" label="Windows" default>
-        WIP Windows
+    <TabItem value="windows_picotool" label="Windows">
+
+        Start by creating a new environment variable called `PICO_SDK_PATH`, which holds the path to the `pico-sdk/` directory.
+        
+        ![PICO_SDK_PATH variable](assets/user_var.png)
+
+        :::warning
+        
+        Make sure you add this under **User variables** and not **System variables**.
+
+        :::
+
+        Next, you will need to install [MSYS2](https://www.msys2.org/), which is a collection of tools and libraries used for building, installing and running software on Windows.
+
+        :::info
+
+        If MSYS2 is already installed on your system, you should update it before continuing to the next steps, as you may receive some errors when building `picotool` if your libraries are outdated. The simplest way to do this is uninstalling MSYS2, downloading the latest installer and running it. 
+
+        :::
+
+        Now you can navigate to the `picotool/` directory in your terminal and use the following command:
+
+        ```shell
+        C:\msys64\msys2_shell.cmd -defterm -here -mingw64
+        ```
+
+        to open a new MSYS2 shell. The options are:
+
+        * `-defterm` to use the default terminal
+        * `-here` to open MSYS2 in the current directory
+        * `-mingw64` to start with the MinGW-w64 64-bit environment.
+
+        In the shell that just opened, run
+
+        ```shell
+        pacman -S $MINGW_PACKAGE_PREFIX-{toolchain,cmake,libusb}
+        ```
+
+        to add the necessary libraries and binaries. You will receive a list of tools similar to this:
+
+        ![MSYS2 terminal](assets/msys_term.png)
+
+        Simply press `Enter` to install (or update) all of them. Once this is done, use these commands in the MSYS2 shell to finish building `picotool`:
+
+        ```shell
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=$MINGW_PREFIX
+        cmake --build .
+        ```
+
+        You can now close the MSYS2 shell and verify that an executable has been generated in `picotool/build/`. This is a command-line program, so in order to check that it works correctly, open a terminal in this directory and try 
+
+        ```shell
+        picotool version
+        ```
+
+        to see if you get an output similar to this:
+
+        ```shell
+        PS C:\pico\picotool\build> picotool version
+        picotool v2.1.1 (Windows, GNU-14.2.0, Release)
+        ```
+
+        :::info
+        At this point, you can only run the executable in the terminal from the `build/` directory, or by specifying the full (or relative) path to the binary. This isn't very convenient, so a recommended step is to add this directory to your `PATH` variable. Go back to your **User environment variables**, click on `Path`, then edit this variable. Add a new entry with the path to `picotools/build/`. Restart your terminal(s) to apply this change and check that the executable is now accessible from other directories by running
+
+        ```shell
+        picotool version 
+        ```
+
+        once again. You may have to restart your PC before the `picotool` command is recognised, especially by the VSCode terminal.
+
+        ::: 
+
     </TabItem>
 </Tabs>
 
@@ -153,9 +273,9 @@ git clone https://github.com/raspberrypi/picotool.git
 If you want to learn more about `picotool` or are having any trouble with your setup, you can check out the [GitHub page](https://github.com/raspberrypi/picotool) and the **Appendix B: Picotool** section of [Getting started with Raspberry Pi Pico-series](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf).
 :::
 
-### `elf2uf2-rs` (**RP2040** only)
+### 4. `elf2uf2-rs` (optional, **RP2040** only)
 
-This is another tool that we can use in order to program an **RP2040** based board over USB. In order to install it, run the following in your terminal:
+This is another tool that we can use in order to program an **RP2040** based board over USB, in the absence of a debugger. In order to install it, run the following in your terminal:
 
 ```shell
 cargo install elf2uf2-rs
@@ -183,52 +303,7 @@ If you try to flash a Pico 2 (W) using the `elf2uf2-rs` tool, the program will n
 
 :::
 
-### `probe-rs`
 
-This tool is an embedded debugging and target interaction toolkit. It enables its user to program and debug microcontrollers via a debug probe.
-
-<Tabs>
-    <TabItem value="linux_probe-rs" label="Linux" default>
-            
-        :::info 
-
-        Before installing probe-rs, you need to install  `pkg-config`, `libudev`, `cmake` and `git`. You can get them by running the following in your terminal. If any of these programs are already installed on your machine, you can omit them from the command.
-        ```shell
-        sudo apt-get install pkg-config libudev-dev cmake git
-        ```
-
-        :::
-
-        ```shell
-        cargo install probe-rs-tools --locked
-        ```
-
-        You will also need to add this [`udev`](https://probe.rs/files/69-probe-rs.rules) file in `/etc/udev/rules.d`. Then, run:
-
-        ```shell
-        udevadm control --reload
-        udevadm trigger
-        ```
-
-    </TabItem>
-    <TabItem value="windows_probe-rs" label="Windows" default>
-
-        :::info
-        You will have to make sure that [`cmake`](https://cmake.org/download/) is installed and that it is added to your `$PATH`. Make sure you choose the latest **stable** version, under the Latest Release section.
-        :::
-
-        Once `cmake` is set up, you can run
-        ```shell
-        cargo install probe-rs-tools --locked
-        ```
-        and no further configuration is required.
-
-    </TabItem>
-</Tabs>
-
-### VSCode Extension
-
-For a better experience, go ahead and install the **Debugger for probe-rs** extension in the Microsoft Extension Marketplace. This will allow us to build and upload a program to the RP2350 directly from VSCode and it will make debugging the program while running on the MCU as easy as debugging a Rust program running on your host machine.
 
 ## Flashing over USB
 
@@ -279,13 +354,13 @@ You will need to compile your executable specifically for the **RP2350** or the 
 <Tabs>
     <TabItem value="pico2_target" label="Raspberry Pi Pico 2">
     
-        ARMv8-M for the **RP235x**
+        ARMv8-M for the **RP2350**
         ```shell
         rustup target add thumbv8m.main-none-eabihf
         ```
         :::warning
 
-        This is a very important step, so make sure you follow it and choose the right target. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of Arm will lead to a number of compilation errors.
+        This is a very important step, so make sure you follow it and choose the right target. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of ARM will lead to a number of compilation errors.
 
         :::
 
@@ -326,7 +401,7 @@ You will need to compile your executable specifically for the **RP2350** or the 
         ```
         :::warning
 
-        This is a very important step, so make sure you follow it and choose the right target. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of Arm will lead to a number of compilation errors.
+        This is a very important step, so make sure you follow it and choose the right target. Compiling for the wrong architecture, such as x86 (Intel and AMD processors) instead of ARM will lead to a number of compilation errors.
 
         :::
 
@@ -372,7 +447,7 @@ The team will only privde you with support for your project if you are using a d
 
 :::
 
-After your program is compiled, you will have to identify the path to the binary, which can vary depending on your target architecture and build flags. For example, the binary for a debug build compiled for the RP2350 will be located in `target/thumbv8m.main-none-eabihf/debug/`, while a release build for the RP2040 will generate a binary in `target/thumbv6m-none-eabi/release/`.
+After your program is compiled, you will have to identify the path to the binary, which can vary depending on your target architecture and build options. For example, the binary for a debug build compiled for the RP2350 will be located in `target/thumbv8m.main-none-eabihf/debug/`, while a release build for the RP2040 will generate a binary in `target/thumbv6m-none-eabi/release/`.
 
 <Tabs>
     <TabItem value="flashing_pico2" label="Raspberry Pi Pico 2" default>
@@ -387,7 +462,7 @@ After your program is compiled, you will have to identify the path to the binary
 
         This will flash the board without starting `probe-rs`' debugging functionality.
 
-        #### 2. Configuring Cargo to do it
+        #### 2. Configuring Cargo to do it (recommended)
 
         If you've already created a `.cargo/config.toml` with a build target, you can add these lines to the file:
 
@@ -447,6 +522,12 @@ After your program is compiled, you will have to identify the path to the binary
         ```
         * `-x` to reset the Pico and start executing the program after flashing
         * `-t elf` to specify the binary's type (`picotool` will convert it to uf2)
+
+        :::warning
+        
+        On Windows, you may receive an error about `picotool` being unable to connect to the board, even though it detects it as being in `BOOTSEL`. This is likely due to a missing driver. Download and run [Zadig](http://zadig.akeo.ie/), select `RP2 Boot` from the dropdown menu and select WinUSB as the driver. Click on install and try flashing the board again once the driver is ready.
+        
+        :::
 
         Alternatively, you can use
 
@@ -529,6 +610,12 @@ After your program is compiled, you will have to identify the path to the binary
         ```
         * `-x` to reset the Pico and start executing the program after flashing
         * `-t elf` to specify the binary's type (`picotool` will convert it to uf2)
+
+        :::warning
+        
+        On Windows, you may receive an error about `picotool` being unable to connect to the board, even though it detects it as being in `BOOTSEL`. This is likely due to a missing driver. Download and run [Zadig](http://zadig.akeo.ie/), select `RP2 Boot` from the dropdown menu and select WinUSB as the driver. Click on install and try flashing the board again once the driver is ready.
+        
+        :::
 
         Alternatively, you can use
 
@@ -682,7 +769,7 @@ A recommended step is to download the **System View Description** file for the M
 
 You can find out more about this configuration file and available options, as well as the debugging process itself from the official [probe-rs documentation](https://probe.rs/docs/tools/debugger/).
 
-**On Windows**, you may also have to create a `tasks.json` file in the `.vscode/` folder in order to define the `rust: cargo build` task, in case it is not recognized. Here is what it should contain:
+**On Windows**, you may also have to create a `tasks.json` file in the `.vscode/` folder in order to define the `rust: cargo build` task, in case it is not recognised. Here is what it should contain:
 
 ##### tasks.json
 
@@ -956,7 +1043,7 @@ The three files mentioned below (`rust-toolchain.toml`,`memory.x` and `build.rs`
     </TabItem>
     <TabItem value="pico_toolchain" label="Raspberry Pi Pico" default>
 
-        The RP2040is based on a a **Cortex-M0+** that uses the **ThumbV6-M** architecture so we will need to specify the target triple we are compiling for. We will do that using a `rust-toolchain.toml` file, as it allows us to also set the **toolchain release channel** we will use, and the components we require.
+        The RP2040 is based on a a **Cortex-M0+** that uses the **ThumbV6-M** architecture so we will need to specify the target triple we are compiling for. We will do that using a `rust-toolchain.toml` file, as it allows us to also set the **toolchain release channel** we will use, and the components we require.
 
         An example of such file is this:
 
@@ -1066,7 +1153,7 @@ At this step, we must add the dependencies we will use for our project. Bellow y
 <Tabs>
     <TabItem value="pico2_deps" label="Raspberry Pi Pico 2" default>
 
-    We have to specify the git version for the `embassy` crates, since the ones on `crates.io` don't work with the `RP2350`.
+    We have to specify the git version for the `embassy` crates, since the ones on `crates.io` don't work with the RP2350.
 
     ##### `embassy-executor`
 

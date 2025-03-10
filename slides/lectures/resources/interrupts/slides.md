@@ -24,6 +24,9 @@ what happens if something does not work as required
 
 ![Exceptions](./exceptions.svg)
 
+<!-- Just explain that MCU's have a special table where firmware can register functions that
+the processor calls in case of several events. -->
+
 ---
 ---
 # Standard ARM Cortex-M Exceptions
@@ -40,6 +43,9 @@ some hardware device notifies the MCU
 <div align="center">
 <img src="./cortex-m-nvic.svg" class="rounded w-170">
 </div>
+
+<!-- Interrupts are exceptions that are usually triggered by hardware when
+it needs attention.-->
 
 ---
 ---

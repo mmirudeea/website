@@ -13,7 +13,7 @@ export function ElectronicsTutorial({title, anchor}) {
 }
 
 The purpose of this lab is to understand how to start developing firmware in [Rust](https://www.rust-lang.org/) 
-with Embassy for the RP2350 MCU.
+with [Embassy](https://embassy.dev) for the RP2350 MCU.
 
 ## Concepts
 
@@ -317,6 +317,18 @@ For a correct use of the buttons, use pull-up, pull-down resistors depending on 
 
 :::
 
+### Waiting for GPIO Input
+
+Embassy provides a set of functions that are able to suspend the execution of the task
+until a change is detected in the input if a GPIO pin.
+
+| Function | Description |
+|-|-|
+| `wait_for_high` | Suspends the execution until the pin state becomes `PinState::High` |
+| `wait_for_low` | Suspends the execution until the pin state becomes `PinState::Low` |
+| `wait_for_rising_edge` | Suspends the execution until the pin state switches from `PinState::Low` to `PinState::High` |
+| `wait_for_falling_edge` | Suspends the execution until the pin state switches `PinState::High` to `PinState::Low` |
+
 ### Waiting
 
 Embassy provides support for suspending the execution of the software for an amount of time. It uses
@@ -409,8 +421,8 @@ Switches on the lab board have a pull-up resistor. This means that:
 
 | Position | Value |
 |-|-|
-| Pressed | `LOW` |
-| Released | `HIGH` |
+| Pressed | `PinState::Low` |
+| Released | `PinState::High` |
 
 2. Pins that connect to switches have to be set up as `Pull::None` to disable the Raspberry Pi 2 Pico's
     internal pull resistor.
@@ -475,7 +487,7 @@ Please make sure the lab professor verifies your circuit before it is powered up
 :::
 
 3. Write a program using Embassy that blinks the LED connected to GPIO pin 2 (GP2) 
-every 300ms. (**2p**)
+every 300ms. (**1p**)
 
 :::note
 
@@ -486,16 +498,65 @@ using the `Timer`, you have to add `.await` after the `after` function.
 
 4. Write a program using Embassy that will write the
 message "The button was pressed" to the console every time button SW5 is pressed. 
-Make sure you connect the switch SW5 to a Raspberry Pi Pico pin. (**2p**)
+Make sure you connect the switch SW5 to a Raspberry Pi Pico 2 pin. (**2p**)
 
-5. Write a Rust program using Embassy that toggles the LED every time button SW5 is pressed. (**1p**)
+5. Write a Rust program using Embassy that toggles the LED every time button SW5 is pressed.
+The message might be printed many times for one press? Why? (**1p**)
 
-6. Instead of constantly sampling for the button value, use the [`wait_for_`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_low) functions to 
-wait for the value to change. (**2p**)
+:::tip
+Read the value of SW5 in a `loop` and print the message if the value is `LOW`.
+:::
+
+6. Instead of constantly sampling for the button value, use the [wait pin functions](#waiting-for-gpio-input) to 
+wait for the value to change. Why is the message printed only once? (**1p**)
 
 :::tip
 Do not forget to write the `.await` keyword at the end of an `async` function call.
 :::
+
+7. Build a traffic light using the `GREEN`, `YELLOW` and `RED` LEDs. The flow of the colors
+is:
+
+```mermaid
+flowchart LR
+    red(RED) -- 3s --> green(Green)
+    green -- 3s --> yellow(Yellow)
+    yellow -- 1s --> red
+
+    classDef red fill:#ff0000,stroke:#000000,color: #ffffff
+    classDef yellow fill:#efa200,stroke:#000000
+    classDef green fill:#00ce54,stroke:#000000
+
+    class red red
+    class yellow yellow
+    class green green
+```
+
+8. Extend the traffic light to include a flashing blue LED for pedestrians.
+ When the pedestrian button is pressed, the traffic light switches to yellow
+ and waits one second. After that, oit switches on the red light and flashed
+ the blue pedestrian light. After 5 seconds, the traffic light switches back
+ to red and stops the blue flashing. (**2p**)
+
+```mermaid
+flowchart LR
+    green(GREEN) --> switch(Wait for pedestrian 
+    button press)
+    switch --> yellow(Yellow)
+    yellow -- 1s --> red(RED)
+    yellow -- 1s --> blue(BLUE blinking)
+    blue -- 5s --> green
+
+    classDef red fill:#ff0000,stroke:#000000,color: #ffffff
+    classDef yellow fill:#efa200,stroke:#000000
+    classDef green fill:#00ce54,stroke:#000000
+    classDef blue fill:#009fff,stroke:#000000,color: #ffffff
+
+    class red red
+    class yellow yellow
+    class green green
+    class blue blue
+```
 
 ## Platform Access Crate (PAC)
 
@@ -506,7 +567,7 @@ Using [rust2svd](https://docs.rs/svd2rust/latest/svd2rust/), developers can auto
 a crate that provides access functions to the MCUs registers. This provides a significant improvement,
 as developers do not have to write manually the register addresses.
 
-One of the PAC crates for the RP2040 MCU is [rp2040-pac](https://docs.rs/rp2040-pac/latest/rp2040_pac/).
+One of the PAC crates for the RP2040 MCU is [rp2350-pac](https://docs.rs/rp2040-pac/latest/rp2350_pac/).
 
 :::note
 
@@ -520,7 +581,7 @@ embedded software is very similar to bare metal, just that register access is ma
 
 :::
 
-The RP2040 (ARM Cortex-M0+) MCU uses *Memory Mapped Input Output* (MMIO). This means that the peripheral's registers
+The RP2350 (ARM Cortex-M33) MCU uses *Memory Mapped Input Output* (MMIO). This means that the peripheral's registers
 are mapped into the address space (in normal words, in the memory). Reading and writing data from and to these registers
 is done by memory reads and writes.
 
@@ -535,75 +596,6 @@ Blinking an LED in PAC or bare metal programming means following these steps:
  7. Wait for an amount of time
  8. Loop through steps 6 and 7
 
-### Bootloader
-
-The RP2040 has a piece of software written in an internal ROM memory that is loaded 
-when the MCU boots. This looks at the first 256 bytes of the Flash memory
-to understand how it needs to start the MCU.
-
-:::tip
-
-While the ROM bootloader is rather small, its functionality is very similar to the PC's BIOS
-boot sequence.
-
-:::
-
-The RP2040's datasheet explains the boot process. This is not very straight forward, and writing this
-information requires a digital signature. The `rp2040-boot` crate provides the bootloader information
-for booting with the `cortex-m-rt` crate.
-
-Adding the following code to the Rust includes the bootloader.
-
-```rust
-#[link_section = ".boot_loader"]
-#[used]
-pub static BOOT_LOADER: [u8; 256] = rp2040_boot2::BOOT_LOADER_W25Q080;
-```
-
-### Entry
-
-For this lab, we will use the `cortex-m-rt` crate. As the starting code for an MCU is usually processor
-and vendor dependent, this crate allows developers to get started a little faster. It implements the bare minimum
-initialization code and provides a macro called `entry` that developers can use to select the startup (main)
-function.
-
-:::info
-
-The `entry` macro is used by Embassy through the `embassy_executor::main` macro that sets the `main` function as the startup point and defines the correct bootloader.
-
-:::
-
-When an error occurs, Rust calls the `panic` function. When using the `std` library, the `panic` function is
-already defined. It prints the error and usually unwinds the stack. When using `core`, it is the developer's
-job to define a `panic` function. In the case of bare metal development, the simplest `panic` function is 
-one that loops indefinitely, preventing the MCU form executing code.
-
-```rust
-use core::panic::PanicInfo;
-
-use cortex_m_rt::entry;
-
-// the `entry` macro sets up this function
-// as the function that the MCU calls at
-// startup
-#[entry]
-fn main() -> ! {
-    // the `main` function is not allows to return
-    loop { }
-}
-
-// rust uses panics when an error occurs
-// as this is bare metal, we have to define
-// the panic function that rust calls
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    // if an error occurs, we simply loop around
-    // to prevent the MCU from executing 
-    // anything
-    loop {}
-}
-```
-
 :::warning
 
 In PAC or bare metal mode, the MCU does not run any framework or operating system, it just runs the developers bare metal code. This is why `main` function is not allowed to return, it loops forever. There is no system to which the function
@@ -615,7 +607,7 @@ One of the first lines of the `main` function is getting a reference to all the
 peripherals.
 
 ```rust
-use rp2040_pac::Peripherals;
+use rp2350_pac::Peripherals;
 
 #[entry]
 fn main() -> ! {
@@ -963,3 +955,8 @@ Noise is produced whenever a pushbutton or other switch is moved. Because the sw
 The image above shows the signal produced by a button when pressed.
 
 The most correct way to correct the bouncing problem is the hardware one, but there are also software methods to correct the problem. For more details and examples, consult the documentation from Embassy and the examples provided by them.
+
+## Advanced Exercises
+
+1. Write a firmware using PAC that blinks the green LED every seconds.
+2. Write a firmware using bare metal that blinks the green LED every seconds.

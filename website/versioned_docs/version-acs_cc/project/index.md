@@ -39,17 +39,22 @@ Students will have to build and showcase the hardware with the running software 
  - Be very careful about the expiration date of the ssh key, change the expiration date otherwise it is set to 30 days.
 
 3. [Download Git](https://git-scm.com) from the official website and access it in the command line using `git -v` to check if it was installed correctly. You might have to use *Git Bash*.
-4. Run in the command line: `git clone git@gitlab.cs.pub.ro:pmrust/pmrust.pages.upb.ro.git`
-5. Now you have your own clone. You need to create a new branch. For this, follow the steps:
+4. Navigate to the [website's Gitlab repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro) and create a public fork by clicking on the button in the top right corner.
+
+5. Clone the newly created repository by running `git clone git@gitlab.cs.pub.ro:<gitlab_username>/pmrust.pages.upb.ro.git`, where <gitlab_username> is replaced by your gitlab username.
+
+6. Now you have your own clone. You need to create a new branch. For this, follow the steps:
   - Run the command: `git fetch` followed by the `git pull` command
   - The branches have the following naming convention: `project/your_curs.upb.ro_username`. Example: `project/andrei_paul.zamfir`
   - To create a new branch:
     - `git checkout -b <branch_name>`
     - `git push --set-upstream origin project/your_curs.upb.ro_username`
 
-6. To start creating your page for the project, go to the directory: `website/versioned_docs/version-acs_cc/project/2025` and create a new directory with your curs.upb.ro username. Example: `andrei_paul.zamfir`.
+7. To start creating your page for the project, go to `website/versioned_docs/version-acs_cc/project/2025` and create a new directory with your curs.upb.ro username. Example: `andrei_paul.zamfir`.
 
-7. In that directory you must create a file named `index.md` which will be your project page. You can take a look at the [Markdown](https://www.markdownguide.org/cheat-sheet/) syntax.
+8. In that directory you must create a file named `index.md` which will be your project page. You can take a look at the [Markdown](https://www.markdownguide.org/cheat-sheet/) syntax. You can look at [last year's projects and template](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro/-/tree/main/website/versioned_docs/version-fils_en/project/2024)
+
+9. After finishing the project, make a _merge request_ to the [upstream repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro)
 
 ## Hardware Rules
 

@@ -131,7 +131,7 @@ layout: two-cols
 </style>
 
 <div align="center">
-<img src="./pwm_rp2040_registers.png" class="rounded w-150">
+<img src="./pwm_rp2350_registers.png" class="rounded w-150">
 </div>
 
 :: right ::

@@ -324,10 +324,11 @@ until a change is detected in the input if a GPIO pin.
 
 | Function | Description |
 |-|-|
-| `wait_for_high` | Suspends the execution until the pin state becomes `PinState::High` |
-| `wait_for_low` | Suspends the execution until the pin state becomes `PinState::Low` |
-| `wait_for_rising_edge` | Suspends the execution until the pin state switches from `PinState::Low` to `PinState::High` |
-| `wait_for_falling_edge` | Suspends the execution until the pin state switches `PinState::High` to `PinState::Low` |
+| [`wait_for_high`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_high) | Suspends the execution until the pin state becomes `Level::High`. If the pin state is already `Level::High`, it returns immediately. |
+| [`wait_for_low`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_low) | Suspends the execution until the pin state becomes `Level::Low`. If the pin state is already `Level::Low`, it returns immediately. |
+| [`wait_for_any_edge`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_any_edge) | Suspends the execution until the pin state switches. |
+| [`wait_for_rising_edge`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_rising_edge) | Suspends the execution until the pin state switches from `Level::Low` to `Level::High` |
+| [`wait_for_falling_edge`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.Input.html#method.wait_for_falling_edge) | Suspends the execution until the pin state switches `Level::High` to `Level::Low` |
 
 ### Waiting
 
@@ -421,8 +422,8 @@ Switches on the lab board have a pull-up resistor. This means that:
 
 | Position | Value |
 |-|-|
-| Pressed | `PinState::Low` |
-| Released | `PinState::High` |
+| Pressed | `Level::Low` |
+| Released | `Level::High` |
 
 2. Pins that connect to switches have to be set up as `Pull::None` to disable the Raspberry Pi 2 Pico's
     internal pull resistor.
@@ -478,7 +479,7 @@ format your source when saving, create a `.vscode/settings.json` file with:
 ```
 :::
 
-2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 2 (GP2). (**2p**)
+2. Write a program using Embassy that set on HIGH the LED connected to GPIO pin 2 (GP2). (**1p**)
 
 :::danger 
 
@@ -498,7 +499,7 @@ using the `Timer`, you have to add `.await` after the `after` function.
 
 4. Write a program using Embassy that will write the
 message "The button was pressed" to the console every time button SW5 is pressed. 
-Make sure you connect the switch SW5 to a Raspberry Pi Pico 2 pin. (**2p**)
+Make sure you connect the switch SW5 to a Raspberry Pi Pico 2 pin. (**1p**)
 
 5. Write a Rust program using Embassy that toggles the LED every time button SW5 is pressed.
 The message might be printed many times for one press? Why? (**1p**)
@@ -514,7 +515,7 @@ wait for the value to change. Why is the message printed only once? (**1p**)
 Do not forget to write the `.await` keyword at the end of an `async` function call.
 :::
 
-7. Build a traffic light using the `GREEN`, `YELLOW` and `RED` LEDs. The flow of the colors
+7. Build a traffic light using the `GREEN`, `YELLOW` and `RED` LEDs. (**1p**) The flow of the colors
 is:
 
 ```mermaid
@@ -557,6 +558,29 @@ flowchart LR
     class green green
     class blue blue
 ```
+
+9. Display letters in Morse Code.
+    1. Write a function that takes as an argument a letter and displays
+    it in Morse Code using three LEDs. For a dot light up the middle LED,
+    for a line light up all three. (**1p**)
+    2. Write a firmware that displays a text in Morse Code. (**1p**)
+![International Morse Code](./images/international_morse_code.svg)
+
+:::note
+Letters in mores code are case insensitive. You can use the [`char::to_ascii_uppercase`](https://doc.rust-lang.org/beta/core/primitive.char.html#method.to_ascii_uppercase)
+ or [`u8::to_ascii_uppercase`](https://doc.rust-lang.org/std/primitive.u8.html#method.to_ascii_uppercase) functions to convert a `char` or `u8` to uppercase.
+:::
+
+:::tip
+You can use an array of `&str`s to store the format of the morse code.
+
+```rust
+const CODES: [&str; 26] = [
+    ".-", // A
+    // ...
+];
+```
+:::
 
 ## Platform Access Crate (PAC)
 

@@ -5,13 +5,13 @@ layout: section
 Pulse Width Modulation
 
 ---
----
+
 # Bibliography
 for this section
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.5 - *PWM*
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 12 - *Peripherals*
+     - Section 12.5 - *PWM*
 
 2. **Paul Denisowski**, *[Understanding PWM](https://www.youtube.com/watch?v=nXFoVSN3u-E)*
 
@@ -84,27 +84,43 @@ $$
 </div>
 
 ---
----
 
 # Usage examples
 
+<div grid="~ cols-2 gap-6">
+
+<div>
+
 - dimming an LED
 <img src="./pwm_led.gif" class="rounded w-90">
+
+</div>
+
+<div>
+
 - controlling motors
   - controlling the angle of a stepper motor
   - controlling the RPM of a motor
+
+
 <img src="./pwm_voltage.gif" class="rounded w-90">
+
+</div>
+
+</div>
+
 ---
 layout: two-cols
 ---
 
-# RP2040's PWM
+# RP2350's PWM
 
 - generates square signals
 - counts the pulse width of input signals
-- 8 PWM units, each with 2 channels (A and B)
-- each PWM channel is connected to a certain pin
+- 8 or 12[^package] PWM slices, each A and B channels
+- each PWM channel is linked to a fixed pin
 - some channels are connected to two pins
+- may be used as timers (`IRQ1_INTE`)
 
 ## Registers
 
@@ -125,17 +141,19 @@ layout: two-cols
 </div>
 
 <div align="center">
-<img src="./pwm_rp2040_pins.png" class="rounded w-150">
+<img src="./pwm_rp2350_pins.png" class="rounded w-150">
 </div>
 
 <div align="center">
-<img src="../rp2040//rp2040_adafruit_pinout.png" class="rounded w-70">
+<img src="../rp2350/pico2w-pinout.svg" class="rounded w-70">
+
 </div>
 
+[^package]: Depends on the RP2350 package
 
 ---
 
-# RP2040's PWM Modes
+# RP2350's PWM Modes
 
 <div grid="~ cols-2 gap-5">
 
@@ -163,14 +181,14 @@ f = \frac{f_{sys}}{period} [Hz]_{SI}
 
 $$
 
-
 ---
 layout: two-cols
 ---
+
 # Example
 using Embassy
 
-```rust{all|1|3|5|5,6|5,6,7|9-13|16|17|18,19|15,18,19,20}
+```rust{1|3|5|5,6|5,6,7|9-13|16|17|18,19|15,18,19,20|all}
 use embassy_rp::pwm::{Config, Pwm};
 
 let p = embassy_rp::init(Default::default());

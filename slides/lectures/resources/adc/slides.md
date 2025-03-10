@@ -5,16 +5,16 @@ layout: section
 Analog to Digital Converter
 
 ---
----
+
 # Bibliography
 for this section
 
 **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.9 - *ADC and Temperature Sensor*
-       - Subchapter 4.9.1
-       - Subchapter 4.9.2
-       - Subchapter 4.9.5
+   - Chapter 12 - *Peripherals*
+     - Section 12.4 - *ADC and Temperature Sensor*
+       - Subchapter 12.4.2
+       - Subchapter 12.4.3
+       - Subchapter 12.4.6
 
 ---
 layout: two-cols
@@ -46,7 +46,7 @@ Lower sample rates yield the *aliasing effect*.
 </div>
 
 ---
----
+
 # Nyquist–Shannon Sampling Theorem
 
 <div grid="~ cols-2 gap-5">
@@ -54,7 +54,7 @@ Lower sample rates yield the *aliasing effect*.
 <div>
 
 $$
-sampling_f >= 2 \times max_{f}
+sampling_f > 2 \times max_{f}
 $$
 
 *The **sampling frequency** has to be at least **two times higher** than the **maximum frequency** of the signal* to avoid frequency aliasing[^aliasing].
@@ -72,6 +72,7 @@ $$
 ---
 layout: two-cols
 ---
+
 # Sampling
 how the ADC works
 
@@ -94,13 +95,13 @@ how the ADC works
 </div>
 
 There are different [types of ADCs](https://www.monolithicpower.com/en/analog-to-digital-converters/introduction-to-adcs/types-of-adcs) depending on the architecture. 
-The most common used is SAR ([*Successive Approximation Register*](https://en.wikipedia.org/wiki/Successive-approximation_ADC)) ADC, also integrated in RP2040.
+The most common used is SAR ([*Successive Approximation Register*](https://en.wikipedia.org/wiki/Successive-approximation_ADC)) ADC, also integrated in RP2350.
 
 ---
 layout: two-cols
 ---
 
-# RP2040's ADC 
+# RP2350's ADC 
 
 <style>
 .two-columns {
@@ -110,13 +111,13 @@ layout: two-cols
 
 | | |
 |-|-|
-| *channels* | 5 |
+| *channels* | 4 or 8[^package] |
 | *sampling rate* | 500 kHz |
 | *resolution* | 12 bits |
 | *V<sub>max</sub>* | 3.3 V |
 
 - requires a 48 MHz clock signal
-- channel 4 is connected to the internal temperature sensor
+- channel 4 or 8[^package] is connected to the internal temperature sensor
 
 $$
 
@@ -131,16 +132,17 @@ $$
 </div>
 
 <div align="center">
-<img src="../rp2040/rp2040_adafruit_pinout.png" class="rounded w-80">
+<img src="../rp2350/pico2w-pinout.svg" class="rounded w-80">
 </div>
 
+[^package]: Depends on the RP2350 package
 
 ---
----
+
 # ADC
 in Embassy
 
-```rust{all|1|3-5|7|8|10|13-14|15|15,16|17|12,13,15,17,18}
+```rust{1|3-5|7|8|10|13-14|15|15,16|17|12,13,15,17,18|all}
 use embassy_rp::adc::{Adc, Channel, Config, InterruptHandler};
 
 bind_interrupts!(struct Irqs {

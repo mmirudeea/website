@@ -19,11 +19,12 @@ for this section
 ---
 ---
 # Clocks
-all peripherals and the MCU use a clock to execute at certain intervals
 
 <div grid="~ cols-2 gap-5">
 
 <div>
+
+all peripherals and the MCU use a clock to execute at certain intervals
 
 | Source | Usage |
 |-|-|
@@ -38,7 +39,7 @@ let p = embassy_rp::init(Default::default());
 </div>
 
 <div align="center">
-<img src="./clocks.png" class="rounded w-140">
+<img src="./rp2350_clocks.png" class="rounded w-140">
 </div>
 
 </div>
@@ -118,7 +119,7 @@ ARM Cortex-M peripheral
 
 <img src="./systick_registers.png" class="rounded w-140">
 
-```rust{all|1,7,8|2,9|3,10,11}
+```rust{1,7,8|2,9|3,10,11|all}
 const SYST_RVR: *mut u32 = 0xe000_e014 as *mut u32;
 const SYST_CVR: *mut u32 = 0xe000_e018 as *mut u32;
 const SYST_CSR: *mut u32 = 0xe000_e010 as *mut u32;
@@ -146,7 +147,6 @@ unsafe fn SysTick() {
     /* systick fired */ 
 }
 ```
-
 
 ---
 layout: two-cols
@@ -210,11 +210,9 @@ layout: two-cols
 # RP2350's Timer instance
 read the number of elapsed μs since reset
 
-<img src="./rp2350_timer_registers_2.png" class="rounded w-100">
-
 #### Reading the time elapsed since restart
 
-```rust{all|1,5|2,6|4,7,8}
+```rust{1,5|2,6|4,7,8|all}
 const TIMERLR: *const u32 = 0x400b_400c;
 const TIMERHR: *const u32 = 0x400b_4008;
 
@@ -233,7 +231,6 @@ The **reading order maters** as reading `TIMELR` latches the value in `TIMEHR` (
     <img src="./rp2350_timer_registers_1.png" class="rounded w-100">
 </div>
 
-
 ---
 layout: two-cols
 ---
@@ -243,14 +240,14 @@ triggering an interrupt at an interval
 
 ```rust
 #[interrupt]
-unsafe fn TIMER_IRQ_0() { /* alarm fired */ }
+unsafe fn TIMER0_IRQ_0() { /* alarm fired */ }
 ```
 
-```rust{all|1,10|2,11,12|3,4,13}
+```rust{1,10|2,11,12|3,4,13|all}
 const TIMERLR: *const u32 = 0x400b_400c;
 const ALARM0: *mut u32 = 0x400b_4010;
 // + 0x2000 is bitwise set
-const INTE_SET: *mut u32 = 0x400b_4038 + 0x2000;
+const INTE_SET: *mut u32 = 0x400b_4040;
 
 // set an alarm after 3 seconds
 let us = 3_0000_0000;
@@ -269,5 +266,6 @@ unsafe {
 :: right ::
 
 <div align="center">
-    <img src="./timer_registers_2.png" class="rounded w-100">
+    <img src="./rp2350_timer_registers_alarm.png" class="rounded w-100">
+    <img src="./rp2350_timer_registers_2.png" class="rounded w-100">
 </div>

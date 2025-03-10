@@ -66,10 +66,11 @@ src: ../../resources/adc/slides.md
 ---
 
 ---
----
+
 # Conclusion
 we talked about
 
+- Exceptions and Interrupts
 - Counters
 - SysTick
 - Timers and Alarms

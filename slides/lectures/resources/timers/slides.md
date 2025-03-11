@@ -50,7 +50,7 @@ let p = embassy_rp::init(Default::default());
 stabilizing the signal and adjusting it
 
 1. divides down the clock signals used for the timer, giving reduced overflow rates
-2. allows the timer to be clocked at a user desires the rate
+2. allows the timer to be clocked at a user desired rate
 
 <div align="center">
 <img src="./clock_pipeline.png" class="rounded w-140">

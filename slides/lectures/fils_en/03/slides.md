@@ -22,7 +22,7 @@ background:
 ---
 
 # Interrupts, PWM and ADC
-Lecture 4
+Lecture 3
 
 ---
 

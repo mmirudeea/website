@@ -247,7 +247,7 @@ unsafe fn TIMER0_IRQ_0() { /* alarm fired */ }
 const TIMERLR: *const u32 = 0x400b_400c;
 const ALARM0: *mut u32 = 0x400b_4010;
 // + 0x2000 is bitwise set
-const INTE_SET: *mut u32 = 0x400b_4040;
+const INTE_SET: *mut u32 = 0x400b_0040;
 
 // set an alarm after 3 seconds
 let us = 3_0000_0000;

@@ -213,8 +213,8 @@ read the number of elapsed μs since reset
 #### Reading the time elapsed since restart
 
 ```rust{1,5|2,6|4,7,8|all}
-const TIMERLR: *const u32 = 0x400b_400c;
-const TIMERHR: *const u32 = 0x400b_4008;
+const TIMERLR: *const u32 = 0x400b_000c;
+const TIMERHR: *const u32 = 0x400b_0008;
 
 let time: u64 = unsafe {
     let low = read_volatile(TIMERLR);

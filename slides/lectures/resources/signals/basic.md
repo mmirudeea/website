@@ -53,7 +53,7 @@ Signal that what we actually generate
 
 </div>
 
-> Why we sill use it? Because after passing through an IC or a gate inside an IC - the signal si "rebuilt" and if the "digital discipline" described in the following is respected - we can preserve the information after numerous "passes". Thus, each element can behave with a large margin for error, yet the final result is correct.
+> Why we still use it? Because after passing through an IC or a gate inside an IC - the signal is "rebuilt" and if the "digital discipline" described in the following is respected - we can preserve the information after numerous "passes". Thus, each element can behave with a large margin for error, yet the final result is correct.
 
 ---
 ---

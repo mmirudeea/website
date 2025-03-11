@@ -11,16 +11,31 @@ The deliverables will be stored in two places:
 - the *source code* will be stored on [Github](https://github.com/UPB-PMRust-Students) 
 - the project documentation will be stored on [Gitlab](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro), by creating a fork of the course's website
 
-## Source Code Repository
-
-The repository contains:
-- a brief documentation - the repository's `README.md` file
-  - short description of functionality
-  - requirements (hardware and software)
-  - hardware design - use [KiCad EDA](https://www.kicad.org/) or a similar tool for the schematics
+The **documentation repository** should contain:
+- the full documentation of the project, in the `index.md` file
+  - a description of the functionality
+  - the motivation for choosing the project
+  - the architecture
+    - a description of all components and how they interconnect
+    - a diagram drawn in [diagrams.net](https://app.diagrams.net/) or similar
+  - a weekly log of the project status
+  - hardware design
+    - a description of the hardware used
+    - a schematic drawn in [KiCad EDA](https://www.kicad.org/) or similar
+    - photos of the device
   - software design
-    - detail design
+    - detailed design
     - functional diagram
+  - bill of materials (hardware and software)
+- the photos and other files required by the index.md file
+
+**ATTENTION:** You need to work in a fork of this website's Gitlab repository and not in a blank one, in order to create a _merge request_, as described below.
+
+The **source code repository** should contain:
+- a brief documentation - the repository's `README.md` file
+  - short description of the functionality
+  - requirements (hardware and software)
+  - brief hardware and software design, including diagrams
 - software source code
 
 The repositories will be checked by the lab assistant at during lab reserved for the project. Uploading code on the last day of the software milestone is not allowed. **The assistant** will check that students have **submitted regular commits** to the repository.

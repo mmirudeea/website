@@ -41,7 +41,7 @@ Students will have to build and showcase the hardware with the running software 
 3. [Download Git](https://git-scm.com) from the official website and access it in the command line using `git -v` to check if it was installed correctly. You might have to use *Git Bash*.
 4. Navigate to the [website's Gitlab repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro) and create a public fork by clicking on the button in the top right corner.
 
-5. Clone the newly created repository by running `git clone git@gitlab.cs.pub.ro:<gitlab_username>/pmrust.pages.upb.ro.git`, where <gitlab_username> is replaced by your gitlab username.
+5. Clone the newly created repository by running `git clone git@gitlab.cs.pub.ro:<gitlab_username>/pmrust.pages.upb.ro.git`, where `<gitlab_username>` is replaced by your gitlab username.
 
 6. Now you have your own clone. You need to create a new branch. For this, follow the steps:
   - Run the command: `git fetch` followed by the `git pull` command

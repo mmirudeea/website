@@ -244,8 +244,8 @@ unsafe fn TIMER0_IRQ_0() { /* alarm fired */ }
 ```
 
 ```rust{1,10|2,11,12|3,4,13|all}
-const TIMERLR: *const u32 = 0x400b_400c;
-const ALARM0: *mut u32 = 0x400b_4010;
+const TIMERLR: *const u32 = 0x400b_000c;
+const ALARM0: *mut u32 = 0x400b_0010;
 // + 0x2000 is bitwise set
 const INTE_SET: *mut u32 = 0x400b_0040;
 

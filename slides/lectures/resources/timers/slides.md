@@ -93,7 +93,7 @@ ARM Cortex-M time counter
 
 - decrements the value of `SYST_CVR` every μs
 - when `SYST_CVR` becomes `0`: 
-  - triggers the `SysTick` the exception
+  - triggers the `SysTick` exception
   - next clock cycle sets the value of `SYST_CVR` to `SYST_RVR`
 - `SYST_CALIB` is the value of `SYST_RVR` for a 10ms interval (might not be available)
 

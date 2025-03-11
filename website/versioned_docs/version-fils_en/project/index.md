@@ -29,7 +29,11 @@ The **documentation repository** should contain:
   - bill of materials (hardware and software)
 - the photos and other files required by the index.md file
 
-**ATTENTION:** You need to work in a fork of this website's Gitlab repository and not in a blank one, in order to create a _merge request_, as described below.
+:::warning 
+
+You need to work in a fork of this website's Gitlab repository and not in a blank one, in order to create a _merge request_, as described below.
+
+:::
 
 The **source code repository** should contain:
 - a brief documentation - the repository's `README.md` file

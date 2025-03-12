@@ -41,7 +41,6 @@ The **source code repository** should contain:
   - requirements (hardware and software)
   - brief hardware and software design, including diagrams
 - software source code
-- software source code
 
 The repositories will be checked by the lab assistant at during lab reserved for the project. Uploading code on the last day of the software milestone is not allowed. **The assistant** will check that students have **submitted regular commits** to the repository.
 

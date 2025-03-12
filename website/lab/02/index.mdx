@@ -457,6 +457,11 @@ Make sure you follow these steps:
 Please make sure you comment out (using `#` in from of the line) all the Embassy's crates 
 that you do not plan to use.
 
+:::warning
+To initialize the Embassy RP peripherals correctly, remember to add `use embassy_rp as _;` 
+or leave the initialization of the peripherals ,else the peripherals won't be initialized, which may cause errors or undefined behavior when accessing hardware components.  
+:::
+
 :::info
 For sure, you will  not use USB and WiFi. This is a trial
 and error job, just comment out all the creates that you think you won't use and

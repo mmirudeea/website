@@ -27,6 +27,7 @@ test fake slides:
 test slides acs_cc:
   stage: test
   script:
+    - rm -rf website/static/slides/acs_cc/*
     - cd slides
     - npx -y playwright@^1.41.2 install chromium
     - npx playwright install-deps
@@ -50,6 +51,7 @@ test slides acs_cc:
 test slides fils_en:
   stage: test
   script:
+    - rm -rf website/static/slides/fils_en/*
     - cd slides
     - npx -y playwright@^1.41.2 install chromium
     - npx playwright install-deps

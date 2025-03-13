@@ -9,10 +9,10 @@ of Embassy
 # Bibliography
 for this section
 
-**Embassy Documentation**, *[Embassy executor](https://embassy.dev/book/dev/runtime.html)*
+**Embassy Documentation**, *[Embassy executor](https://embassy.dev/book/#_embassy_executor)*
 
 ---
----
+
 # Tasks
 
 <div grid="~ cols-2 gap5">
@@ -32,9 +32,9 @@ for this section
 </div>
 
 
-```rust {all|9-22|1-7|18-21|19|3-6|4|5}
+```rust {9-22|1-7|18-21|19|3-6|4|5|all}
 #[embassy_executor::task(pool_size = 2)]
-async fn led_blink(mut led:Output<'static, PIN_X>) {
+async fn led_blink(mut led: AnyPin) {
     loop {
         led.toogle();
         Timer::after_secs(1).await;
@@ -60,7 +60,7 @@ async fn main(spawner: Spawner) {
 </div>
 
 ---
----
+
 # Tasks can stop the executor
 
 <div grid="~ cols-2 gap5">
@@ -73,9 +73,9 @@ async fn main(spawner: Spawner) {
 </div>
 
 
-``` {all|5-8|3-9}
+```rust {5-8|3-9|all}
 #[embassy_executor::task]
-async fn led_blink(mut led:Output<'static, PIN_X>) {
+async fn led_blink(mut led: AnyPin) {
     loop {
         led.toogle();
         // this does not execute anything
@@ -114,6 +114,7 @@ async fn main(spawner: Spawner) {
 ---
 layout: two-cols
 ---
+
 ## Priority Tasks
 
 <style>
@@ -139,7 +140,7 @@ unsafe fn SWI_IRQ_0() {
 
 :: right ::
 
-```rust {all|5,6,22|1,7-10|2,12-15|3,17-21}
+```rust {5,6,22|1,7-10|2,12-15|3,17-21|all}
 static EXECUTOR_HIGH: InterruptExecutor = InterruptExecutor::new();
 static EXECUTOR_MED: InterruptExecutor = InterruptExecutor::new();
 static EXECUTOR_LOW: StaticCell<Executor> = StaticCell::new();

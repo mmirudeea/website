@@ -33,7 +33,7 @@ trait Future {
 }
 ```
 
-```rust {all|5,10|6|6,7|6|6,7|6|6,8|1,8}{lines: false}
+```rust {5,10|6|6,7|6|6,7|6|6,8|1,8|all}{lines: false}
 fn execute<F>(mut f: F) -> F::Output
 where
   F: Future
@@ -74,7 +74,7 @@ sequenceDiagram
 
 <div grid="~ cols-2 gap-5">
 
-```rust {all|1-4|6-9|11-18}
+```rust {1-4|6-9|11-18|all}
 enum SleepStatus {
     SetAlarm,
     WaitForAlarm,
@@ -97,7 +97,7 @@ impl Sleep {
 
 <v-click>
 
-```rust {all|1,20|1,2,20|4,19|5,18|6-10|11-17|11,12,13|11,14,15}{lines: false}
+```rust {1,20|1,2,20|4,19|5,18|6-10|11-17|11,12,13|11,14,15|all}{lines: false}
 impl Future for Sleep {
     type Output = ();
 
@@ -130,7 +130,7 @@ impl Future for Sleep {
 
 <div grid="~ cols-2 gap-5">
 
-```rust {all|1,20|1,2,20|4,19|5,18|6-10|11-17|11,12,13|11,14,15}{lines: false}
+```rust {1,20|1,2,20|4,19|5,18|6-10|11-17|11,12,13|11,14,15|all}{lines: false}
 impl Future for Sleep {
     type Output = ();
 
@@ -218,7 +218,7 @@ fn blink(led: Output<'static, PIN_X>) -> Blink {
 
 <v-click>
 
-```rust {4-23|5-22|5,6-10,22|5,11-17,22|12-14|5,11-17,22|12,14,15,16|5,18-21,22}{lines: false}
+```rust {4-23|5-22|5,6-10,22|5,11-17,22|12-14|5,11-17,22|12,14,15,16|5,18-21,22|all}{lines: false}
 impl Future for Blink {
   type Output = ();
   fn poll(&mut self) -> Poll<Self::Output> {
@@ -257,7 +257,7 @@ impl Future for Blink {
 - it does not know how to execute them
 - executors are implemented into third party libraries
 
-```rust {all|12|11,13,15|14}
+```rust {12|11,13,15|14|all}
 use engine::execute;
 
 // Rust rewrites the function to a Future
@@ -280,7 +280,7 @@ fn main() -> ! {
 ---
 # Executor
 
-```rust {all|1|4-16|5-12|14,15}
+```rust {1|4-16|5-12|14,15|all}
 static TASKS: [Option<impl Future>; N] = [None, N];
 
 fn executor() {

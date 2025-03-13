@@ -22,7 +22,7 @@ layout: two-cols
 }
 </style>
 
-- MCUs are usually *single core*[^rp2040]
+- MCUs are usually *single core*[^rp2350]
 - Tasks in parallel require an OS[^interrupts]
 - Tasks can be suspended at any time
 - **Switching** the task is **expensive**
@@ -54,7 +54,7 @@ sequenceDiagram
     end
 ```
 
-[^rp2040]: RP2040 is a dual core MCU, we use only one core
+[^rp2350]: RP2350 is a dual core MCU, we use only one core
 [^interrupts]: Running in an ISR is not considered a normal task
 
 ---

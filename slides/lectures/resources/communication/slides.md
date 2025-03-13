@@ -181,7 +181,7 @@ flowchart LR
 
 # Channel Example
 
-```rust{all|1|2|5,7,14,17-25|5,8-14}
+```rust{1|2|5,7,14,17-25|5,8-14|all}
 enum LedState { On, Off }
 static CHANNEL: Channel<ThreadModeRawMutex, LedState, 64> = Channel::new();
 

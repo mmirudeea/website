@@ -458,8 +458,12 @@ Please make sure you comment out (using `#` in from of the line) all the Embassy
 that you do not plan to use.
 
 :::warning
-To initialize the Embassy RP peripherals correctly, remember to add `use embassy_rp as _;` 
-or leave the initialization of the peripherals ,else the peripherals won't be initialized, which may cause errors or undefined behavior when accessing hardware components.  
+Please make sure the `embassy_rp` crate is included in your build either:
+- by importing it with `use embassy_rp as _;`
+- or by initialising the peripherals
+
+This crate provides the `.start_block` section that is needed by the RP2350 to boot. Not including
+this crate will prevent this section from being added and will prevent the RP2350 to boot.
 :::
 
 :::info

@@ -117,7 +117,7 @@ alexagungureanu@gmail.com
 
 | Part | Description | Points |
 |--------|-------------|--------|
-| [Lecture](./category/lecture) tests | You will have a test every few classes with subjects from the previous class (will pe anounced). | 2p |
+| [Lecture](./category/lecture) tests | You will have a test every few classes with subjects from the previous class (will be anounced). | 2p |
 | [Lab](./category/lab) | Your work at every lab will be graded. | 1p |
 | [Lab](./category/lab) | Final Lab Assigment (Final Lab Test) | 1p |
 | [Project](./project) | You will have to design and implement a hardware device. Grading will be done for the documentation, hardware design and software development. | 3p |

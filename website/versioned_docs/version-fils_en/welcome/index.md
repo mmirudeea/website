@@ -56,7 +56,7 @@ teodor.dicu@wyliodrin.com
 ![Danut Aldea](images/danut_aldea.jpg)
  
 Lab Professor \
-Responsible for software
+Responsible for software \
 GitHub: [danutaldea](https://github.com/danutaldea) \
 danut.aldea@oxidos.io
 </td>

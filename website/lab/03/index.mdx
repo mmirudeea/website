@@ -17,24 +17,23 @@ The purpose of this lab is to help you learn about different types of signals in
 
 ## Resources
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-    - Chapter 2 - *System Description*
-     - Chapter 2.15 - *Clocks*
-       - Subchapter 2.15.1
-       - Subchapter 2.15.2
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.5 - *PWM*
-     - Chapter 4.6 - *Timer*
-     - Chapter 4.9 - *ADC and Temperature Sensor*
-       - Subchapter 4.9.1
-       - Subchapter 4.9.2
-       - Subchapter 4.9.5
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 8 - *Clocks*
+     - Subchapter 8.1.1
+     - Subchapter 8.1.2
+   - Chapter 12 - *Peripherals*
+     - Chapter 12.4 - *ADC and Temperature Sensor*
+       - Subchapter 12.4.1
+       - Subchapter 12.4.3
+       - Subchapter 12.4.6
+     - Chapter 12.5 - *PWM*
+     - Chapter 12.8 - *System Timers*
 
 2. **Paul Denisowski**, *[Understanding PWM](https://www.youtube.com/watch?v=nXFoVSN3u-E)*
 
 ## Timing
 
-In embedded applications, keeping track of time is crucial. Even for the simple task of blinking a led at a certain time interval, we need a reference of time that is constant and precise. 
+In embedded applications, keeping track of time is crucial. Even for the simple task of blinking an LED at a certain time interval, we need a reference of time that is constant and precise. 
 
 ### Clocks
 
@@ -50,7 +49,7 @@ This clock signal is just a reference, and most of the time we need to adjust it
 
 ### Counters
 
-A counter in electronics is a tool that keeps track of numbers. It adds one to its total every time the clock ticks. When the counter reaches its highest possible number, it can't go any higher, so it resets back to zero and starts counting again. This reset is called an "overflow".
+A counter in electronics is a tool that tracks numbers, typically by adding or subtracting one each time the clock ticks. When it reaches its maximum (or minimum) value, it resets or wraps around. This reset is called an "overflow" (when counting up) or "underflow" (when counting down). Some counters can also switch between counting up and down based on control signals.
 
 :::info
 A regular counter on 8 bits would count up from 0 to 255, then loop back to 0 and continue counting. 
@@ -81,16 +80,18 @@ The ARM Cortex-M for RP2040 and ARM Cortex-M33 for RP2350 use the SysTick time c
 
 ### Timers
 
-Until now, we have been able to blink a led at a certain time interval, by busy waiting a while between each led toggle. The technique we used so far was asking the processor to skip a clock cycle a number of times, or by calling the processor instruction `nop` (no operation) in a loop. 
+The simplest way to make a processor wait is to ask the processor to skip a clock cycle a number of times, or by calling the processor instruction `nop` (no operation) in a loop.
 :::info
 This method is not ideal, since the `nop` instruction stalls the processor and wastes valuable time that could otherwise be used to do other things in the meantime. To optimize this, we can use *alarms*.
 :::
-An **alarm** is a counter that triggers an interrupt every time it reaches a certain value. This way, an alarm can be set to trigger after a specific interval of time, and while it's waiting, the main program can continue executing instructions, and so it is not blocked. When the alarm reaches the chosen value, it goes off and triggers an interrupt that can then be handled in its specific Interrupt Service Routine (ISR).
+An **alarm** is a counter that triggers an interrupt every time it reaches a certain value. This way, an alarm can be set to trigger after a specific interval of time, and while the **alarm** hardware is *running in the background*, the main program can continue executing instructions, and so it is not blocked. When the alarm reaches the chosen value, it goes off and triggers an interrupt that can then be handled in its specific Interrupt Service Routine (ISR).
 
 ![Alarm](images/alarm.svg)
 
 :::info
-The **RP2350** timer, like the **RP2040's**, is fully monotonic, meaning it can never truly overflow. Its value is stored on 64 bits and increments every 1 microsecond, ensuring precise and consistent timekeeping. This means the last value it can increment to before overflowing is 2<sup>^64-1</sup>, which is equivalent to roughly 500,000 years. The RP2350 also supports 4 different alarms (TIMER_IRQ_0/1/2/3), which can be used independently, allowing for multiple timed events or tasks to be managed simultaneously.
+The **RP2350** timer and the **RP2040's** are fully monotonic, meaning they can never truly overflow. Their value is stored on 64 bits and incremented every 1 microsecond, ensuring precise and consistent timekeeping. This means the last value they can increment to before overflowing is 2<sup>^64-1</sup>, which is equivalent to roughly 500,000 years. RP2040 and RP2350 support 4 different alarms (TIMERx_IRQ_0/1/2/3), which can be used independently, allowing for multiple timed events or tasks to be managed simultaneously.
+
+RP2350 provides two tiner peripherals, while RP2040 provides only one.
 :::
 
 ## Analog and Digital Signals
@@ -104,7 +105,7 @@ The **RP2350** timer, like the **RP2040's**, is fully monotonic, meaning it can 
 ![DigitalSignal](images/digital_signal.png)
 
 ## Pulse-Width Modulation (PWM)
-Up to now, we learned to turn a led on and off, or in other words, set a led's intensity to 100% or 0%. What if we wanted to turn on the led only at 50% intensity? We only have a two-level digital value, 0 or 1, so technically a value of 0.5 is not possible. What we can do is simulate this analog signal, so that it *looks* like the led is at half intensity. 
+Up to now, we learned to turn an LED on and off, or in other words, set a LED's intensity to 100% or 0%. What if we wanted to turn on the LED only at 50% intensity? We only have a two-level digital value, 0 or 1, so technically a value of 0.5 is not possible. What we can do is simulate this analog signal, so that it *looks* like the LED is at half intensity. 
 
 **Pulse-Width Modulation** is a method of simulating an analog signal using a digital one, by varying the width of the generated square wave. 
 
@@ -128,7 +129,7 @@ duty\_cycle = \frac{time\_on}{period} \%
 
 $$
 
-For the RP2350 and RP2040, to generate this PWM signal, a *counter* is used. The PWM counter is controlled by these registers (`X` can be from 0-7, depending on the channel):
+A *counter* is used by the RP2350 and RP2040 to generate the PWM signal. The PWM counter is controlled by these registers (`X` can be from 0-7, depending on the channel):
 
 - `CHX_CTR` - the actual value of the counter
 - `CHX_CC` - the value that the counter will compare to
@@ -177,7 +178,7 @@ For this lab, we will be using **common anode** RGB LEDs, which means that the P
 
 #### How to wire an RGB LED
 
-The RGB led that the board provide is signaled with labels `RGB_B` (blue), `RGB_G` (green) and `RGB_R` (red) in the connectors section.
+The RGB LED that the board provides is signaled with labels `RGB_B` (blue), `RGB_G` (green) and `RGB_R` (red) in the connectors section.
 
 ![RGBWiring](images/board_rgb.png)
 
@@ -191,11 +192,11 @@ A servo motor has three wires:
 - **Signal** - usually orange, connected to a PWM pin
 ![ServoMotorWiring](images/servo_wires.png)
 
-The servo motor that the board provide is signaled with labels `GND`, `PWR` and `SIG` in the connectors section.
+The servo motor that the board provides is signaled with labels `GND`, `PWR` and `SIG` in the connectors section.
 
 ![ServoMotor](images/board_servo.png)
 
-To wire the servo motor to the  Raspberry Pi Pico 2, jumper wire is needed to connect the `SERVOS` connector to PWM pins on the board.
+To wire the servo motor to the  Raspberry Pi Pico 2, a jumper wire is needed to connect the `SERVOS` connector to PWM pins on the board.
 
 ### PWM in Embassy-rs
 
@@ -214,7 +215,7 @@ use embassy_rp::pwm::Config as ConfigPwm; // PWM config
 // Create config for PWM slice
 let mut config: ConfigPwm = Default::default();
 // Set top value (value at which PWM counter will reset)
-config.top = 0x8000; // in HEX, equals 32768 in decimal
+config.top = 0x9088; // in HEX, equals 37000 in decimal
 // Set compare value (counter value at which the PWM signal will change from 1 to 0)
 config.compare_a = config.top / 2;
 ```
@@ -227,23 +228,23 @@ In this case, `config.compare_a` is half of `config.top`. This means that the du
 To select the pin that we want to use for PWM, we need to create a new PWM driver that uses the correct channel and output for our pin.
 
 ```rust
-// Create PWM driver for pin 0
-let mut pwm = Pwm::new_output_a( // output A
-    peripherals.PWM_CH0, // channel 0
-    peripherals.PIN_0, // pin 0
+// Create a PWM driver for pin 3
+let mut pwm = Pwm::new_output_b( // Output B
+    peripherals.PWM_SLICE1, // Channel 1
+    peripherals.PIN_3,   // Pin 3 (modify this as needed)
     config.clone()
 );
 ```
 
 :::warning
-1. The code above is an example for pin 0. You need to modify the channel, output and pin depending on the PWM pin you choose to use!
+1. The code above is an example for pin 3. You need to modify the channel, output and pin depending on the PWM pin you choose to use!
 2. The value of `compare_a` or `compare_b` must be changed depending on the desired duty cycle!
 :::
 
 If we decide to modify the value of `compare_a` or `compare_b`, we have to update the configuration for the PWM.
 
 ```rust
-config.compare_a += 100; // modified value of `compare_a`
+config.compare_b += 100; // modified value of `compare_b`
 pwm.set_config(&config); // set the new configuration for PWM
 ```
 
@@ -252,39 +253,52 @@ pwm.set_config(&config); // set the new configuration for PWM
 Just like controlling other hardware through PWM, we start by initializing the peripherals:
 
 ```rust
-// Initialize peripherals
-let peripherals = embassy_rp::init(Default::default());
+    // Initialize the RP2350 peripherals
+    let peripherals = embassy_rp::init(Default::default());
 ```
 Next, we configure the PWM
 
 ```rust
-use embassy_rp::pwm::{Pwm, Config as PwmConfig};
+    // Configure PWM for servo control
+    let mut servo_config: PwmConfig = Default::default();
 
-// PWM configuration for the servo
-let mut servo_config: PwmConfig = Default::default();
-servo_config.top = 0x9999; // Set the PWM period to 0x9999 (in HEX) because the servo motor has a period of 20ms
-servo_config.compare_a = 0x07AE; // Initial position of the servo motor
-servo_config.divider = 64_i32.to_fixed(); // Set the frequency divider for PWM 
+    // Set the PWM frequency to 50 Hz (standard for servos)
+    // Servos typically expect a 20 ms period (50 Hz), so we calculate the TOP value accordingly.
+    // The formula for TOP is: TOP = (Clock Frequency / (PWM Frequency * Divider)) - 1
+    // For 150 MHz clock, 50 Hz frequency, and a divider of 64:
+    // TOP = (150,000,000 / (50 * 64)) - 1 = 46,874 (0xB71A in hex)
+    servo_config.top = 0xB71A; // TOP value for 50 Hz frequency
+
+    // Set the clock divider to 64
+    // The RP2350 runs at 150 MHz, which is too fast for direct PWM control.
+    // Dividing the clock by 64 brings it down to a manageable frequency.
+    servo_config.divider = 64_i32.to_fixed(); // Clock divider = 64
+
+    // Servo timing constants
+    const PERIOD_US: usize = 20_000; // 20 ms period for 50 Hz
+    const MIN_PULSE_US: usize = 500; // 0.5 ms pulse for 0 degrees
+    const MAX_PULSE_US: usize = 2500; // 2.5 ms pulse for 180 degrees
+
+    // Calculate the PWM compare values for minimum and maximum pulse widths
+    // The formula is: compare_value = (pulse_width_us * TOP) / period_us
+    // This scales the pulse width to the PWM counter range.
+    let min_pulse = (MIN_PULSE_US * servo_config.top as usize) / PERIOD_US;
+    let max_pulse = (MAX_PULSE_US * servo_config.top as usize) / PERIOD_US;
 ```
 
 After setting up the PWM configuration, we want to create a control loop that can dynamically adjust the servo's position.
 
 ```rust
-let mut servo = Pwm::new_output_a(peripherals.PWM_CH2, peripherals.PIN_X, servo_config);
+    // Initialize PWM for servo control
+    let mut servo = Pwm::new_output_a(peripherals.PWM_SLICE1, peripherals.PIN_2, servo_config.clone());
 
-let min_pulse = 0x07AE;  
-let max_pulse = 0x0F5C;  
-
+    // Main loop to move the servo back and forth
     loop {
-        // Move the servo to the maximum position
-        servo_config.compare_a = max_pulse;
-        servo.set_config(&servo_config);
-        Timer::after_millis(1000).await; // Wait for 1 second
-
-        // Move the servo back to the minimum position
-        servo_config.compare_a = min_pulse;
-        servo.set_config(&servo_config);
-        Timer::after_millis(1000).await; // Wait for 1 second
+        // Move servo to maximum position (180 degrees)
+        // Set compare value for max pulse width
+        // Update PWM configuration
+        // Wait 1 second
+        // Then move the servo to minimum position (0 degrees)
     }
 ```
 
@@ -335,7 +349,7 @@ A **photoresistor** (or photocell) is a sensor that measures the intensity of li
 
 #### How to wire a photoresistor
 
-The photoresistor that the board provide is signaled with label `PHOTORESISTOR` in the connectors section.
+The photoresistor that the board provides is signaled with the label `PHOTORESISTOR` in the connectors section.
 
 ![PhotoresistorWiring](images/board_photoresistor.png)
 
@@ -352,6 +366,8 @@ In our case:
 - $ R_{2} $ is a resistance compatible with our photoresistor (in our case, 10k $\Omega$)
 
 This way, the ADC pin measures the photoresistor's resistance, without the risk of a short-circuit.
+
+![PhotoresistorWiring](images/photoresistor_wiring.png)
 :::
 
 
@@ -403,10 +419,6 @@ Timer::after_secs(1).await; // wait a bit before reading and printing another va
 ## Exercises
 
 :::info
-For this lab, you will need to use the Embassy library. If you haven't already set it up, check the [Getting Started](../../tutorial/embassy/index.md) tutorial.
-:::
-
-:::info
 If you need to remember the layout of the board, check the [Lab Board](./02#the-lab-board) section from the previous lab.
 :::
 
@@ -418,7 +430,7 @@ Please make sure the lab professor verifies your circuit before it is powered up
     - Light up the LED at 25% intensity. (**1p**)
     - Make the LED change intensity from 0% to 100% in 10% increments every 1 second. (**1p**)
 :::info
-To remeber how to set up Embassy, check [Exercise 1](./02#exercises) from last week's lab.
+You should use the lab skeleton provided in the [Lab Repository](https://github.com/UPB-PMRust/lab-2025) as a starting point for your implementation.
 :::
 
 2. Write a program using Embassy to control the led intensity using a potentiometer. The potentiometer is connected to an ADC-capable GPIO pin. The LED should change intensity based on the potentiometer's position. (**2p**) 
@@ -429,7 +441,7 @@ Unlike the photoresistor, which requires an external resistor to form a voltage 
     - The middle pin to an ADC-capable GPIO pin.
     - One leg to GND.
     
-    (The potentiometer that the board provide is signaled with label `POTENTIOMETER` in the connectors section.)
+    (The potentiometer that the board provides is signaled with label `POTENTIOMETER` in the connectors section.)
 :::
 
 3. Make the RGB LED switch from red -> yellow -> blue every time the button `SW4` is pressed. (**2p**)

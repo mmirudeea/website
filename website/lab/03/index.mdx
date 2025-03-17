@@ -70,7 +70,7 @@ The way the counter works here is that it increments/decrements every clock cycl
 
 #### SysTick
 
-The ARM Cortex-M0 used by RP2040 and RP2350 uses the SysTick time counter to keep track of time. This counter is decremented every microsecond, and when it reaches 0, it triggers an exception and then resets.
+The ARM Cortex-M0 used by RP2040 and the ARM Cortex-M33 used by RP2350 both use the SysTick time counter to keep track of time. This counter is decremented every microsecond, and when it reaches 0, it triggers an exception and then resets.
 
 - `SYST_CVR` register - the value of the timer itself
 - `SYST_RVR` register - the reset value

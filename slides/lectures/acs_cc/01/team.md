@@ -66,7 +66,7 @@ Hardware
 
 <td>
 
-**Alex Ungureanu**
+**Alexandru <b Ungureanu**
 <img src="./img/alexandru_ungureanu.jpg" class="w-25">
  
 Lab Professor\

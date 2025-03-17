@@ -210,13 +210,15 @@ let peripherals = embassy_rp::init(Default::default());
 In order to modify the PWM counter configurations, we need to create a `Config` for our PWM.
 
 ```rust
-use embassy_rp::pwm::Config as ConfigPwm; // PWM config
+// PWM config
+use embassy_rp::pwm::Config as ConfigPwm; 
 
 // Create config for PWM slice
 let mut config: ConfigPwm = Default::default();
 // Set top value (value at which PWM counter will reset)
 config.top = 0x9088; // in HEX, equals 37000 in decimal
-// Set compare value (counter value at which the PWM signal will change from 1 to 0)
+// Set compare value (counter value at which the 
+// PWM signal will change from 1 to 0)
 config.compare_a = config.top / 2;
 ```
 
@@ -264,27 +266,29 @@ To control a servo motor using PWM, we need to calculate the **TOP value**, whic
 Servos typically expect a **50 Hz** PWM signal, which corresponds to a **20 ms** period.  
 
 $$
-\text{TOP} = \left( \frac{f_{clock}}{f_{pwm}} \times \text{Divider}} \right) - 1
+
+top = \left( \frac{f_{clock}}{f_{pwm} \times divider} \right) - 1
+
 $$
 
 For example, with:
 
 $$
 \begin{aligned}
-\mathrm{Clock\ Frequency} &= 150 \,\mathrm{MHz} \\
-\mathrm{PWM\ Frequency} &= 50 \,\mathrm{Hz} \\
-\mathrm{Divider} &= 64
+f_{clock} &= 150 \,MHz \\
+f_{PWM} &= 50 \,Hz \\
+divider &= 64
 \end{aligned}
 $$
 
 We get:
 
 $$
-\text{TOP} = \left( \frac{150\,000\,000}{50 \times 64} \right) - 1 = 46\,874
+top = \left( \frac{150\,000\,000}{50 \times 64} \right) - 1 = 46\,874
 $$
 
 
-which is **0xB71A** in hexadecimal.
+which is `0xB71A` in hexadecimal.
 
 The **clock divider** is used to slow down the high-frequency system clock so that it can generate a usable PWM signal. The RP2350's system clock runs at 150 MHz, which is too fast for direct PWM control of a servo. By setting the divider to 64, we effectively slow down the clock.
 
@@ -297,13 +301,13 @@ Servos interpret PWM signals based on the pulse width rather than just frequency
 To convert these pulse widths into PWM compare values, we use:
 
 $$
-\mathrm{compare\_value} = \left( \frac{\mathrm{pulse\_width\_us} \times \mathrm{TOP}}{\mathrm{PERIOD\_US}} \right)
+compare = \left( \frac{pulse_{width} \times top}{T} \right)
 $$
 
 where:
-- `pulse_width_us` is the desired pulse width in microseconds.
-- `TOP` is the previously calculated counter value (46,874).
-- `PERIOD_US` is the total period in microseconds (20,000 μs for 50 Hz).
+- $$pulse_{width}$$ is the desired pulse width in microseconds.
+- $$top$$ is the previously calculated counter value (46,874).
+- $$T$$ is the total period in microseconds (20,000 μs for 50 Hz).
 
 
 Now, let's implement this in Rust:
@@ -332,7 +336,11 @@ After setting up the PWM configuration, we want to create a control loop that ca
 
 ```rust
 // Initialize PWM for servo control
-let mut servo = Pwm::new_output_a(peripherals.PWM_SLICE1, peripherals.PIN_2, servo_config.clone());
+let mut servo = Pwm::new_output_a(
+    peripherals.PWM_SLICE1, 
+    peripherals.PIN_2, 
+    servo_config.clone()
+);
 
 // Main loop to move the servo back and forth
 loop {
@@ -447,15 +455,23 @@ Now, we need to initialize the ADC pin we will be using. The Raspberry Pi Pico h
 
 ```rust
 // Initialize ADC pin
-let mut adc_pin = Channel::new_pin(peripherals.PIN_X, Pull::None); // where X should be replaced with a pin number
+// X should be replaced with a pin number
+let mut adc_pin = Channel::new_pin(peripherals.PIN_X, Pull::None); 
 ```
 
 Once we have the ADC and pin set up, we can start reading values from the pin. 
 
 ```rust
-let level = adc.read(&mut adc_pin).await.unwrap(); // read a value from the pin
-info!("Light sensor reading: {}", level); // print the value over serial
-Timer::after_secs(1).await; // wait a bit before reading and printing another value
+loop {
+    // read a value from the pin
+    let level = adc.read(&mut adc_pin).await.unwrap(); 
+
+    // print the value over serial
+    info!("Light sensor reading: {}", level); 
+
+    // wait a bit before reading and printing another value
+    Timer::after_secs(1).await; 
+}
 ```
 
 ## Exercises

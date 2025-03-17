@@ -264,7 +264,7 @@ To control a servo motor using PWM, we need to calculate the **TOP value**, whic
 Servos typically expect a **50 Hz** PWM signal, which corresponds to a **20 ms** period.  
 
 $$
-\text{TOP} = \left( \frac{\mathrm{Clock\ Frequency}}{\mathrm{PWM\ Frequency} \times \mathrm{Divider}} \right) - 1
+\text{TOP} = \left( \frac{f_{clock}}{f_{pwm}} \times \text{Divider}} \right) - 1
 $$
 
 For example, with:

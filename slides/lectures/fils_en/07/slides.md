@@ -11,18 +11,18 @@ drawings:
 defaults:
   foo: true
 transition: slide-left
-title: MA - 03 - Exceptions and Interrupts
+title: MA - 07 - Exceptions and Interrupts
 mdc: true
 layout: cover
 themeConfig:
   primary: '#0060df'
 download: true
-exportFilename: ma-03
+exportFilename: ma-07
 background:
 ---
 
 # Exceptions and Interrupts
-Lecture 3
+Lecture 7
 
 ---
 

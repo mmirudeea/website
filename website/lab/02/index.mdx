@@ -287,6 +287,7 @@ pin.set_high();
 pin.set_low();
 ```
 
+
 :::tip
 
 While the device initialization is specific to every hardware device (the example uses the 
@@ -409,6 +410,12 @@ The board provides four single colored LEDs, red, green, blue and yellow. Each o
 uses one pin for control. Each LED connector has one single hole on the board,
 marked with `RED`, `GREEN`, `BLUE` and `YELLOW` respectively. These are located in the **Connectors**
 section of the board.
+
+:::warning
+
+The LEDs are connected so they will light up if the pin is set to LOW and turn off if the pin is set to HIGH.
+
+:::
 
 The four switches that the lab board provides are signaled with labels
 `SW4`, `SW5`, `SW6` and `SW7` in the connectors section.

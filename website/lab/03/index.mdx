@@ -478,6 +478,8 @@ loop {
 
 :::info
 If you need to remember the layout of the board, check the [Lab Board](./02#the-lab-board) section from the previous lab.
+
+Remember that LEDs are wired so they light up on LOW and turn off on HIGH and buttons return 0 when pressed and 1 when not pressed.
 :::
 
 :::danger 
@@ -489,6 +491,8 @@ Please make sure the lab professor verifies your circuit before it is powered up
     - Make the LED change intensity from 0% to 100% in 10% increments every 1 second. (**1p**)
 :::info
 You should use the lab skeleton provided in the [Lab Repository](https://github.com/UPB-PMRust/lab-2025) as a starting point for your implementation.
+
+Make sure the main function never exits so you can see how the circuit behaves.
 :::
 
 2. Write a program using Embassy to control the led intensity using a potentiometer. The potentiometer is connected to an ADC-capable GPIO pin. The LED should change intensity based on the potentiometer's position. (**2p**) 

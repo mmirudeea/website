@@ -14,15 +14,52 @@ This lab will teach you the principles of asynchronous programming, and its appl
 1. **Bert Peters**, *[How does async Rust work](https://bertptrs.nl/2023/04/27/how-does-async-rust-work.html)* 
 2. **Omar Hiari**, *[Sharing Data Among Tasks in Rust Embassy: Synchronization Primitives](https://dev.to/apollolabsbin/sharing-data-among-tasks-in-rust-embassy-synchronization-primitives-59hk)* 
 
-## Asynchronous functions
+## Asynchronous functions and Tasks
 
-Up to now, during the labs, we've seen that, in order to be able to do multiple different actions "at once", we would use *tasks*. We would let the `main` function run, while also doing another action seemingly "in parallel" inside of another task. 
-Let's take the following example: if we want to blink an LED every second while also waiting for a button press to do something else, we would need to spawn a new task in which we would wait for the button press, while blinking the LED in the `main` function. 
+Until now you've only worked with simple (almost) serial programs. However not all programs can be designed to run serially/sequentially. Handling multiple I/O events concurrently usually requires separate parallel tasks. 
+Example: Reading a button press while blinking an LED. A single loop would block the button reading event while waiting for the timer to finish.
 
-When thinking of how exactly this works, you would probably think that the task is running on a separate *thread* than the `main` function. Usually this would be the case when developing a normal computer application. Multithreading is possible, but requires a preemptive operating system. Without one, only one thread can independently run per processor core and that means that, since we are using only one core of the RP2040 (which actually has only 2), we would only be able to run **one thread at a time**. So how exactly does the task wait for the button press in parallel with the LED blinking? 
+```mermaid
+sequenceDiagram
+    participant Button as Button
+    participant Timer as Timer
+    participant Task as Main Task (LED + Button)
+    participant LED as LED Control
+    
+    loop
+    %% LED starts blinking
+    Task->>LED: Turn LED ON
+    Timer->>+Task: Delay 1 sec (Blocks everything)
+    
+    %% Button presses button during delay
+    Button-->>Task: Button Press Sent (but microcontroller is busy)
+ 
+    
+    Task->>-Task: Continue with next instruction
+    %% LED continues
+    Task->>LED: Turn LED OFF
+
+    Timer->>+Task: Delay 1 sec (Blocks everything)
+    Button-->>Task:Button Press Sent (but microcontroller is busy)
+
+    Task->>-Task: Continue with next instruction
+
+    %% Now the task checks the button, but it's too late
+
+    Task->>Button: Check if button is pressed
+    Button-->>Task: No press detected (press was missed)
+    end
+    
+    Note over Button, Button: User pressed button, but MCU was busy!
+    Note over Task: Button check happens too late.
+
+
+```
+
+ To address this issue, we would need to spawn a new task in which we would wait for the button press, while blinking the LED in the `main` function. 
+
+When thinking of how exactly this works, you would probably think that the task is running on a separate *thread* than the `main` function. Usually this would be the case when developing a normal computer application. Multithreading is possible, but requires a preemptive operating system. Without one, only one thread can independently run per processor core and that means that, since we are using only one core of the RP2350 (which actually has only 2), we would only be able to run **one thread at a time**. So how exactly does the task wait for the button press in parallel with the LED blinking? 
 Short answer is: it doesn't. In reality, both functions run asynchronously. 
-
-### Tasks
 
 A task in Embassy is represented by an *asynchronous function*. Asynchronous functions are different from normal functions, in the sense that they allow asynchronous code execution. Let's take an example from the previous lab:
 ```rust
@@ -248,107 +285,103 @@ that the value cannot be modified concurrently by two different tasks, or use ch
 To better understand the concepts of ownership and borrowing in Rust, take a look at [chapter 4](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) of the Rust Book.
 :::
 
-## Potentiometer
+### Buzzer
 
-A potentiometer is a three-terminal resistor with a sliding or rotating contact that forms an adjustable voltage divider. If only two terminals are used, one end and the wiper, it acts as a variable resistor or rheostat. A volume knob on a speaker is a potentiometer, for instance.
+A buzzer is a hardware device that emits sound. There are two types of buzzers:
+- *active buzzer* - connected to VCC and GND, with a resistance - emits a constant frequency
+- *passive buzzer* - connected to a GPIO pin and GND, with a resistance - frequency can be controlled through the pin with PWM
 
-![Potentiometer](images/potentiometer_pins.png)
+![Buzzer](images/buzzer.png)
+
+:::tip
+To control the buzzer, all you need to do is to set the `top` value of the PWM config to match the frequency you want!
+:::
+
+#### How to wire an RGB LED
+
+The buzzer on the development board is connected a pin in the J9 block.
+
+![board_buzzer](./images/board_buzzer.png)
 
 ## Exercises
 
-![Pico Explorer Pinout](../images/explorer_pins.jpg)
+1. Make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. Use PWM to change the light intensity smoothly between 0% and 100%. (**2p**)
+  Blink:
+  - YELLOW -> 3 times/sec
+  - RED -> 4 times/sec
+  - GREEN -> 5 times/sec
+  - BLUE -> 1 time/sec
+   :::tip
+    Use a different task instance for each LED. You can spawn multiple instances of the same task. Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
+   :::
 
-1. Connect an LED to GP0, an RGB LED to GP1, GP2, GP5 and a potentiometer to ADC0. Use Kicad to draw the schematic. (**1p**)
-2. Change the monochromatic LED's intensity, using button A (SW_A) and button B(SW_B) on the Pico Explorer. Button A will increase the intensity, and button B will decrease it. (**2p**)
+2. Change the monochromatic LED's intensity, using switch **SW_4** and switch **SW_5**. **SW_4** will increase the intensity, and button **SW_5** will decrease it. (**2p**)
 
 :::tip
 - Use PWM to control the intensity.
-- Create two tasks, one for button A, one for button B. Use a channel to send commands from each button task to the main task.
+- Create two tasks, one for **SW_4**, one for button **SW_5**. Use a channel to send commands from each button task to the main task.
 :::
 
-3. Control the RGB LED's color with buttons A, B, X and Y on the Pico Explorer. (**2p**)
-- Button A -> RGB = Red
-- Button B -> RGB = Green
-- Button X -> RGB = Blue
-- Button Y -> RGB = Led Off
-:::tip
-Use a separate task for each button. When a button press is detected, a command will be sent to the main task, and the main task will set the RGB LED's color according to that command.
+3. Control the speed of the servo motor using the potentiometer. Use button **SW_6** to change the direction in which the motor is spinning. (**2p**)
 
-:::warning
-When building Rust software in *debug mode*, which is what `cargo build` does, Rust will panic if mathematical operations underflow or overflow. This means that:
+
+4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**2p**)
+
+| Default               | Pedestrian when Green | Pedestrian when Red or Yellow |
+| ----------------------| --------------------- | ----------------------------- |
+| Green -> 5s           | Yellow Blink -> 1s    |   Keep Red -> +2 s            |
+| Yellow Blink -> 1s    | Red -> 4s             |   Reset to Default            |
+| Red -> 2s             | Reset to Default      |                               |
+| Reset                 |                       |                               |
+
+Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if the word "pedestrian" was written over serial using **UART** .
+
+:::info
+The UART (Universal Asynchronous Receiver-Transmitter) peripheral is a hardware module inside a microcontroller that enables serial communication between devices without needing a clock signal. 
+The RP2350 has two UART peripherals (UART0 and UART1). The lab board's debugger chip is uses Pins GP0 and GP1 for UART serial communication.
+
+To read input over serial using UART you can use :
 
 ```rust
-let v = 10u8;
-v -= 12;
-```
+bind_interrupts!(struct Irqs {
+    UART0_IRQ => BufferedInterruptHandler<UART0>;
+});
 
-will panic. To avoid this, you can use the [`wrapping_`](https://doc.rust-lang.org/std/primitive.u8.html#method.wrapping_add) and [`saturating_`](https://doc.rust-lang.org/std/primitive.u8.html#method.saturating_add) functions:
 
-```rust
-let v = 10u8;
-// this will store 0 in v
-v = v.saturating_sub(12); 
-```
-:::
+let (tx_pin, rx_pin, uart) = (p.PIN_0, p.PIN_1, p.UART0);
 
-```mermaid
-sequenceDiagram
-    autonumber
-    note right of TaskBtnA: waits for button A press
-    note right of TaskBtnB: waits for button B press
-    note right of TaskBtnX: waits for button X press
-    note right of TaskBtnY: waits for button Y press
-    note right of TaskMain: waits for LED command
-    Hardware-->>TaskBtnA: button A press
-    TaskBtnA-->>TaskMain: LedCommand(LedColor::Red)
-    note right of TaskMain: sets PWM configuration
-    TaskMain-->>Hardware: sets RGB LED color RED
-    Hardware-->>TaskBtnX: button X press
-    TaskBtnX-->>TaskMain: LedCommand(LedColor::Blue)
-    note right of TaskMain: sets PWM configuration
-    TaskMain-->>Hardware: sets RGB LED color BLUE
-```
-:::
+static TX_BUF: StaticCell<[u8; 16]> = StaticCell::new();
+let tx_buf = &mut TX_BUF.init([0; 16])[..];
+static RX_BUF: StaticCell<[u8; 16]> = StaticCell::new();
+let rx_buf = &mut RX_BUF.init([0; 16])[..];
+let uart = BufferedUart::new(uart, Irqs, tx_pin, rx_pin, tx_buf, rx_buf, Config::default());
+let (mut tx, rx) = uart.split();
 
-4. In addition to the four buttons, control the RGB LED's intensity with the potentiometer. (**3p**)
 
-:::tip
-You will need another task in which you sample the ADC and send the values over a channel.
-You could do this in one of two ways:
-1. Use a single channel for both changing the color and the intensity of the LED. Button tasks and the potentiometer task will send over the same channel. For this, you will need to change the type of data that is sent over the channel to encapsulate both types of commands. For example, you could use an enum like this:
-```rust
-enum LedCommand {
-    ChangeColor(Option<LedColor>),
-    ChangeIntensity(u16)
+info!("Reading...");
+loop {
+    let mut buf = [0; 31];
+    let _ = rx.read_exact(&mut buf).await;
+
+    info!("RX {:?}", buf);
 }
+
 ```
-2. Use two separate channels, one for sending the color command (which contains the LedColor), and one for sending the intensity. You can `await` both channel `receive()` futures inside of a `select` to see which command is received first, and handle it.
-Example:
-```rust
-let select = select(COLOR_CHANNEL.receive(), INTENSITY_CHANNEL.receive()).await;
-match select {
-    First(color) => {
-        // ...
-    },
-    Second(intensity) => {
-        // ...
-    }
-}
-```
+To write to serial you need to open the serial monitor tab in Visual Studio Code. 
+![serial_monitor](./images/serial_monitor.png)
+
 :::
 
-5. Print to the screen of the Pico Explorer the color of the RGB LED and its intensity. Use the SPI screen driver provided in the lab skeleton. (**2p**)
 :::tip
-To write to the screen, use this example:
-```rust
-let mut text = String::<64>::new();
-write!(text, "Screen print: ", led_color).unwrap(); // led_color must be defined first
+Use a separate task for the timer, LEDs and serial read. Use channels to communicate the traffic light states between the tasks.
+:::
 
-Text::new(&text, Point::new(40, 110), style)
-    .draw(&mut display)
-    .unwrap();
 
-// Small delay for yielding
-Timer::after_millis(1).await;
-```
+5. Continue exercise 4, adding a new task to control the buzzer. The buzzer make a continuous low frequency sound while the traffic light is green and yellow and should start beeping on and off while the traffic light is red. (**2p**)
+
+
+6. Using the previous exercise control the traffic light using two buttons. To trigger the "pedestrian" scenario, both buttons need to be pressed at some point in time. (**0.5p**).
+
+:::tip
+Take a look at [join](#join)   
 :::

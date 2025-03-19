@@ -337,8 +337,8 @@ The buzzer on the development board is connected a pin in the J9 block.
 Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if the word "pedestrian" was written over serial using **UART** .
 
 :::info
-The UART (Universal Asynchronous Receiver-Transmitter) peripheral is a hardware module inside a microcontroller that enables serial communication between devices without needing a clock signal. 
-The RP2350 has two UART peripherals (UART0 and UART1). The lab board's debugger chip is uses Pins GP0 and GP1 for UART serial communication.
+The UART (Universal Asynchronous Receiver-Transmitter) peripheral is a hardware module inside a microcontroller that enables serial communication between devices without needing an external clock signal. 
+The RP2350 has two UART peripherals . The lab board's debugger chip is uses UART0: Pin GP0 (transmit - TX pin) and pin GP1 (receive -RX pin ) for serial communication.
 
 To read input over serial using UART you can use :
 
@@ -377,7 +377,7 @@ Use a separate task for the timer, LEDs and serial read. Use channels to communi
 :::
 
 
-5. Continue exercise 4, adding a new task to control the buzzer. The buzzer make a continuous low frequency sound while the traffic light is green and yellow and should start beeping on and off while the traffic light is red. (**2p**)
+1. Continue exercise 4, adding a new task to control the buzzer. The buzzer make a continuous low frequency sound while the traffic light is green and yellow and should start beeping on and off while the traffic light is red. (**2p**)
 
 
 6. Using the previous exercise control the traffic light using two buttons. To trigger the "pedestrian" scenario, both buttons need to be pressed at some point in time. (**0.5p**).

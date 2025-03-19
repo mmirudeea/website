@@ -492,7 +492,7 @@ Please make sure the lab professor verifies your circuit before it is powered up
 :::info
 You should use the lab skeleton provided in the [Lab Repository](https://github.com/UPB-PMRust/lab-2025) as a starting point for your implementation.
 
-Make sure the main function never exits so you can see how the circuit behaves.
+Embassy will reset all the peripherals when the `main` function exists, that means `PWM` and `ADC` will stop. Make sure the `main` function never exits so you can see how the circuit behaves.
 :::
 
 2. Write a program using Embassy to control the led intensity using a potentiometer. The potentiometer is connected to an ADC-capable GPIO pin. The LED should change intensity based on the potentiometer's position. (**2p**) 

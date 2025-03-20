@@ -166,7 +166,7 @@ flowchart LR
 # PubSubChannel
 sends data from one task to all receiver tasks
 
-[`PubSubChannel`](https://docs.embassy.dev/embassy-sync/git/default/signal/struct.Signal.html) - A broadcast channel (publish-subscribe) channel. Each message is received by all consumers.
+[`PubSubChannel`](https://docs.embassy.dev/embassy-sync/git/default/pubsub/struct.PubSubChannel.html) - A broadcast channel (publish-subscribe) channel. Each message is received by all consumers.
 
 ```mermaid
 flowchart LR

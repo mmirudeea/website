@@ -129,7 +129,7 @@ sends data from one task to another
 
 [`Channel`](https://docs.embassy.dev/embassy-sync/git/default/channel/struct.Channel.html) - A Multiple Producer Multiple Consumer (MPMC) channel. Each message is only received by a single consumer.
 
-[`Signal`](https://docs.embassy.dev/embassy-sync/git/default/pubsub/struct.PubSubChannel.html) - Signalling latest value to a single consumer. 
+[`Signal`](https://docs.embassy.dev/embassy-sync/git/default/signal/struct.Signal.html) - Signalling latest value to a single consumer. 
 
 ```mermaid
 flowchart LR

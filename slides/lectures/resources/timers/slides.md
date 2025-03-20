@@ -212,7 +212,7 @@ read the number of elapsed μs since reset
 
 #### Reading the time elapsed since restart
 
-```rust{1,5|2,6|4,7,8|all}
+```rust {1,5|2,6|4,7,8|all}
 const TIMERLR: *const u32 = 0x400b_000c;
 const TIMERHR: *const u32 = 0x400b_0008;
 
@@ -228,7 +228,7 @@ The **reading order maters** as reading `TIMELR` latches the value in `TIMEHR` (
 :: right ::
 
 <div align="center">
-    <img src="./rp2350_timer_registers_1.png" class="rounded w-100">
+    <img src="./rp2350_timer_registers_1.png" class="rounded w-90">
 </div>
 
 ---

@@ -383,11 +383,11 @@ The buzzer on the development board is connected to a pin in the J9 block.
     - GREEN -> 5 times/sec
     - BLUE -> 1 time/sec
 
-3. Change the RED LED's intensity, using switch **SW_4** and switch **SW_5**. **SW_4** will increase the intensity, and button **SW_5** will decrease it. (**2p**)
+3. Change the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Button **SW_4** will increase the intensity, and button **SW_5** will decrease it. (**2p**)
 
     :::tip
     - Use PWM to control the intensity.
-    - Create two tasks, one for **SW_4**, one for button **SW_5**. Use a `Channel` to send commands from each button task to the main task.
+    - Create two tasks, one for switch **SW_4**, one for switch **SW_5**. Use a `Channel` to send commands from each button task to the main task.
     :::
 
 4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**3p**)

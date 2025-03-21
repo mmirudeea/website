@@ -405,13 +405,13 @@ The buzzer on the development board is connected to a pin in the J9 block.
 
     - Take a look at `select_biased!` macro. 
     - Use `join` to wait for button presses.
-    - Use a [`Signal`](https://docs.rs/futures/latest/futures/macro.select_biased.html) transmit button presses in the LED task. 
+    - Use a [`Signal`](https://docs.rs/futures/latest/futures/macro.select_biased.html) to transmit button presses in the LED task. 
     :::
 
 
 5. Continue exercise 4, 
    - adding a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green and yellow and should start beeping (at 400Hz) on and off while the traffic light is red. (**1.5p**)
-   - adding a new task for a servo motor. The motor should spin ... when the light is green, slow down when the light is yellow, and stop spinning if its red. (**1.5p**)
+   - adding a new task for a servo motor. Set the motor position at 180 when the light is green, slow down when the light is yellow, and stop spinning if its red. (**1.5p**)
    :::tip
    Use a separate task for the buzzer and a `PubSubChannel` to transmit the state of the traffic light.
    :::

@@ -64,10 +64,11 @@ Short answer is: it doesn't. In reality, both functions run asynchronously.
 A task in Embassy is represented by an *asynchronous function*. Asynchronous functions are different from normal functions, in the sense that they allow asynchronous code execution. Let's take an example from the previous lab:
 ```rust
 #[embassy_executor::task]
-async fn button_pressed(mut led: Output<'static, PIN_X>, mut button: Input<'static, PIN_X>) {
+async fn button_pressed(mut led: Output<'static>, mut button: Input<'static>) {
     loop {
 	info!("waiting for button press");
         button.wait_for_falling_edge().await;
+        led.toggle();
     }
 }
 
@@ -233,7 +234,7 @@ let (res1, res2) = join(button.wait_for_falling_edge(), Timer::after_secs(5)).aw
 `join` returns a tuple containing the results of both `Future`s.
 
 
-## Channels
+## Channel
 
 Up to this point, to be able to share peripherals or data across multiple tasks, we have been using global `Mutex`s or passing them directly as parameters to the tasks. But there are other, more convenient ways to send data to and from tasks. Instead of having to make global, static variables that are shared by tasks, we could choose to only send the information that we need from one task to another. To achieve this, we can use *channels*.
 
@@ -285,6 +286,70 @@ that the value cannot be modified concurrently by two different tasks, or use ch
 To better understand the concepts of ownership and borrowing in Rust, take a look at [chapter 4](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html) of the Rust Book.
 :::
 
+### `Signal`
+
+This is similar to a `Channel` with a buffer size of 1, except “sending” to it (calling `Signal::signal`) when full will overwrite the previous value instead of waiting for the receiver to pop the previous value.
+
+It is useful for sending data between tasks when the receiver only cares about the latest data, and therefore it's fine to “lose” messages. This is often the case for “state” updates.
+
+
+```rust
+
+use embassy_sync::signal::Signal;
+
+static SIG: Signal<CriticalSectionRawMutex, ()> = Signal::new();
+
+#[embassy_executor::task]
+async fn waiter() {
+    SIG.wait().await; // Wait until signaled
+    defmt::info!("Signal received!");
+}
+
+#[embassy_executor::task]
+async fn trigger() {
+    SIG.signal(()); // Notify the waiting task
+}
+
+
+```
+
+### `PubSubChannel`
+
+This is a type of channel where any published message can be read by all subscribers. A publisher can choose how it sends its message.
+
+- With Pub::publish() the publisher has to wait until there is space in the internal message queue.
+- With Pub::publish_immediate() the publisher doesn't await and instead lets the oldest message in the queue drop if necessary. This will cause any Subscriber that missed the message to receive an error to indicate that it has lagged.
+
+Example:
+
+```rust
+
+use embassy_sync::pubsub::PubSubChannel;
+
+static PUB: PubSubChannel<CriticalSectionRawMutex, &'static str, 4, 2> = PubSubChannel::new();
+
+#[embassy_executor::task]
+async fn publisher() {
+    PUB.publisher().publish("Hello").await;
+}
+
+#[embassy_executor::task]
+async fn subscriber1() {
+    let mut sub = PUB.subscriber().unwrap();
+    let msg = sub.next_message().await;
+    defmt::info!("Sub 1 got: {}", msg);
+}
+
+#[embassy_executor::task]
+async fn subscriber2() {
+    let mut sub = PUB.subscriber().unwrap();
+    let msg = sub.next_message().await;
+    defmt::info!("Sub 2 got: {}", msg);
+}
+
+```
+
+
 ### Buzzer
 
 A buzzer is a hardware device that emits sound. There are two types of buzzers:
@@ -305,83 +370,50 @@ The buzzer on the development board is connected a pin in the J9 block.
 
 ## Exercises
 
-1. Make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. Use PWM to change the light intensity smoothly between 0% and 100%. (**2p**)
-  Blink:
-  - YELLOW -> 3 times/sec
-  - RED -> 4 times/sec
-  - GREEN -> 5 times/sec
-  - BLUE -> 1 time/sec
-   :::tip
+1. Use two separate tasks to make the RED LED and BLUE LED blink 1 time per second. 
+
+    Instead of using `Timer::after_millis(time_interval).await`, start a timer using `Instant::now();` and check the elapsed time in a loop using `if start_time.elapsed().as_millis() >= time_interval`. What do you notice? (**1p**)
+    :::tip
     Use a different task instance for each LED. You can spawn multiple instances of the same task. Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
+    :::
+2. Fix exercise 1 and make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. (**1p**)
+    Blink:
+    - YELLOW -> 3 times/sec
+    - RED -> 4 times/sec
+    - GREEN -> 5 times/sec
+    - BLUE -> 1 time/sec
+
+3. Change the RED LED's intensity, using switch **SW_4** and switch **SW_5**. **SW_4** will increase the intensity, and button **SW_5** will decrease it. (**2p**)
+
+    :::tip
+    - Use PWM to control the intensity.
+    - Create two tasks, one for **SW_4**, one for button **SW_5**. Use a `Channel` to send commands from each button task to the main task.
+    :::
+
+4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**3p**)
+
+    | Default               | Pedestrian when Green | Pedestrian when Red or Yellow |
+    | ----------------------| --------------------- | ----------------------------- |
+    | Green -> 5s           | Yellow Blink -> 1s    |   Keep Red -> +2 s            |￼
+    | Yellow Blink -> 1s    | Red -> 4s             |   Reset to Default            |
+    | Red -> 2s             | Reset to Default      |                               |
+    | Reset                 |                       |                               |
+
+    Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
+
+    :::tip
+    Use a separates tasks: one for the both buttons and one to control the LEDs.
+
+    - Take a look at `select_biased!` macro. 
+    - Use `join` to wait for button presses.
+    - Use a [`Signal`](https://docs.rs/futures/latest/futures/macro.select_biased.html) transmit button presses in the LED task. 
+    :::
+
+
+5. Continue exercise 4, 
+   - adding a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green and yellow and should start beeping (at 400Hz) on and off while the traffic light is red. (**1.5p**)
+   - adding a new task for a servo motor. The motor should spin ... when the light is green, slow down when the light is yellow, and stop spinning if its red. (**1.5p**)
+   :::tip
+   Use a separate task for the buzzer and a `PubSubChannel` to transmit the state of the traffic light.
    :::
 
-2. Change the monochromatic LED's intensity, using switch **SW_4** and switch **SW_5**. **SW_4** will increase the intensity, and button **SW_5** will decrease it. (**2p**)
-
-:::tip
-- Use PWM to control the intensity.
-- Create two tasks, one for **SW_4**, one for button **SW_5**. Use a channel to send commands from each button task to the main task.
-:::
-
-3. Control the speed of the servo motor using the potentiometer. Use button **SW_6** to change the direction in which the motor is spinning. (**2p**)
-
-
-4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**2p**)
-
-| Default               | Pedestrian when Green | Pedestrian when Red or Yellow |
-| ----------------------| --------------------- | ----------------------------- |
-| Green -> 5s           | Yellow Blink -> 1s    |   Keep Red -> +2 s            |
-| Yellow Blink -> 1s    | Red -> 4s             |   Reset to Default            |
-| Red -> 2s             | Reset to Default      |                               |
-| Reset                 |                       |                               |
-
-Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if the word "pedestrian" was written over serial using **UART** .
-
-:::info
-The UART (Universal Asynchronous Receiver-Transmitter) peripheral is a hardware module inside a microcontroller that enables serial communication between devices without needing an external clock signal. 
-The RP2350 has two UART peripherals . The lab board's debugger chip is uses UART0: Pin GP0 (transmit - TX pin) and pin GP1 (receive -RX pin ) for serial communication.
-
-To read input over serial using UART you can use :
-
-```rust
-bind_interrupts!(struct Irqs {
-    UART0_IRQ => BufferedInterruptHandler<UART0>;
-});
-
-
-let (tx_pin, rx_pin, uart) = (p.PIN_0, p.PIN_1, p.UART0);
-
-static TX_BUF: StaticCell<[u8; 16]> = StaticCell::new();
-let tx_buf = &mut TX_BUF.init([0; 16])[..];
-static RX_BUF: StaticCell<[u8; 16]> = StaticCell::new();
-let rx_buf = &mut RX_BUF.init([0; 16])[..];
-let uart = BufferedUart::new(uart, Irqs, tx_pin, rx_pin, tx_buf, rx_buf, Config::default());
-let (mut tx, rx) = uart.split();
-
-
-info!("Reading...");
-loop {
-    let mut buf = [0; 31];
-    let _ = rx.read_exact(&mut buf).await;
-
-    info!("RX {:?}", buf);
-}
-
-```
-To write to serial you need to open the serial monitor tab in Visual Studio Code. 
-![serial_monitor](./images/serial_monitor.png)
-
-:::
-
-:::tip
-Use a separate task for the timer, LEDs and serial read. Use channels to communicate the traffic light states between the tasks.
-:::
-
-
-1. Continue exercise 4, adding a new task to control the buzzer. The buzzer make a continuous low frequency sound while the traffic light is green and yellow and should start beeping on and off while the traffic light is red. (**2p**)
-
-
-6. Using the previous exercise control the traffic light using two buttons. To trigger the "pedestrian" scenario, both buttons need to be pressed at some point in time. (**0.5p**).
-
-:::tip
-Take a look at [join](#join)   
-:::

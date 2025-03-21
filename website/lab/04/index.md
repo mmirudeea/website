@@ -364,7 +364,7 @@ To control the buzzer, all you need to do is to set the `top` value of the PWM c
 
 #### How to wire an RGB LED
 
-The buzzer on the development board is connected a pin in the J9 block.
+The buzzer on the development board is connected to a pin in the J9 block.
 
 ![board_buzzer](./images/board_buzzer.png)
 

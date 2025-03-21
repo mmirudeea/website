@@ -402,7 +402,7 @@ The buzzer on the development board is connected to a pin in the J9 block.
     Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
 
     :::tip
-    Use a separates tasks: one for the both buttons and one to control the LEDs.
+    Use separate tasks: one for both buttons and one to control the LEDs.
 
     - Take a look at `select_biased!` macro. 
     - Use `join` to wait for button presses.

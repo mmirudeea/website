@@ -75,7 +75,7 @@ async fn button_pressed(mut led: Output<'static>, mut button: Input<'static>) {
 async fn main(spawner: Spawner) {
     let peripherals = embassy_rp::init(Default::default());
 
-    let button = Input::new(peripherals.PIN_X, Pull::Up);
+    let button = Input::new(peripherals.PIN_X, Pull::None);
     let led2 = Output::new(peripherals.PIN_X, Level::Low);
 
     spawner.spawn(button_pressed(led2, button)).unwrap();
@@ -369,12 +369,17 @@ The buzzer on the development board is connected to a pin in the J9 block.
 
 ## Exercises
 
-1. Use two separate tasks to make the RED LED and BLUE LED blink 1 time per second. 
+1. Use two separate tasks to make the RED LED and BLUE LED blink 1 time per second. Instead of using `Timer::after_millis(time_interval).await` use *busy waiting* by starting a timer using `Instant::now();` and checking the elapsed time in a `while` loop using 
 
-    Instead of using `Timer::after_millis(time_interval).await`, start a timer using `Instant::now();` and check the elapsed time in a loop using `if start_time.elapsed().as_millis() >= time_interval`. What do you notice? (**1p**)
+```rust
+while start_time.elapsed().as_millis() < time_interval {}
+```
+
+What do you notice? (**1p**)
     :::tip
     Use a different task instance for each LED. You can spawn multiple instances of the same task. Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
     :::
+    
 2. Fix exercise 1 and make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. (**1p**)
     Blink:
     - YELLOW -> 3 times/sec

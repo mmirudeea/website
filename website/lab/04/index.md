@@ -377,7 +377,8 @@ while start_time.elapsed().as_millis() < time_interval {}
 
 What do you notice? (**1p**)
     :::tip
-    Use a different task instance for each LED. You can spawn multiple instances of the same task. Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
+    Use a different task instance for each LED. You can spawn multiple instances of the same task, however you need to specify the pool size with `#[embassy_executor::task(pool_size = 2)]`. Take a look at [task-arena](https://docs.embassy.dev/embassy-executor/git/std/index.html#task-arena) for more info.
+    Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
     :::
     
 2. Fix exercise 1 and make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. (**1p**)

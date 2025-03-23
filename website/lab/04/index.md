@@ -369,9 +369,13 @@ The buzzer on the development board is connected to a pin in the J9 block.
 
 ## Exercises
 
-1. Use two separate tasks to make the RED LED and BLUE LED blink 1 time per second. 
+1. Use two separate tasks to make the RED LED and BLUE LED blink 1 time per second. Instead of using `Timer::after_millis(time_interval).await` use *busy waiting* by starting a timer using `Instant::now();` and checking the elapsed time in a `while` loop using 
 
-    Instead of using `Timer::after_millis(time_interval).await`, start a timer using `Instant::now();` and check the elapsed time in a loop using `if start_time.elapsed().as_millis() >= time_interval`. What do you notice? (**1p**)
+```rust
+while start_time.elapsed().as_millis() < time_interval {}
+```. 
+
+What do you notice? (**1p**)
     :::tip
     Use a different task instance for each LED. You can spawn multiple instances of the same task. Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
     :::

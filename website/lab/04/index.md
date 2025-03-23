@@ -75,7 +75,7 @@ async fn button_pressed(mut led: Output<'static>, mut button: Input<'static>) {
 async fn main(spawner: Spawner) {
     let peripherals = embassy_rp::init(Default::default());
 
-    let button = Input::new(peripherals.PIN_X, Pull::Up);
+    let button = Input::new(peripherals.PIN_X, Pull::None);
     let led2 = Output::new(peripherals.PIN_X, Level::Low);
 
     spawner.spawn(button_pressed(led2, button)).unwrap();

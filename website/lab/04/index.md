@@ -391,28 +391,29 @@ The buzzer on the development board is connected to a pin in the J9 block.
 
 4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**3p**)
 
-    | Default               | Pedestrian when Green | Pedestrian when Red or Yellow |
-    | ----------------------| --------------------- | ----------------------------- |
-    | Green -> 5s           | Yellow Blink -> 1s    |   Keep Red -> +2 s            |￼
-    | Yellow Blink -> 1s    | Red -> 4s             |   Reset to Default            |
-    | Red -> 2s             | Reset to Default      |                               |
-    | Reset                 |                       |                               |
+    | Default                           | Pedestrian when Green             | Pedestrian when Red or Yellow |
+    | ----------------------            | ---------------------             | ----------------------------- |
+    | Green -> 5s                       | Yellow Blink (4 times) -> 1s      |   Keep Red -> +2 s            |￼
+    | Yellow Blink (4 times) -> 1s      | Red -> 4s                         |   Reset to Default            |
+    | Red -> 2s                         | Reset to Default                  |                               |
+    | Reset                             |                                   |                               |
 
     Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
 
-    :::tip
-    Use separate tasks: one for both buttons and one to control the LEDs.
+    Make two tasks: one for both buttons and one to control the LEDs.
+    In the *buttons task*, use `join` to check if both buttons were pressed (one after the other - does not matter the order). Send a [`Signal`](https://docs.rs/futures/latest/futures/macro.select_biased.html) to the *LEDs task* if the buttons were pressed.
+    For the *LEDs task* you need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the buttons were pressed. Use `select` to choose if the traffic light changes color based on the `Timer` future or the [`Signal`](https://docs.embassy.dev/embassy-sync/git/default/signal/struct.Signal.html) received from the buttons task.
 
-    - Take a look at `select_biased!` macro. 
-    - Use `join` to wait for button presses.
-    - Use a [`Signal`](https://docs.rs/futures/latest/futures/macro.select_biased.html) to transmit button presses in the LED task. 
+
+    :::tip
+    Define an `enum` to save the traffic light state (`Green`, `Yellow`,`Red`). In the *LEDs task*, use `match` to check the current state of the traffic light. Then check which future completes first and change the state of the traffic light accordingly. 
     :::
 
 
 5. Continue exercise 4, 
-   - adding a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green and yellow and should start beeping (at 400Hz) on and off while the traffic light is red. (**1.5p**)
+   - adding a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green and yellow and should start beeping (at 400Hz) on and off while the traffic light is red (Use the [formula from Lab03](./03#calculating-the-top-value) to calculate the frequency) . (**1.5p**)
    - adding a new task for a servo motor. Set the motor position at 180° when the light is green, 90° the light is yellow, and 0° if its red. (**1.5p**)
    :::tip
-   Use a separate task for the buzzer and a `PubSubChannel` to transmit the state of the traffic light.
+    Use a `PubSubChannel` to transmit the state of the traffic light from the LEDs task to both the buzzer and the servo motor tasks.
    :::
 

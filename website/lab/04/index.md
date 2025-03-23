@@ -406,9 +406,19 @@ What do you notice? (**1p**)
 
     Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
 
-    Make two tasks: one for both buttons and one to control the LEDs.
-    In the *buttons task*, use `join` to check if both buttons were pressed (one after the other - does not matter the order). Send a [`Signal`](https://docs.rs/futures/latest/futures/macro.select_biased.html) to the *LEDs task* if the buttons were pressed.
-    For the *LEDs task* you need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the buttons were pressed. Use `select` to choose if the traffic light changes color based on the `Timer` future or the [`Signal`](https://docs.embassy.dev/embassy-sync/git/default/signal/struct.Signal.html) received from the buttons task.
+
+    Create two tasks:  
+    - One task to handle the buttons.  
+    - Another task to control the LEDs.
+
+    In the **buttons task**:
+    - Use `join` to detect when **both buttons** have been pressed (in any order, one after the other).
+    - Once both buttons are pressed, **send a `Signal`** to the LEDs task.
+
+    In the **LEDs task**:
+
+    You need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the buttons were pressed. Use `select` to check which future completes first (`Timer` or `Signal`).
+    
 
 
     :::tip

@@ -381,7 +381,7 @@ What do you notice? (**1p**)
     Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
     :::
     
-2. Fix exercise 1 and make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. (**1p**)
+2. Fix the usage of busy waiting from exercise 1 and make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. (**1p**)
     Blink:
     - YELLOW -> 3 times/sec
     - RED -> 4 times/sec

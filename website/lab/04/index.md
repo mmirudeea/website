@@ -388,47 +388,49 @@ What do you notice? (**1p**)
     - GREEN -> 5 times/sec
     - BLUE -> 1 time/sec
 
-3. Change the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Button **SW_4** will increase the intensity, and button **SW_5** will decrease it. (**2p**)
+3. Change the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Button **SW_4** will increase the intensity, and button **SW_5** will decrease it. You will implement this in three ways: (**3p**)
+   
+   - **a.** Use three tasks : `main` to control the LED and another two for each button (one for switch **SW_4**, one for switch **SW_5**). Use a `Channel` to send commands from each button task to the main task.
+   - **b.** Use a single task (`main`). Use `select` to check which of the buttons were pressed and change the LED intensity accordingly. 
+   - **c.** Use two tasks: `main` to control the LED and another one for both buttons. Use a `Signal` channel to transmit from the buttons task, the new value of the intensity which the LED will be set to.
+
+4. Simulates a traffic light using the GREEN, YELLOW and RED LEDs on the board. Normally the traffic light goes from one state based on the time elapsed (Green -> 5s , Yellow Blink (4 times) -> 1s , Red -> 2s ).
+However if the switch **SW4** is pressed the state of traffic light changes immediately as shown in the diagram bellow.(**2p**)
+
+    ```mermaid
+    flowchart LR
+        green(GREEN) -- Button pressed --> yellow(Yellow)
+        green(GREEN) -- 5s --> yellow(Yellow)
+
+        
+        yellow(YELLOW - Blink 4 times/second) -- Button pressed --> red(RED)
+
+        yellow(YELLOW - Blink 4 times/second) -- 1s --> red(RED)
+
+        red(RED) -- Button pressed --> red(RED)
+        red(RED) -- 2s --> green(GREEN)
+
+        classDef red fill:#ff0000,stroke:#000000,color: #ffffff
+        classDef yellow fill:#efa200,stroke:#000000
+        classDef green fill:#00ce54,stroke:#000000
+
+        class red red
+        class yellow yellow
+        class green green
+    ```
 
     :::tip
-    - Use PWM to control the intensity.
-    - Create two tasks, one for switch **SW_4**, one for switch **SW_5**. Use a `Channel` to send commands from each button task to the main task.
+    For this exercise you only need one task. Define an `enum` to save the traffic light state (`Green`, `Yellow`,`Red`). Use `match` to check the current state of the traffic light. Then you need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the button was pressed. Use `select` to check which future completes first (`Timer` or button press).
     :::
 
-4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**3p**)
+5.  Continue exercise 4, this time if both switch **SW4** and switch **SW7** were pressed consecutively change the state of the traffic     light. Use `join` to check if both switches were pressed. (**1p**)
+   :::note
+    The switches don't need to be pressed at the same time, but one after the other. The order does not matter.
+   :::
 
-    | Default                           | Buttons pressed when Green             | Buttons pressed when Red or Yellow |
-    | ----------------------            | ---------------------             | ----------------------------- |
-    | Green -> 5s                       | Yellow Blink (4 times) -> 1s      |   Keep Red -> +2 s            |￼
-    | Yellow Blink (4 times) -> 1s      | Red -> 4s                         |   Reset to Default            |
-    | Red -> 2s                         | Reset to Default                  |                               |
-    | Reset                             |                                   |                               |
-
-    Use the "**Buttons pressed when Green**" and "**Buttons pressed when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
-
-
-    Create two tasks:  
-    - One task to handle the buttons.  
-    - Another task to control the LEDs.
-
-    In the **buttons task**:
-    - Use `join` to detect when **both buttons** have been pressed (in any order, one after the other).
-    - Once both buttons are pressed, **send a `Signal`** to the LEDs task.
-
-    In the **LEDs task**:
-
-    You need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the buttons were pressed. Use `select` to check which future completes first (`Timer` or `Signal`).
-    
-
-
-    :::tip
-    Define an `enum` to save the traffic light state (`Green`, `Yellow`,`Red`). In the *LEDs task*, use `match` to check the current state of the traffic light. Then check which future completes first and change the state of the traffic light accordingly. 
-    :::
-
-
-5. Continue exercise 4, 
-   - adding a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green and yellow and should start beeping (at 400Hz) on and off while the traffic light is red (Use the [formula from Lab03](./03#calculating-the-top-value) to calculate the frequency) . (**1.5p**)
-   - adding a new task for a servo motor. Set the motor position at 180° when the light is green, 90° the light is yellow, and 0° if its red. (**1.5p**)
+6. Continue exercise 5, 
+   - adding a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green and yellow and should start beeping (at 400Hz) on and off while the traffic light is red (Use the [formula from Lab03](./03#calculating-the-top-value) to calculate the frequency) . (**1p**)
+   - adding a new task for a servo motor. Set the motor position at 180° when the light is green, 90° the light is yellow, and 0° if its red. (**1p**)
    :::tip
     Use a `PubSubChannel` to transmit the state of the traffic light from the LEDs task to both the buzzer and the servo motor tasks.
    :::

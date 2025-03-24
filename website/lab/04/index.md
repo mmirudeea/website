@@ -397,14 +397,14 @@ What do you notice? (**1p**)
 
 4. Simulates a traffic light using the RED, YELLOW and GREEN LEDs on the board in the following scenarios: (**3p**)
 
-    | Default                           | Pedestrian when Green             | Pedestrian when Red or Yellow |
+    | Default                           | Buttons pressed when Green             | Buttons pressed when Red or Yellow |
     | ----------------------            | ---------------------             | ----------------------------- |
     | Green -> 5s                       | Yellow Blink (4 times) -> 1s      |   Keep Red -> +2 s            |￼
     | Yellow Blink (4 times) -> 1s      | Red -> 4s                         |   Reset to Default            |
     | Red -> 2s                         | Reset to Default                  |                               |
     | Reset                             |                                   |                               |
 
-    Use the "**Pedestrian when Green**" and "**Pedestrian when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
+    Use the "**Buttons pressed when Green**" and "**Buttons pressed when Red or Yellow**" if both **SW4** and **SW7** is pressed at some time.
 
 
     Create two tasks:  

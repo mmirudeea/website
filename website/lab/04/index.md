@@ -400,7 +400,7 @@ Blink:
    
    1. Use three tasks : `main` to control the LED and another two for each button (one for switch **SW_4**, one for switch **SW_5**). Use a [`Channel`](#channel) to send commands from each button task to the main task.
     :::tip
-    Use an `enum` to define the LED Intensity change command for point
+    Use an `enum` to define the LED Intensity change command for point i.
     :::
    2. Use a single task (`main`). Use [`select`](#select) to check which of the buttons were pressed and change the LED intensity accordingly. 
    3. Use two tasks: `main` to control the LED and another one for both buttons. Use a [`Signal`](#signal) channel to transmit from the buttons task, the new value of the intensity which the LED will be set to. The `main` will wait for a new value on the `Signal` channel and change the intensity accordingly.

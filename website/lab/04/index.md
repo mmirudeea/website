@@ -439,7 +439,7 @@ However if the switch **SW4** is pressed the state of traffic light changes imme
     For this exercise you only need one task. Define an `enum` to save the traffic light state (`Green`, `Yellow`,`Red`). Use `match` to check the current state of the traffic light. Then you need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the button was pressed. Use `select` to check which future completes first (`Timer` or button press).
     :::
 
-1.  Continue exercise 4: this time, if switch **SW4** and switch **SW7** are pressed consecutively, change the state of the traffic light. Use `join` to check that both switches were pressed. (**1p**)
+5.  Continue exercise 4: this time, if switch **SW4** and switch **SW7** are pressed consecutively, change the state of the traffic light. Use `join` to check that both switches were pressed. (**1p**)
    :::note
     The switches don't need to be pressed at the same time, but one after the other. The order does not matter.
    :::

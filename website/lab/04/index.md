@@ -410,7 +410,7 @@ Blink:
 
 
 
-3. Simulates a traffic light using the GREEN, YELLOW and RED LEDs on the board. Normally the traffic light goes from one state based on the time elapsed (Green -> 5s , Yellow Blink (4 times) -> 1s , Red -> 2s ).
+4. Simulates a traffic light using the GREEN, YELLOW and RED LEDs on the board. Normally the traffic light goes from one state based on the time elapsed (Green -> 5s , Yellow Blink (4 times) -> 1s , Red -> 2s ).
 However if the switch **SW4** is pressed the state of traffic light changes immediately as shown in the diagram bellow.(**2p**)
 
     ```mermaid

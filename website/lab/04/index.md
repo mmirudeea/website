@@ -15,7 +15,7 @@ This lab will teach you the principles of asynchronous programming, and its appl
 
 ## Asynchronous functions and Tasks
 
-Until now you've only worked with simple (almost) serial programs. However not all programs can be designed to run serially/sequentially. Handling multiple I/O events concurrently usually requires separate parallel tasks. 
+Until now you've only worked with simple (almost) serial programs. However, not all programs can be designed to run serially/sequentially. Handling multiple I/O events concurrently usually requires separate parallel tasks. 
 Example: Reading a button press while blinking an LED. A single loop would block the button reading event while waiting for the timer to finish.
 
 ```mermaid

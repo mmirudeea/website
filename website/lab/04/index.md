@@ -444,7 +444,7 @@ However if the switch **SW4** is pressed the state of traffic light changes imme
     The switches don't need to be pressed at the same time, but one after the other. The order does not matter.
    :::
 
-2. Continue exercise 5:
+6. Continue exercise 5:
    - add a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green or yellow and should start beeping (at 400Hz) on and off while the traffic light is red (Use the [formula from Lab03](./03#calculating-the-top-value) to calculate the frequency) . (**1p**)
    - add a new task for a servo motor. Set the motor position at 180° when the light is green, 90° the light is yellow, and 0° if its red. (**1p**)
    :::tip

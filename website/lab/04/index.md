@@ -396,7 +396,7 @@ Blink:
 1 Hz means once per second.
 :::
 
-2. Write a firmware that changes the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Switch **SW_4** will increase the intensity, and switch **SW_5** will decrease it. You will implement this in three ways: (**3p**)
+3. Write a firmware that changes the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Switch **SW_4** will increase the intensity, and switch **SW_5** will decrease it. You will implement this in three ways: (**3p**)
    
    1. Use three tasks : `main` to control the LED and another two for each button (one for switch **SW_4**, one for switch **SW_5**). Use a [`Channel`](#channel) to send commands from each button task to the main task.
     :::tip

@@ -375,26 +375,42 @@ The buzzer on the development board is connected to a pin in the J9 block.
 while start_time.elapsed().as_millis() < time_interval {}
 ```
 
-What do you notice? (**1p**)
+You should notice that one of the tasks is not running. Why? (**1p**)
     :::tip
     Use a different task instance for each LED. You can spawn multiple instances of the same task, however you need to specify the pool size with `#[embassy_executor::task(pool_size = 2)]`. Take a look at [task-arena](https://docs.embassy.dev/embassy-executor/git/std/index.html#task-arena) for more info.
     Use [`AnyPin`](https://docs.embassy.dev/embassy-rp/git/rp2040/gpio/struct.AnyPin.html) and blinking frequency parameters for the task. 
     :::
     
 2. Fix the usage of busy waiting from exercise 1 and make the 4 LEDs (YELLOW, RED, GREEN, BLUE) blink at different frequencies. (**1p**)
-    Blink:
-    - YELLOW -> 3 times/sec
-    - RED -> 4 times/sec
-    - GREEN -> 5 times/sec
-    - BLUE -> 1 time/sec
 
-3. Change the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Button **SW_4** will increase the intensity, and button **SW_5** will decrease it. You will implement this in three ways: (**3p**)
+Blink:
+
+| LED | frequency |
+|-|-|
+| YELLOW | 3 Hz |
+| RED | 4 Hz |
+| GREEN | 5 Hz |
+| BLUE | 1 Hz |
+
+:::tip
+1 Hz means once per second.
+:::
+
+2. Write a firmware that changes the RED LED's intensity, using switch **SW_4** and switch **SW_5**. Switch **SW_4** will increase the intensity, and switch **SW_5** will decrease it. You will implement this in three ways: (**3p**)
    
-   - **a.** Use three tasks : `main` to control the LED and another two for each button (one for switch **SW_4**, one for switch **SW_5**). Use a `Channel` to send commands from each button task to the main task.
-   - **b.** Use a single task (`main`). Use `select` to check which of the buttons were pressed and change the LED intensity accordingly. 
-   - **c.** Use two tasks: `main` to control the LED and another one for both buttons. Use a `Signal` channel to transmit from the buttons task, the new value of the intensity which the LED will be set to.
+   1. Use three tasks : `main` to control the LED and another two for each button (one for switch **SW_4**, one for switch **SW_5**). Use a [`Channel`](#channel) to send commands from each button task to the main task.
+    :::tip
+    Use an `enum` to define the LED Intensity change command for point
+    :::
+   2. Use a single task (`main`). Use [`select`](#select) to check which of the buttons were pressed and change the LED intensity accordingly. 
+   3. Use two tasks: `main` to control the LED and another one for both buttons. Use a [`Signal`](#signal) channel to transmit from the buttons task, the new value of the intensity which the LED will be set to. The `main` will wait for a new value on the `Signal` channel and change the intensity accordingly.
+    :::tip
+    Instead of sending commands over the channel like you did at point i, send the intensity value as a number.
+    :::
 
-4. Simulates a traffic light using the GREEN, YELLOW and RED LEDs on the board. Normally the traffic light goes from one state based on the time elapsed (Green -> 5s , Yellow Blink (4 times) -> 1s , Red -> 2s ).
+
+
+3. Simulates a traffic light using the GREEN, YELLOW and RED LEDs on the board. Normally the traffic light goes from one state based on the time elapsed (Green -> 5s , Yellow Blink (4 times) -> 1s , Red -> 2s ).
 However if the switch **SW4** is pressed the state of traffic light changes immediately as shown in the diagram bellow.(**2p**)
 
     ```mermaid
@@ -423,12 +439,12 @@ However if the switch **SW4** is pressed the state of traffic light changes imme
     For this exercise you only need one task. Define an `enum` to save the traffic light state (`Green`, `Yellow`,`Red`). Use `match` to check the current state of the traffic light. Then you need to wait for two futures, since the traffic light changes its color either because some time has elapsed or because the button was pressed. Use `select` to check which future completes first (`Timer` or button press).
     :::
 
-5.  Continue exercise 4: this time, if switch **SW4** and switch **SW7** are pressed consecutively, change the state of the traffic light. Use `join` to check that both switches were pressed. (**1p**)
+1.  Continue exercise 4: this time, if switch **SW4** and switch **SW7** are pressed consecutively, change the state of the traffic light. Use `join` to check that both switches were pressed. (**1p**)
    :::note
     The switches don't need to be pressed at the same time, but one after the other. The order does not matter.
    :::
 
-6. Continue exercise 5:
+2. Continue exercise 5:
    - add a new task to control the buzzer. The buzzer should make a continuous low frequency (200Hz) sound while the traffic light is green or yellow and should start beeping (at 400Hz) on and off while the traffic light is red (Use the [formula from Lab03](./03#calculating-the-top-value) to calculate the frequency) . (**1p**)
    - add a new task for a servo motor. Set the motor position at 180° when the light is green, 90° the light is yellow, and 0° if its red. (**1p**)
    :::tip

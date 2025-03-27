@@ -5,14 +5,13 @@ layout: section
 Serial Peripheral Interface
 
 ---
----
 
 # Bibliography
 for this section
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.4 - *SPI*
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 12 - *Peripherals*
+     - Chapter 12.3 - *SPI*
 
 2. **Paul Denisowski**, *[Understanding SPI](https://www.youtube.com/watch?v=0nVNwozXsIc)*
 
@@ -213,21 +212,21 @@ activate all the **sub** devices
 | Speed | *no limit* | does not have any limit, it is limited by the **main** clock and the electronics wirings |
 
 ---
----
+
 # Usage
 
 - EEPROMs / Flash (usually in *QSPI* mode)
   - Raspberry Pi Pico has its 2MB Flash connected using *QSPI*
 - sensors
 - small displays
-- RP2040 has two SPI devices
+- RP2350 has two SPI devices
 
 <div align="center">
-<img src="./raspberry_pi_pico_pins.jpg" class="rounded m-5 w-120">
+<img src="../rp2350/pico2w-pinout.svg" class="rounded m-5 w-100">
 </div>
 
 ---
----
+
 # Embassy API
 for RP2040, synchronous
 
@@ -257,7 +256,7 @@ pub enum Polarity {
 
 </div>
 
-```rust{all|1|2|2,3|5-7|5-8|10,11|13|13,14|13,14,15|13,14,15,16}
+```rust {1|2|2,3|5-7|5-8|10,11|13|13,14|13,14,15|13,14,15,16|all}
 use embassy_rp::spi::Config as SpiConfig;
 let mut config = SpiConfig::default();
 config.frequency = 2_000_000;
@@ -277,11 +276,11 @@ cs.set_high();
 ```
 
 ---
----
+
 # Embassy API
 for RP2040, asynchronous
 
-```rust{all|1|2|2,3|5-7|5-8|10,11|13|13,14,15|13,14,15,16|13,14,15,16,17}
+```rust {1|2|2,3|5-7|5-8|10,11|13|13,14,15|13,14,15,16|13,14,15,16,17|all}
 use embassy_rp::spi::Config as SpiConfig;
 let mut config = SpiConfig::default();
 config.frequency = 2_000_000;

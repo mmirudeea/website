@@ -6,14 +6,13 @@ layout: section
 Direct Memory Access
 
 ---
----
+
 # Bibliography
 for this section
 
-**Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 2 - *System Description*
-     - Chapter 2.5 - *DMA*
-
+**Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 12 - *Peripherals*
+     - Chapter 16.6 - *DMA*
 
 ---
 layout: two-cols

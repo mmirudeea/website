@@ -81,7 +81,7 @@ using synchronous/asynchronous SPI to read the `press_lsb` register of BMP280
 
 <div grid="~ cols-2 gap-5">
 
-```rust{all|1|3,4|6,7|6,7,8|10,11|13,14}
+```rust {1|3,4|6,7|6,7,8|10,11|13,14|all}
 const REG_ADDR: u8 = 0xf8;
 
 // enable the sensor
@@ -98,7 +98,7 @@ cs.set_high();
 let pressure_lsb = buf[1];
 ```
 
-```rust{none|all|1|3,4|6,7,8|6,7,8,9|11,12|14,15}
+```rust {none|1|3,4|6,7,8|6,7,8,9|11,12|14,15|all}
 const REG_ADDR: u8 = 0xf8;
 
 // enable the sensor
@@ -118,9 +118,8 @@ let pressure_lsb = rx_buf[1];
 
 </div>
 
+---
 
----
----
 # Writing to a digital sensor
 using synchronous/asynchronous SPI to set up the `ctrl_meas` register of the BMP280 sensor 
 
@@ -128,7 +127,7 @@ using synchronous/asynchronous SPI to set up the `ctrl_meas` register of the BMP
 
 <div grid="~ cols-2 gap-5">
 
-```rust{all|1|3,4|6,7|9,10|9,10,11|13,14}
+```rust {1|3,4|6,7|9,10|9,10,11|13,14|all}
 const REG_ADDR: u8 = 0xf4;
 
 // see subchapters 3.3.2, 3.3.1 and 3.6
@@ -145,7 +144,7 @@ spi.blocking_transfer_in_place(&mut buf);
 cs.set_high();
 ```
 
-```rust{none|all|1|3,4|6,7|9,10|9,10,11|9,10,11,12|14,15}
+```rust {none|1|3,4|6,7|9,10|9,10,11|9,10,11,12|14,15|all}
 const REG_ADDR: u8 = 0xf4;
 
 // see subchapters 3.3.2, 3.3.1 and 3.6

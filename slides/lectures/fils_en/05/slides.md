@@ -27,7 +27,7 @@ Lecture 5
 ---
 
 # UART & SPI
-used by RP2040
+used by RP2350
 
 - Direct Memory Access
 - Buses
@@ -35,7 +35,9 @@ used by RP2040
   - Serial Peripheral Interface
 - Analog and Digital Sensors
 
-<!-- DMA -->
+<!--
+DMA
+-->
 
 ---
 src: ../../resources/dma/slides.md

@@ -5,13 +5,13 @@ layout: section
 Universal Asynchronous Receiver and Transmitter
 
 ---
----
+
 # Bibliography
 for this section
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.2 - *UART*
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 12 - *Peripherals*
+     - Chapter 12.1 - *UART*
 
 2. **Paul Denisowski**, *[Understanding Serial Protocols](https://www.youtube.com/watch?v=LEz5UCN3aHA)*
 3. **Paul Denisowski**, *[Understanding UART](https://www.youtube.com/watch?v=sTHckUyxwp8)*
@@ -193,21 +193,21 @@ using the 8N1 data format
 </div>
 
 ---
----
+
 # Usage
 
 - print debug information
 - device console
-- RP2040 has two USART devices
+- RP2350 has two USART devices
 
 <div align="center">
-<img src="../rp2040/rp2040_adafruit_pinout.png" class="rounded m-5 w-100">
+<img src="../rp2350/pico2w-pinout.svg" class="rounded m-5 w-100">
 </div>
 
 ---
 
 # Embassy API
-for RP2040, synchronous
+for RP2350, synchronous
 
 <div grid="~ cols-4 gap-5">
 
@@ -250,7 +250,7 @@ pub enum Parity {
 
 </div>
 
-```rust{all|1|1,2|4,5|6,7|9,10,11}
+```rust {1|1,2|4,5|6,7|9,10,11|all}
 use embassy_rp::uart::Config as UartConfig;
 let config = UartConfig::default();
 
@@ -264,13 +264,12 @@ let mut buf = [0; 5];
 uart.blocking_read(&mut buf);
 ```
 
-
 ---
 
 # Embassy API
-for RP2040, asynchronous
+for RP2350, asynchronous
 
-```rust{all|1|3-5|7|9,10|12,13|15,16,17}
+```rust {1|3-5|7|9,10|12,13|15,16,17|all}
 use embassy_rp::uart::Config as UartConfig;
 
 bind_interrupts!(struct Irqs {

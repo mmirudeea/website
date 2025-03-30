@@ -79,7 +79,7 @@ layout: two-cols
 
 :: right ::
 
-```mermaid
+```mermaid {scale: 0.6}
 sequenceDiagram
     autonumber
     loop

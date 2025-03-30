@@ -511,15 +511,16 @@ let mut imu_spi = SpiDeviceWithConfig::new(&spi_bus, imu_cs, imu_config);
 ```
 :::
 
-:::tip
-In order to display the floating point values on the screen, you should create a string with a maximum capacity and only print a fixed number of decimals:
+:::note
+The formatting machine for transforming floating point numbers into strings is much more complex than the integer one. Displaying the values in floating point format would increase the `.text` size by **over 15%**.\
+Because of this, it is recommended to manually convert the values to fixed point integers when creating the buffer for the display, as such:
 
 ```rust
 let mut buf = heapless::String::<10>::new();
-core::write!(&mut buf, "{:.2}", f32_value).unwrap();
+core::write!(&mut buf, "{}.{}", f32_value as u32, (f32_value * 1000f32) as u32 % 1000).unwrap();
 ```
 
-You can also use `\n` in the format string to write on separate lines.
+You can write all values in the same buffer. Use `\n` in the format string to write on separate lines.
 :::
 
 :::tip

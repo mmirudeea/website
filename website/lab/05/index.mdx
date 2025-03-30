@@ -240,10 +240,10 @@ The **MPU-6500** is a *digital* gyroscope and accelerometer designed by InvenSen
 
 | GYRO_FS_SEL[1:0] | Gyro Full Scale |
 |-|-|
-| 00 | ±250 °/s |
-| 01 | ±500 °/s |
-| 10 | ±1000 °/s |
-| 11 | ±2000 °/s |
+| 00 | $±250 °/s$ |
+| 01 | $±500 °/s$ |
+| 10 | $±1000 °/s$ |
+| 11 | $±2000 °/s$ |
 
 `ACCEL_CONFIG` register - used for configuring the accelerometer
 
@@ -257,17 +257,17 @@ The **MPU-6500** is a *digital* gyroscope and accelerometer designed by InvenSen
 
 | ACCEL_FS_SEL[1:0] | Accel Full Scale |
 |-|-|
-| 00 | ±2 g |
-| 01 | ±4 g |
-| 10 | ±8 g |
-| 11 | ±16 g |
+| 00 | $±2 g$ |
+| 01 | $±4 g$ |
+| 10 | $±8 g$ |
+| 11 | $±16 g$ |
 
 `ACCEL` registers - `ACCEL_XOUT_H`, `ACCEL_XOUT_L`, `ACCEL_YOUT_H`, `ACCEL_YOUT_L`, `ACCEL_ZOUT_H`, `ACCEL_ZOUT_L` - contain the acceleration
 
 `GYRO` registers - `GYRO_XOUT_H`, `GYRO_XOUT_L`, `GYRO_YOUT_H`, `GYRO_YOUT_L`, `GYRO_ZOUT_H`, `GYRO_ZOUT_L` - contain the angular velocity
 
 :::note
-The values read from the sensor are 16-bit signed integers and must be interpreted according to the Full Scale selected. By default, they are both set to 0 (±250 °/s, ±2 g).
+The values read from the sensor are 16-bit signed integers and must be interpreted according to the Full Scale selected. By default, they are both set to 0 ($±250 °/s$, $±2 g$).
 
 **g** represents the gravity of Earth and is equal to approximately $9.80665 m/s^2$.
 :::
@@ -473,7 +473,7 @@ Use the provided [lab skeleton](https://github.com/UPB-PMRust/lab-2025) as a bas
 :::
 
 3. Get the acceleration and angular velocity readings from the sensor.
-- Configure the full scale as **±2 g** for the acceleration and **±1000 °/s** for the angular velocity (**2p**)
+- Configure the full scale as **$±2 g$** for the acceleration and **$±1000 °/s$** for the angular velocity (**2p**)
 - Read the raw values for the X axis of the accelerometer and print them in a loop. (**2p**)
 
 :::note
@@ -491,7 +491,7 @@ val = i16::from_be_bytes([val_h, val_l]);
 :::
 - Read and print the rest of the values. (**1p**)
 
-4. Print the actual value of the accelerations (in $m/s^2$) and the angular velocities (in °/s) (**1p**)
+4. Print the actual value of the accelerations (in $m/s^2$) and the angular velocities (in $°/s$) (**1p**)
 
 :::tip
 Make use of the values configured in the **full scale** fields.

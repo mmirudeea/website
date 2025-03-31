@@ -395,11 +395,11 @@ spi.transfer(&mut rx_buf, &tx_buf).await;
 
 ## Screen
 
-### ST7735S TFT Screen Controller
+### ST7735 TFT Screen Controller
 
-The **ST7735S** features a **132x162** screen and an integrated **SD card reader**. For now, we will ignore the SD card reader and focus on the screen.
+The **ST7735** features a **128x160** screen and an integrated **SD card reader**. For now, we will ignore the SD card reader and focus on the screen.
 
-Because writing an SPI driver for the ST7735S would be out of the scope of the lab, we will be using the one provided by the **mipidsi** crate.
+Because writing an SPI driver for the ST7735 would be out of the scope of the lab, we will be using the one provided by the **mipidsi** crate.
 
 ```rust
 use embassy_embedded_hal::shared_bus::blocking::spi::SpiDevice;

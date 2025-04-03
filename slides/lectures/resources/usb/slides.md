@@ -1127,9 +1127,9 @@ join(usb_run, echo_run).await;
 ---
 ---
 # Host API
-using `nusb`
+using `nusb` 
 
-```rust
+```rust {3,4|6,20|7-10|7-12|13|15,16|18,19|all}
 use nusb::transfer::RequestBuffer;
 
 const BULK_OUT_EP: u8 = 0x01;
@@ -1150,4 +1150,34 @@ async fn main() {
     let result = interface.bulk_in(BULK_IN_EP, RequestBuffer::new(64)).await;
     println!("{result:?}");
 }
+```
+
+---
+---
+# Host API
+using Python
+
+```python {1,5-7|9|11,12|14|14,16|2,17|19,20|1,22|all}
+import usb
+import time
+
+# Find the USB device
+dev = usb.core.find(idVendor=0xc0de, idProduct=0xcafe)
+if dev is None:
+    raise ValueError('Device not found')
+
+dev.set_configuration() # Set the active configuration (this is usually required after device detection)
+
+OUT_ENDPOINT = 0x01  # Usually 0x01 for OUT endpoint
+IN_ENDPOINT = 0x81  # Usually 0x81 for IN endpoint (Endpoint 1, Direction IN)
+
+data_to_send = b"Hello, USB Device!"
+
+dev.write(OUT_ENDPOINT, data_to_send)
+time.sleep(1) # Wait for a short time to ensure data is transferred
+
+data_received = dev.read(IN_ENDPOINT, 64)  # Read 64 bytes (adjust the size if needed)
+print("Data received from device:", bytes(data_received))
+
+usb.util.release_interface(dev, 0) # Release the device interface (optional, but good practice)
 ```

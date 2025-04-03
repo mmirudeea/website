@@ -39,16 +39,16 @@ used by RP2040
 src: ../../resources/i2c/slides.md
 ---
 
-<!-- USB -->
-
----
-src: ../../resources/usb/slides.md
----
-
 <!-- Sensors -->
 
 ---
 src: ../../resources/sensors_i2c/slides.md
+---
+
+<!-- USB -->
+
+---
+src: ../../resources/usb/slides.md
 ---
 
 ---

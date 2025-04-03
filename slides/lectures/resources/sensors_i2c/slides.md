@@ -81,34 +81,35 @@ using synchronous/asynchronous I2C to read the `press_lsb` register of BMP280
 
 <div grid="~ cols-2 gap-5">
 
-```rust{all|1|1,2|4|6,7|9,10}
+```rust {all|1|1,2|4|6,7,8|10,11|all}
 const DEVICE_ADDR: u8 =  0x77;
 const REG_ADDR: u8 = 0xf8;
 
-i2c.write(DEVICE_ADDR, &[REG_ADDR]).unwrap();
-
 let mut buf = [0x00u8];
-i2c.read(DEVICE_ADDR, &mut buf).unwrap();
+
+i2c.write_read(
+  DEVICE_ADDR, &[REG_ADDR], &mut buf
+).unwrap();
 
 // use the value
 let pressure_lsb = buf[1];
 ```
 
-```rust{none|all||1|1,2|4|6,7|9,10}
+```rust {none|1|1,2|4|6,7,8|10,11|all}
 const DEVICE_ADDR: u8 =  0x77;
 const REG_ADDR: u8 = 0xf8;
 
-i2c.write(DEVICE_ADDR, &[REG_ADDR]).await.unwrap();
-
 let mut buf = [0x00u8];
-i2c.read(DEVICE_ADDR, &mut buf).await.unwrap();
+
+i2c.write_read(
+  DEVICE_ADDR, &[REG_ADDR], &mut buf
+).await.unwrap();
 
 // use the value
 let pressure_lsb = buf[1];
 ```
 
 </div>
-
 
 ---
 ---
@@ -119,27 +120,23 @@ using synchronous/asynchronous I2C to set up the `ctrl_meas` register of the BMP
 
 <div grid="~ cols-2 gap-5">
 
-```rust{all|1|1,2|4,5|7|9,10}
+```rust {1|1,2|4,5|7,8|all}
 const DEVICE_ADDR: u8 =  0x77;
 const REG_ADDR: u8 = 0xf4;
 
 // see subchapters 3.3.2, 3.3.1 and 3.6
 let value = 0b100_010_11;
-
-i2c.write(DEVICE_ADDR, &[REG_ADDR]);
 
 let buf = [REG_ADDR, value];
 i2c.write(DEVICE_ADDR, &buf).unwrap();
 ```
 
-```rust{none|all|1|1,2|4,5|7|9,10}
+```rust {none|1|1,2|4,5|7,8|all}
 const DEVICE_ADDR: u8 =  0x77;
 const REG_ADDR: u8 = 0xf4;
 
 // see subchapters 3.3.2, 3.3.1 and 3.6
 let value = 0b100_010_11;
-
-i2c.write(DEVICE_ADDR, &[REG_ADDR]);
 
 let buf = [REG_ADDR, value];
 i2c.write(DEVICE_ADDR, &buf).await.unwrap();

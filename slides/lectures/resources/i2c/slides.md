@@ -10,9 +10,9 @@ Inter-Integrated Circuit
 # Bibliography
 for this section
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.3 - *I2C*
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 12 - *Peripherals*
+     - Chapter 12.2 - *I2C*
 
 2. **Paul Denisowski**, *[Understanding I2C](https://www.youtube.com/watch?v=CAvawEcxoPU)*
 
@@ -196,7 +196,7 @@ Transmission
 
 - sensors
 - small displays
-- RP2040 has two I2C devices
+- RP2350 has two I2C devices
 
 <div align="center">
 <img src="./raspberry_pi_pico_pins.jpg" class="rounded m-5 w-120">
@@ -205,7 +205,7 @@ Transmission
 ---
 ---
 # Embassy API
-for RP2040, synchronous
+for RP2350, synchronous
 
 <div grid="~ cols-3 gap-5">
 
@@ -237,12 +237,11 @@ pub enum Error {
 
 </div>
 
-```rust{all|1|3,4|6|8,9|11,12}
+```rust {1|3,4|3-5|7,8|10,11|13|all}
 use embassy_rp::i2c::Config as I2cConfig;
 
 let sda = p.PIN_14;
 let scl = p.PIN_15;
-
 let mut i2c = i2c::I2c::new_blocking(p.I2C1, scl, sda, I2cConfig::default());
 
 let tx_buf = [0x90];
@@ -250,14 +249,16 @@ i2c.write(0x5e, &tx_buf).unwrap();
 
 let mut rx_buf = [0x00u8; 7];
 i2c.read(0x5e, &mut rx_buf).unwrap();
+
+i2c.write_read(0x5e, &tx_buf, &mut rx_buf).unwrap();
 ```
 
 ---
 ---
 # Embassy API
-for RP2040, asynchronous
+for RP2350, asynchronous
 
-```rust{all|1|3-5|7,8|10|12,13|15,16}
+```rust {1|3-5|7,8|7-9|11,12|14,15|17|all}
 use embassy_rp::i2c::Config as I2cConfig;
 
 bind_interrupts!(struct Irqs {
@@ -266,7 +267,6 @@ bind_interrupts!(struct Irqs {
 
 let sda = p.PIN_14;
 let scl = p.PIN_15;
-
 let mut i2c = i2c::I2c::new_async(p.I2C1, scl, sda, Irqs, I2cConfig::default());
 
 let tx_buf = [0x90];
@@ -274,4 +274,6 @@ i2c.write(0x5e, &tx_buf).await.unwrap();
 
 let mut rx_buf = [0x00u8; 7];
 i2c.read(0x5e, &mut rx_buf).await.unwrap();
+
+i2c.write_read(0x5e, &tx_buf, &mut rx_buf).await.unwrap();
 ```

@@ -53,16 +53,16 @@ flowchart
 # Bibliography
 for this section
 
-1. **Raspberry Pi Ltd**, *[RP2040 Datasheet](https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf)*
-   - Chapter 4 - *Peripherals*
-     - Chapter 4.1 - *USB*
+1. **Raspberry Pi Ltd**, *[RP2350 Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)*
+   - Chapter 12 - *Peripherals*
+     - Chapter 12.7 - *USB*
 
 2. *[USB Made Simple](https://www.usbmadesimple.co.uk/)*
 
 ---
 layout: two-cols
 ---
-# USB Device
+# USB
 
 <style>
 .two-columns {
@@ -202,7 +202,7 @@ used to control a device - ask for data
 <v-click>
 
 **Setup** - send a command (*GET_DESCRIPTOR*, ...)
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -232,7 +232,7 @@ flowchart LR
 <v-click>
 
 **Data** - *optional* several transfers, host transfers data
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -264,7 +264,7 @@ flowchart LR
 
 <v-after>
 
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -296,7 +296,7 @@ flowchart LR
 
 **Status** - report the status to the host
 
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -337,7 +337,7 @@ used to control a device - send data
 <v-click>
 
 **Setup** - send a command (*SET_ADDRESS*, ...)
-```mermaid {scale: 0.75}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -367,7 +367,7 @@ flowchart LR
 <v-click>
 
 **Data** - *optional* several transfers, device transfers the requested data
-```mermaid {scale: 0.75}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -399,7 +399,7 @@ flowchart LR
 
 <v-after>
 
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -431,7 +431,7 @@ flowchart LR
 
 **Status** - report the status to the device
 
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -539,7 +539,7 @@ flowchart LR
 slow, but reliable transfer
 
 - does not have a guaranteed bandwidth
-- secure transfer
+- does not allow data loss
 - used for large data transfers where loosing packets is not permitted
 
 <div grid="~ cols-2 gap-5">
@@ -549,7 +549,7 @@ slow, but reliable transfer
 <v-click>
 
 **OUT** - transfer data from the host to the device
-```mermaid {scale: 0.69}
+```mermaid {scale: 0.5}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -562,20 +562,27 @@ flowchart LR
 	NACK)
 	D0 --> A(Handshake
 	ACK)
-	A --> I2(Idle)
-	N --> I2
-	SA --> I2
+	A --> F{payload 
+	< 64 bytes?}
+	F -- Yes --> I2(Idle)
+	F -- No --> D0
+	N -- wait timeout --> S
+	SA --> R(Reset
+	Endpoint)
 
 	classDef hub fill:#B0E3E6,stroke:#0E8088
 	classDef host fill:#B1DDF0,stroke:#10739E
 	classDef device fill:#FFE6CC,stroke:#D79B00
+	classDef device_error fill:#FFE6CC,stroke:#D79B00,color: #ff0000
 	classDef exception fill:#F8CECC,stroke:#B85450
 	classDef error fill:#ff0000,stroke:#ae0000,color:#ffffff
 	classDef start fill:#00ef00
 
-	class S,D0 host
-	class A,N,SA device
+	class S,D0,F host
+	class A device
+	class N,SA device_error
 	class I,I2 start
+	class R error
 ```
 
 </v-click>
@@ -587,7 +594,7 @@ flowchart LR
 <v-click>
 
 **IN** - transfer data from the device to the host
-```mermaid {scale: 0.69}
+```mermaid {scale: 0.5}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -601,19 +608,27 @@ flowchart LR
 	D0 --> A(Handshake
 	ACK)
 	A --> I2
-	N --> I2
-	SA --> I2
+	A --> F{payload 
+	< 64 bytes?}
+	F -- Yes --> I2(Idle)
+	F -- No --> D0
+	N -- wait timeout --> S
+	SA --> R(Reset
+	Endpoint)
 
 	classDef hub fill:#B0E3E6,stroke:#0E8088
 	classDef host fill:#B1DDF0,stroke:#10739E
+	classDef host_error fill:#B1DDF0,stroke:#10739E,color: #ff0000
 	classDef device fill:#FFE6CC,stroke:#D79B00
 	classDef exception fill:#F8CECC,stroke:#B85450
 	classDef error fill:#ff0000,stroke:#ae0000,color:#ffffff
 	classDef start fill:#00ef00
 
-	class S,A,N,SA host
-	class D0 device
+	class S,A host
+	class N,SA host_error
+	class D0,F device
 	class I,I2 start
+	class R error
 ```
 
 </v-click>
@@ -637,7 +652,7 @@ transfer data at a minimum time interval
 <v-click>
 
 **OUT** - transfer data from the host to the device
-```mermaid {scale: 0.69}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -652,17 +667,21 @@ flowchart LR
 	ACK)
 	A --> I2(Idle)
 	N --> I2
-	SA --> I2
+	SA --> R(Reset
+	Endpoint)
 
 	classDef hub fill:#B0E3E6,stroke:#0E8088
 	classDef host fill:#B1DDF0,stroke:#10739E
 	classDef device fill:#FFE6CC,stroke:#D79B00
+	classDef device_error fill:#FFE6CC,stroke:#D79B00,color: #ff0000
 	classDef exception fill:#F8CECC,stroke:#B85450
 	classDef error fill:#ff0000,stroke:#ae0000,color:#ffffff
 	classDef start fill:#00ef00
 
 	class S,D0 host
-	class A,N,SA device
+	class R error
+	class A,N device
+	class SA device_error
 	class I,I2 start
 ```
 
@@ -675,7 +694,7 @@ flowchart LR
 <v-click>
 
 **IN** - transfer data from the device to the host
-```mermaid {scale: 0.69}
+```mermaid {scale: 0.6}
 flowchart LR
 	I(Idle) --> S
 	S(Token
@@ -688,18 +707,22 @@ flowchart LR
 	NACK)
 	D0 --> A(Handshake
 	ACK)
-	A --> I2
+	A --> I2(Idle)
 	N --> I2
-	SA --> I2
+	SA --> R(Reset
+	Endpoint)
 
 	classDef hub fill:#B0E3E6,stroke:#0E8088
 	classDef host fill:#B1DDF0,stroke:#10739E
+	classDef host_error fill:#B1DDF0,stroke:#10739E,color: #ff0000
 	classDef device fill:#FFE6CC,stroke:#D79B00
 	classDef exception fill:#F8CECC,stroke:#B85450
 	classDef error fill:#ff0000,stroke:#ae0000,color:#ffffff
 	classDef start fill:#00ef00
 
-	class S,A,N,SA host
+	class S,A,N host
+	class R error
+	class SA host_error
 	class D0 device
 	class I,I2 start
 ```
@@ -714,16 +737,17 @@ flowchart LR
 ---
 layout: two-cols
 ---
+
 # Device Organization
 configuration, interfaces, endpoints
 
-- a device can have multiple configurations
+- a *device* can have multiple *configurations*
   - for instance different functionality based on power consumption
-- a configuration has multiple interfaces
+- a *configuration* has multiple *interfaces*
   - a device can perform multiple functions
   - Debugger
   - Serial Port
-- each interface has multiple interfaces attached
+- each *interface* has *alternate settings* with multiple *endpoints* attached
   - endpoints are used for data transfer
   - maximum 16 endpoints, can be configured IN and OUT
 - the device reports the descriptors in this order
@@ -737,7 +761,6 @@ configuration, interfaces, endpoints
 ---
 layout: two-cols
 ---
-
 # Connection
 
 <style>
@@ -788,6 +811,193 @@ The DATA packet of the SETUP Control Transfer
 </div>
 
 
+
+---
+---
+# Device Classes
+predefined devices types
+
+<style>
+  table {
+    font-size: 0.5em;
+    border-collapse: collapse;
+  }
+  th {
+    font-weight: bold;
+  }
+  td, th {
+    padding: 4px; /* Reduce padding */
+  }
+</style>
+
+| **Device Class Code** | **Class Name**                 | **Description**                                                   |
+|-----------------------|--------------------------------|-------------------------------------------------------------------|
+| `0x00`                | **Device Class**               | Device class-specific; the class code is assigned by the device.  |
+| `0x01`                | **Audio**                      | Audio devices (e.g., audio interfaces, speakers, microphones).    |
+| `0x02`                | **Communications and CDC Control** | Devices related to communication (e.g., modems, network adapters).|
+| `0x03`                | **HID (Human Interface Device)** | Devices like keyboards, mice, and other human interface devices.  |
+| `0x05`                | **Physical Interface Device (PID)** | Devices that require physical input/output (e.g., game controllers).|
+| `0x06`                | **Image**                      | Image devices such as digital cameras and scanners.               |
+| `0x07`                | **Printer**                    | Devices for printing (e.g., printers).                            |
+| `0x08`                | **Mass Storage**               | Mass storage devices (e.g., USB flash drives, external hard drives).|
+| `0x0A`                | **Still Image Capture Device** | Devices for still image capture (e.g., digital cameras).           |
+| `0x0B`                | **Smart Card**                 | Smart card readers and related devices.                           |
+| `0x0D`                | **Content Security**           | Devices for content protection (e.g., video players).             |
+| `0x0E`                | **Video**                      | Video devices (e.g., webcams, video capture devices).             |
+| `0x0F`                | **Personal Healthcare**        | Healthcare devices (e.g., thermometers, blood pressure monitors). |
+| `0x10`                | **Audio/Video**                | Devices with combined audio/video functions.                      |
+| `0x11`                | **Health Device**              | Devices used in health-related monitoring.                        |
+| `0x12`                | **Diagnostic Device**          | Devices for diagnostics or test instruments.                      |
+| `0xFF`                | **Vendor Specific**            | Vendor-specific devices (class code not assigned by USB standard).|
+
+---
+---
+# Device Descriptor
+describes the whole device
+
+<style>
+  table {
+    font-size: 0.7em;
+    border-collapse: collapse;
+  }
+  th {
+    font-weight: bold;
+  }
+  td, th {
+    padding: 4px; /* Reduce padding */
+  }
+</style>
+
+| **Field**              | **Value**         | **Description**                                             |
+|------------------------|-------------------|-------------------------------------------------------------|
+| *bLength*              | `18`              | Descriptor length in bytes.                                 |
+| *bDescriptorType*      | `1`               | Descriptor type (1 = Device Descriptor).                     |
+| *bcdUSB*               | `0x0200`          | USB specification release number (2.0).                     |
+| *bDeviceClass*         | `0xFF`            | Device class (0xFF = Vendor Specific).                       |
+| *bDeviceSubClass*      | `0`               | Device subclass (0 = defined by the interface).             |
+| *bDeviceProtocol*      | `0`               | Device protocol (0 = defined by the interface).             |
+| *bMaxPacketSize0*      | `64`              | Maximum packet size for endpoint 0 (64 bytes).              |
+| *idVendor*             | `0xCODE`          | Vendor ID (example: `0xCODE`).                               |
+| *idProduct*            | `0xCAFE`          | Product ID (example: `0xCAFE`).                              |
+| *bcdDevice*            | `0x0100`          | Device release number (example: `1.0`).                      |
+| *iManufacturer*        | `1`               | Index of the string descriptor for the manufacturer.        |
+| *iProduct*             | `2`               | Index of the string descriptor for the product.             |
+| *iSerialNumber*        | `3`               | Index of the string descriptor for the serial number.       |
+| *bNumConfigurations*   | `1`               | Number of configurations supported by the device.           |
+
+---
+---
+# Configuration Descriptor
+one of the configurations
+
+<style>
+  table {
+    font-size: 0.7em;
+    border-collapse: collapse;
+  }
+  th {
+    font-weight: bold;
+  }
+  td, th {
+    padding: 4px; /* Reduce padding */
+  }
+</style>
+
+| **Field**                    | **Value**         | **Description**                                                    |
+|------------------------------|-------------------|--------------------------------------------------------------------|
+| *bLength*                    | `9`               | Descriptor length in bytes (always 9 for configuration descriptor). |
+| *bDescriptorType*            | `2`               | Descriptor type (2 = Configuration Descriptor).                     |
+| *wTotalLength*               | `0x0022`          | Total length of data returned for this configuration (including all descriptors). |
+| *bNumInterfaces*             | `1`               | Number of interfaces supported by this configuration.              |
+| *bConfigurationValue*        | `1`               | Value to select this configuration.                                |
+| *iConfiguration*             | `4`               | Index of the string descriptor describing the configuration.       |
+| *bmAttributes*               | `0x80`            | Configuration characteristics (bus-powered, no remote wake-up).    |
+| *bMaxPower*                  | `50`              | Maximum power consumption (in 2mA units, so `50` means 100mA).     |
+
+
+---
+---
+# Interface Descriptor
+
+<style>
+  table {
+    font-size: 0.7em;
+    border-collapse: collapse;
+  }
+  th {
+    font-weight: bold;
+  }
+  td, th {
+    padding: 4px; /* Reduce padding */
+  }
+</style>
+
+| **Field**                    | **Value**         | **Description**                                                    |
+|------------------------------|-------------------|--------------------------------------------------------------------|
+| *bLength*                    | `9`               | Descriptor length in bytes (always 9 for interface descriptor).    |
+| *bDescriptorType*            | `4`               | Descriptor type (4 = Interface Descriptor).                        |
+| *bInterfaceNumber*           | `0`               | Number of this interface (starting from 0).                        |
+| *bAlternateSetting*          | `0`               | Alternate setting (0 = default setting).                          |
+| *bNumEndpoints*              | `1`               | Number of endpoints used by this interface.                        |
+| *bInterfaceClass*            | `0xFF`            | Interface class (0xFF = Vendor Specific).                         |
+| *bInterfaceSubClass*         | `0`               | Interface subclass (0 = vendor specific).                         |
+| *bInterfaceProtocol*         | `0`               | Interface protocol (0 = vendor specific).                         |
+| *iInterface*                 | `5`               | Index of the string descriptor describing this interface.          |
+
+---
+---
+# Endpoint Descriptor
+
+<style>
+  table {
+    font-size: 0.7em;
+    border-collapse: collapse;
+  }
+  th {
+    font-weight: bold;
+  }
+  td, th {
+    padding: 4px; /* Reduce padding */
+  }
+</style>
+
+| **Field**                    | **Value**         | **Description**                                                    |
+|------------------------------|-------------------|--------------------------------------------------------------------|
+| *bLength*                    | `7`               | Descriptor length in bytes (always 7 for endpoint descriptor).     |
+| *bDescriptorType*            | `5`               | Descriptor type (5 = Endpoint Descriptor).                         |
+| *bEndpointAddress*           | `0xb1_0000_001`            | Endpoint address (`0x81`): **Bit 7** indicates **IN** direction (device to host), and **Bits 0-3** indicate the endpoint number (`1` in this case). |
+| *bmAttributes*               | `0x02`            | Endpoint attributes (`0x02` = Bulk endpoint).                      |
+| *wMaxPacketSize*             | `64`              | Maximum packet size the endpoint can handle (64 bytes).           |
+| *bInterval*                  | `0`               | Interval for polling (relevant for interrupt endpoints; `0` for others). |
+
+
+---
+---
+# Strings Descriptor
+
+<style>
+  table {
+    font-size: 0.7em;
+    border-collapse: collapse;
+  }
+  th {
+    font-weight: bold;
+  }
+  td, th {
+    padding: 4px; /* Reduce padding */
+  }
+</style>
+
+### String Descriptor for Configuration and Interface
+
+| **Field**                    | **Value**           | **Description**                                                     |
+|------------------------------|---------------------|---------------------------------------------------------------------|
+| *bLength*                    | `4`                 | Descriptor length in bytes (always 4 for string descriptor header).  |
+| *bDescriptorType*            | `3`                 | Descriptor type (3 = String Descriptor).                             |
+| *bString*                    | `0x09 0x55 0x53 0x42 0x20 0x43 0x6F 0x6E 0x66 0x69 0x67 0x20 0x31` | UTF-16LE string encoding: `"USB Config 1"`.                        |
+
+Explanation: This string descriptor corresponds to **Configuration 1**. The string is encoded in **UTF-16LE** (little-endian). Each character is represented by two bytes.
+
 ---
 ---
 # USB 1.0 and 2.0 Modes
@@ -811,92 +1021,133 @@ The DATA packet of the SETUP Control Transfer
 | Speed | *480 MBbit/s* |  |
 
 ---
-layout: two-cols
 ---
 # Embassy API
-for RP2040, setup the device
+for RP2350, setup the device
 
-```rust {*}{lines: false}
-use embassy_rp::usb::{Driver, Instance, InterruptHandler};
-use embassy_usb::class::cdc_acm::{CdcAcmClass, State};
+```rust {1,4-6|2,8-14|4-6,15|all}
+use embassy_rp::usb::{Driver, InterruptHandler};
+use embassy_usb::Config;
 
 bind_interrupts!(struct Irqs {
     USBCTRL_IRQ => InterruptHandler<USB>;
 });
 
-let driver = Driver::new(p.USB, Irqs);
-
 let mut config = Config::new(0xc0de, 0xcafe);
 config.manufacturer = Some("Embassy");
-config.product = Some("USB-serial example");
+config.product = Some("USB sender receiver");
 config.serial_number = Some("12345678");
 config.max_power = 100;
 config.max_packet_size_0 = 64;
 
-// Required for windows compatibility.
-config.device_class = 0xEF;
-config.device_sub_class = 0x02;
-config.device_protocol = 0x01;
-config.composite_with_iads = true;
-```
-
-:: right ::
-
-```rust {*}{lines: false}
-// It needs some buffers for building the descriptors.
-let mut config_descriptor = [0; 256];
-let mut bos_descriptor = [0; 256];
-let mut control_buf = [0; 64];
-
-let mut state = State::new();
-
-let mut builder = Builder::new(
-	driver,
-	config,
-	&mut config_descriptor,
-	&mut bos_descriptor,
-	&mut [], // no msos descriptors
-	&mut control_buf,
-);
-
-// Create classes on the builder.
-let mut class = CdcAcmClass::new(&mut builder, &mut state, 64);
-
-// Build the builder.
-let mut usb = builder.build();
-
-// Run the USB device.
-let usb_driver = usb.run();
+let driver = Driver::new(p.USB, Irqs);
 ```
 
 ---
 ---
 # Embassy API
-for RP2040, use the USB device
+for RP2350, setup the descriptors
 
-```rust
-let echo_loop = async {
+```rust {4-8|2,4-12|1,14-21}
+use embassy_usb::msos::{self, windows_version};
+use embassy_usb::Builder;
+
+// It needs some buffers for building the descriptors.
+let mut config_descriptor = [0; 256];
+let mut bos_descriptor = [0; 256];
+let mut msos_descriptor = [0; 256];
+let mut control_buf = [0; 64];
+
+let mut builder = Builder::new(driver, config, 
+	&mut config_descriptor, &mut bos_descriptor, &mut msos_descriptor, &mut control_buf,
+);
+
+// Required for Windows
+const DEVICE_INTERFACE_GUIDS: &[&str] = &["{AFB9A6FB-30BA-44BC-9232-806CFC875321}"];
+builder.msos_descriptor(windows_version::WIN8_1, 0);
+builder.msos_feature(msos::CompatibleIdFeatureDescriptor::new("WINUSB", ""));
+builder.msos_feature(msos::RegistryPropertyFeatureDescriptor::new(
+	"DeviceInterfaceGUIDs",
+	msos::PropertyData::RegMultiSz(DEVICE_INTERFACE_GUIDS),
+));
+```
+
+---
+---
+# Embassy API
+for RP2350, setup the device's function and start
+
+```rust {3|3,4|3-5|3-6|3-7|11|14|all}
+// Add a vendor-specific function (class 0xFF), and corresponding interface,
+// that uses our custom handler.
+let mut function = builder.function(0xFF, 0, 0);
+let mut interface = function.interface();
+let mut alt = interface.alt_setting(0xFF, 0, 0, None);
+let mut read_ep = alt.endpoint_bulk_out(64);
+let mut write_ep = alt.endpoint_bulk_in(64);
+drop(function);
+
+// Build the builder.
+let mut usb = builder.build();
+
+// Create the USB device handler
+let usb_run = usb.run();
+```
+
+---
+---
+# Embassy API
+for RP2350, use the USB device
+
+```rust {1,18|1,2,17,18|3,4|5,15|6,7,14,8,13|9-11|22|all}
+let echo_run = async {
 	loop {
-		class.wait_connection().await;
+		read_ep.wait_enabled().await;
 		info!("Connected");
-		let _ = echo(&mut class).await;
+		loop {
+			let mut data = [0; 64];
+			match read_ep.read(&mut data).await {
+				Ok(n) => {
+					info!("Got bulk: {:a}", data[..n]);
+					// Echo back to the host:
+					write_ep.write(&data[..n]).await.ok();
+				}
+				Err(_) => break,
+			}
+		}
 		info!("Disconnected");
 	}
 };
 
 // Run everything concurrently.
-join(usb_driver, echo_loop).await;
+// If we had made everything `'static` above instead, we could do this using separate tasks instead.
+join(usb_run, echo_run).await;
 ```
 
-```rust
-async fn echo<'d, T: Instance + 'd>(class: &mut CdcAcmClass<'d, Driver<'d, T>>) -> Result<(), EndpointError> {
-    let mut buf = [0; 64];
-    loop {
-        let n = class.read_packet(&mut buf).await?;
-        let data = &buf[..n];
-        info!("data: {:x}", data);
-        class.write_packet(data).await?;
-    }
-}
+---
+---
+# Host API
+using `nusb`
 
+```rust
+use nusb::transfer::RequestBuffer;
+
+const BULK_OUT_EP: u8 = 0x01;
+const BULK_IN_EP: u8 = 0x81;
+
+async fn main() {
+    let di = nusb::list_devices()
+        .unwrap()
+        .find(|d| d.vendor_id() == 0xc0de && d.product_id() == 0xcafe)
+        .expect("no device found");
+
+    let device = di.open().expect("error opening device");
+    let interface = device.claim_interface(0).expect("error claiming interface");
+
+    let result = interface.bulk_out(BULK_OUT_EP, b"hello world".into()).await;
+    println!("{result:?}");
+
+    let result = interface.bulk_in(BULK_IN_EP, RequestBuffer::new(64)).await;
+    println!("{result:?}");
+}
 ```

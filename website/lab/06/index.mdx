@@ -225,7 +225,7 @@ The `press` contains the raw pressure measurement data. The measurement output i
 | 0xF8 | `press_lsb` | Contains the next 8 bits (**press[11:4]**) of the raw pressure measurement output data. |
 | 0xF9 (bit 7, 6, 5, 4) | `press_xlsb` | Contains the last 4 bits (**press[3:0]**) of the raw pressure measurement output data. |
 
-:::tip Reading the raw pressure value.
+:::tip Reading the raw pressure value
 To determine the raw pressure measurement, you need to first read the `press_msb`, `press_lsb` and `press_xlsb` register values, then compute the raw value:
 
 ```rust
@@ -245,7 +245,7 @@ The `temp` contains the raw temperature measurement data. The measurement output
 | 0xF8 | `temp_lsb` | Contains the next 8 bits (**temp[11:4]**) of the raw temperature measurement output data. |
 | 0xF9 (bit 7, 6, 5, 4) | `temp_xlsb` | Contains the last 4 bits (**temp[3:0]**) of the raw temperature measurement output data. |
 
-:::tip Reading the raw temperature value.
+:::tip Reading the raw temperature value
 To determine the raw temperature measurement, you need to first read the `temp_msb`, `temp_lsb` and `temp_xlsb` register values, then compute the raw value:
 
 ```rust
@@ -275,9 +275,9 @@ These are `u16` and `i16` factory-calibrated parameters stored inside the `BMP28
 | 0x9E / 0x9F | `dig_P9` | signed short (i16) |
 | OxA0 / 0xA1 | reserved | reserved |
 
-### Temperature computation formulae
+### Temperature computation formula
 
-This formula is based on the **Compensation formula in fixed point** which can be found in section 8.2 of the [datasheet](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp280-ds001.pdf)
+This formula is based on the **Compensation formula in fixed point** which can be found in section **8.2** of the [datasheet](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp280-ds001.pdf).
 
 To determine the actual temperature, you need the raw temperature measurement value and the temperature compensation parameters (`dig_t1`, `dig_t2` and `dig_t3`). We will assume these are already determined.
 
@@ -289,7 +289,7 @@ let t_fine = var1 + var2;
 let actual_temp = (t_fine * 5 + 128) >> 8;
 ```
 
-The `actual_temp` value is in hundredths of a degree celsius, meaning that a `1234` represents 12.34°C.
+The `actual_temp` value is in hundredths of a degree Celsius, meaning that a `1234` represents 12.34°C.
 
 ### Wiring
 
@@ -413,7 +413,7 @@ The AT24C256 has 8 pins with the following functions. For more information, cons
 | NC | No Connect |
 | GND | Ground |
 
-The BMP280 is integrated already integrated in the lab board, having some of these pins already wired, and some exposed in the **J10** breakout. Consult the board [schematic](https://gitlab.cs.pub.ro/pmrust/pm-ma-pcb/-/blob/main/Schematic/MA.pdf?ref_type=heads) to figure out which ones you need to connect to your *"I2C capable"* pins.
+The AT24C256 is integrated already integrated in the lab board, having some of these pins already wired, and some exposed in the **J10** breakout. Consult the board [schematic](https://gitlab.cs.pub.ro/pmrust/pm-ma-pcb/-/blob/main/Schematic/MA.pdf?ref_type=heads) to figure out which ones you need to connect to your *"I2C capable"* pins.
 
 ![J10_Breakout](./images/J10_Breakout.png)
 
@@ -421,7 +421,7 @@ The BMP280 is integrated already integrated in the lab board, having some of the
 
 The memory is organized into 32,768 bytes, divided into 512 pages of 64 bytes each. Each byte can be accessed individually, or multiple bytes can be written/read in a single operation using page addressing.
 
-We can connect the EEPROM to the same I2c bus as the BMP280, therefore we can reuse the same `I2c` instance we [previously](./index.mdx#reading-and-writing-to-the-bmp280) initialized.
+We can connect the EEPROM to the same I2C bus as the BMP280, therefore we can reuse the same `I2c` instance we [previously](./index.mdx#reading-and-writing-to-the-bmp280) initialized.
 
 #### Reading from the AT24C256
 

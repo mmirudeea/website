@@ -26,7 +26,7 @@ This lab will teach you how to communicate with hardware devices using the Inter
 
 ## Inter-Integrated Circuit (I2C)
 
-The Inter-Integrated Circuit (I2C) is a synchronous, multi-controller/multi-target communication protocol. Similarly to the SPI, it allows data transfer between a controller and one or more peripheral ICs, but it uses only 2 wires (1 data line and 1 clock line, making it half-duplex) and has a different way of addressing the peripherals: using the their unique *addresses*.
+The Inter-Integrated Circuit (I2C) is a synchronous, multi-controller/multi-target communication protocol. Similarly to the SPI, it allows data transfer between a controller and one or more peripheral ICs, but it uses only 2 wires (1 data line and 1 clock line, making it half-duplex) and has a different way of addressing the peripherals: using their unique *addresses*.
 
 ### Configuration
 
@@ -481,7 +481,7 @@ At the end of this lab, you should be familiar with both the **blocking** and **
 1. Connect both the BMP280 and AT24C256 at the same I2C pins and perform a scan to determine their addresses. (**2p**)
 
 :::tip I2C scan
-You can perform an I2C scan by attempting a one byte `read` at every address withing the **viable address range**. The addresses used by the I2C protocol are 7-bit address, ranging from `0x00` to `0x7F`, but some of these are either reserved, or have a special function (the general call `0x00` address). The unusable addresses range from `0x00` to `0x07` and `0x78` to `0x7F`. This leaves us with addresses ranging from `0x08` to `0x77`
+You can perform an I2C scan by attempting a one byte `read` at every address within the **viable address range**. The addresses used by the I2C protocol are 7-bit address, ranging from `0x00` to `0x7F`, but some of these are either reserved, or have a special function (the general call `0x00` address). The unusable addresses range from `0x00` to `0x07` and `0x78` to `0x7F`. This leaves us with addresses ranging from `0x08` to `0x77`
 :::
 
 2. Read the raw temperature value from the BMP280 and print it once a second.

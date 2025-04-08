@@ -229,9 +229,9 @@ The `press` contains the raw pressure measurement data. The measurement output i
 To determine the raw pressure measurement, you need to first read the `press_msb`, `press_lsb` and `press_xlsb` register values, then compute the raw value:
 
 ```rust
-// Assuming the `press_*` values are u32s. If not, additional
+// Assuming the `press_*` values are i32s. If not, additional
 // casts will be necessary.
-let raw_press: u32 = (press_msb << 12) + (press_lsb << 4) + (press_xlsb >> 4)
+let raw_press: i32 = (press_msb << 12) + (press_lsb << 4) + (press_xlsb >> 4)
 ```
 :::
 
@@ -249,9 +249,9 @@ The `temp` contains the raw temperature measurement data. The measurement output
 To determine the raw temperature measurement, you need to first read the `temp_msb`, `temp_lsb` and `temp_xlsb` register values, then compute the raw value:
 
 ```rust
-// Assuming the `temp_*` values are u32s. If not, additional
+// Assuming the `temp_*` values are i32s. If not, additional
 // casts will be necessary.
-let raw_temp: u32 = (temp_msb << 12) + (temp_lsb << 4) + (temp_xlsb >> 4)
+let raw_temp: i32 = (temp_msb << 12) + (temp_lsb << 4) + (temp_xlsb >> 4)
 ```
 :::
 

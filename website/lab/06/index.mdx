@@ -494,7 +494,7 @@ This should be done **only once**, before reading the sensor.
 
 * Read the raw temperature value stored in the `temp` register once a second, and print it to the terminal using the `defmt` macros. Details on how this can be performed can be found in this [subsection](./index.mdx#register-temp-0xfa0xfc) of the register map and in the [Reading a register](./index.mdx#reading-a-register) subsection. (**2p**)
 
-3. Based on the raw temperature value previously determined, compute the actual temperature value using the **mock** calibration values provided bellow and the formula described in the [sections above](./index.mdx#temperature-computation-formulae). (**1p**)
+3. Based on the raw temperature value previously determined, compute the actual temperature value using the **mock** calibration values provided bellow and the formula described in the [sections above](./index.mdx#temperature-computation-formula). (**1p**)
 
 ```rust
 let dig_t1: u16 = 27504;

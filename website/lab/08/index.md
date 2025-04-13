@@ -1,10 +1,10 @@
 ---
 descriptions: Exceptions and Interrupts Requests Handling
-slug: /lab/07
+slug: /lab/08
 unlisted: true
 ---
 
-# 07 - Exceptions & Interrupts
+# 08 - Exceptions & Interrupts
 
 The purpose of this lab is to understand how exceptions and hardware interrupts work and how they can be used, how to set a hard fault handler,
 register interrupts and *use interrupts*  with embassy-rs.

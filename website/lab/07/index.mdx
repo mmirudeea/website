@@ -52,7 +52,7 @@ The IP address can also be represented in hexadecimal or binary form. Usually, w
 
 An IP address is made of two parts:
 - **network prefix**: this portion defines the network to which the device belongs
-- **host identifier**: this portion uniquely idnetifies the device in the network
+- **host identifier**: this portion uniquely identifies the device in the network
 
 The *network mask* defines the number of bits that are used to represent the network prefix. A smaller mask allows more bits to be used for host identifiers, enabling a larger number of unique devices within the network.
 
@@ -331,7 +331,7 @@ control.start_ap_wpa2("Pico AP", "WeloveRust", 5).await;
 
 Now that we have connected our Pico to a Wi-Fi network, we can start a server to handle connections to our Pico.
 
-We can to create a TCP socket in order to handle TCP connections and transfers. 
+We need to create a TCP socket in order to handle TCP connections and transfers. 
 
 ```rust
 let mut rx_buffer = [0; 4096];

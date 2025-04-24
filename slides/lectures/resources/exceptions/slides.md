@@ -1,21 +1,22 @@
 ---
 layout: section
 ---
+
 # Exceptions
-for the ARM Cortex-M0+ processor
+for the ARM Cortex-M processor
 
 ---
----
+
 # Bibliography
 for this section
 
-**Joseph Yiu**, *The Definitive Guide to ARM® Cortex®-M0 and Cortex-M0+ Processors, 2nd Edition*
+**Joseph Yiu**, *The Definitive Guide to ARM® Cortex®-M23 and Cortex-M33 Processors* 
    - Chapter 4 - *Architecture*
-     - Section 4.4 - *Stack Memory Operations*
      - Section 4.5 - *Exceptions and Interrupts*
+       - Subsection 4.4.1 - *What are exceptions*
    - Chapter 8 - *Exceptions and Interrupts*
      - Section 8.1 - *What are Exceptions and Interrupts*
-     - Section 8.2 - *Exception types on Cortex-M0 and Cortex-M0+*
+     - Section 8.2 - *Exception types+*
 
 ---
 ---
@@ -32,9 +33,9 @@ what happens if something does not work as required
 ![Exceptions](./cortex-m.svg)
 
 ---
----
+
 # Exception (HardFault) Handling
-ARM Cortex-M0+ has one **actual exception**, *HardFault*
+ARM Cortex-M has one **actual exception**, *HardFault*
 
 ```mermaid
 flowchart LR
@@ -414,9 +415,8 @@ unsafe fn SysTick() {
 ```
 
 ---
----
+
 # Set Interrupt Handlers
-bare metal, PAC
 
 *embassy-rs already defined the interrupts as it needs them*
 
@@ -424,9 +424,11 @@ bare metal, PAC
 <img src="./interrupts.png" class="w-140 rounded">
 </div>
 
-```rust {all|1|2,4|3}
-#[interrupt]
-unsafe fn IO_IRQ_BANK0 {
+```rust {1-4,6|4-6|all}
+// The name of the function has to match the
+// interrupt name defined by the 
+// *Peripheral Access Crate* (PAC)
+unsafe fn IO_IRQ_BANK0() {
     // so some work when a pin interrupt triggers
 }
 ```

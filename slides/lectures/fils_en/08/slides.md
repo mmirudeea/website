@@ -5,13 +5,13 @@ class: text-center
 highlighter: shiki
 lineNumbers: true
 info: |
-  ## Networking
+  ## Exceptions and Interrupts
 drawings:
   persist: false
 defaults:
   foo: true
 transition: slide-left
-title: MA - 08 - Networking
+title: MA - 08 - Exceptions and Interrupts
 mdc: true
 layout: cover
 themeConfig:
@@ -21,47 +21,24 @@ exportFilename: ma-08
 background:
 ---
 
-# Networking
+# Exceptions and Interrupts
 Lecture 8
 
 ---
 
-# Networking
+# Exceptions and Interrupts
+used by RP2
 
-- OSI Network Stack
-- Wi-Fi
-- TCP/IP
-- Raspberry Pi W
-- Protocols
+- Exceptions
+- Interrupts
+- Boot
 
-<!-- OSI -->
-
----
-src: ../../resources/osi/slides.md
----
-
-<!-- WiFi -->
+<!--
+Exceptions
+-->
 
 ---
-src: ../../resources/wifi/slides.md
----
-
-<!-- TCP/IP -->
-
----
-src: ../../resources/tcp_ip/slides.md
----
-
-<!-- Raspberry Pi Pico -->
-
----
-src: ../../resources/raspberry_pi_pico/slides.md
----
-
-<!-- Protocols -->
-
----
-src: ../../resources/protocols/slides.md
+src: ../../resources/exceptions/slides.md
 ---
 
 ---
@@ -69,8 +46,6 @@ src: ../../resources/protocols/slides.md
 # Conclusion
 we talked about
 
-- OSI Network Stack
-- Wi-Fi
-- TCP/IP
-- Raspberry Pi W
-- Protocols
+- Exceptions
+- Interrupts
+- How the RP2040 boots and loads the software

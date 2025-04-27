@@ -46,6 +46,18 @@ The repositories will be checked by the lab assistant at during lab reserved for
 
 Students will have to build and showcase the hardware with the running software at PM Fair. On the presentation day, **students will upload the source code to the hardware** and the demo will be done live in front of the committee.
 
+## Website build pre-requisites
+
+:::danger Windows support
+If you are using Windows, you will either need to install WSL2, for which you will find a detailed tutorial [here](https://learn.microsoft.com/en-us/windows/wsl/install), or use a VM with Ubuntu, Debian or another Linux based OS.
+:::
+
+You will need to install `npm` and `node` and the simples way to do that can be found on [Node.js Official Website](https://nodejs.org/en/download/).
+
+:::note WSL2
+If you are using WSL2, you should follow the instructions for installing on Linux.
+:::
+
 ## How to create a page for your project?
 
 1. Please login with your UPB login to [Gitlab](https://gitlab.cs.pub.ro) 
@@ -73,7 +85,13 @@ Students will have to build and showcase the hardware with the running software 
 
 8. In that directory you must create a file named `index.md` which will be your project page. You can take a look at the [Markdown](https://www.markdownguide.org/cheat-sheet/) syntax. You can look at [last year's projects and template](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro/-/tree/main/website/versioned_docs/version-fils_en/project/2024)
 
-9. After finishing the project, make a _merge request_ to the [upstream repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro)
+9. To build and test the website, you can run the `./build_website.sh` in the project's root folder, then run `cd ./website/ && npm run serve`.
+
+:::note Development process
+After running the script, you could run `npm run start` instead of `serve`. This would ensure that the changes you are making in your Markdown file reflect in the running build (without needing to rebuild the project over and over again). But make sure to re-run the build script when you are done, because some subtle bugs may not be caught by this method.
+:::
+
+10. After finishing the project, make a _merge request_ to the [upstream repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro)
 
 ## Hardware Rules
 

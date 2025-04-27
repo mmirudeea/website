@@ -24,7 +24,7 @@ Add here the schematics with the architecture of your project. Make sure to incl
 
 ## Log
 
-<!-- write every week your progress here -->
+<!-- write your progress here every week -->
 
 ### Week 5 - 11 May
 

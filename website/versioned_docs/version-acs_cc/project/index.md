@@ -60,10 +60,14 @@ If you are using WSL2, you should follow the instructions for installing on Linu
 
 ## How to create a page for your project?
 
+:::important Windows Users
+These steps should be performed on inside your **VM**, or in **WSL2**, **not on your host machine**.
+:::
+
 1. Please login with your UPB login to [Gitlab](https://gitlab.cs.pub.ro) 
 2. You will have to add an SSH Key to your Gitlab account. This will allow you to push code without entering you username and password every time. For this, run the following command in the Windows/Linux/macOS's console: `ssh-keygen -t rsa -b 2048`. Press press ENTER until you exit the respective command prompts.
  - If your command prompt `Overwrite (y/n)?` press `n` and run the above command again, changing the destination of the key.
- - If the key was generated successfully, you will have the keys generated in the location indicated by the command `Enter file in which to save the key (C:\Users\"NAME"/.ssh/id_rsa):`
+ - If the key was generated successfully, you will have the keys generated in the location indicated by the command `Enter file in which to save the key (/home/"NAME"/.ssh/id_rsa):`
  - Read the content of the file `id_rsa.pub` or the name you gave to the file and transfer it to Github.
  - Login to [Gitlab](https://gitlab.cs.pub.ro/) and go to: [SSH Keys](https://gitlab.cs.pub.ro/-/user_settings/ssh_keys).
  - Click on *Add new key* and insert into the *Key* textbox your key from `id_rsa.pub`.

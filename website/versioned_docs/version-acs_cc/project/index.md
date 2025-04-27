@@ -64,7 +64,7 @@ If you are using WSL2, you should follow the instructions for installing on Linu
 These steps should be performed on inside your **VM**, or in **WSL2**, **not on your host machine**.
 :::
 
-1. Please login with your UPB login to [Gitlab](https://gitlab.cs.pub.ro) 
+1. Please login with your UPB login to [Gitlab](https://gitlab.cs.pub.ro)
 2. You will have to add an SSH Key to your Gitlab account. This will allow you to push code without entering you username and password every time. For this, run the following command in the Windows/Linux/macOS's console: `ssh-keygen -t rsa -b 2048`. Press press ENTER until you exit the respective command prompts.
  - If your command prompt `Overwrite (y/n)?` press `n` and run the above command again, changing the destination of the key.
  - If the key was generated successfully, you will have the keys generated in the location indicated by the command `Enter file in which to save the key (/home/"NAME"/.ssh/id_rsa):`
@@ -87,7 +87,7 @@ These steps should be performed on inside your **VM**, or in **WSL2**, **not on 
 
 7. To start creating your page for the project, go to `website/versioned_docs/version-acs_cc/project/2025` and create a new directory with your curs.upb.ro username. Example: `andrei_paul.zamfir`.
 
-8. In that directory you must create a file named `index.md` which will be your project page. You can take a look at the [Markdown](https://www.markdownguide.org/cheat-sheet/) syntax. You can look at [last year's projects and template](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro/-/tree/main/website/versioned_docs/version-fils_en/project/2024)
+8. In that directory you must create a file named `index.md` which will be your project page. This page must follow the project [template page](./2025/template.md) You can take a look at the [Markdown](https://www.markdownguide.org/cheat-sheet/) syntax. You can look at [last year's projects](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro/-/tree/main/website/versioned_docs/version-fils_en/project/2024).
 
 9. To build and test the website, you can run the `./build_website.sh` in the project's root folder, then run `cd ./website/ && npm run serve`.
 
@@ -95,8 +95,13 @@ These steps should be performed on inside your **VM**, or in **WSL2**, **not on 
 After running the script, you could run `npm run start` instead of `serve`. This would ensure that the changes you are making in your Markdown file reflect in the running build (without needing to rebuild the project over and over again). But make sure to re-run the build script when you are done, because some subtle bugs may not be caught by this method.
 :::
 
-10. After finishing the project, make a _merge request_ to the [upstream repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro)
+10. After finishing the project, make a _merge request_ to the [upstream repository](https://gitlab.cs.pub.ro/pmrust/pmrust.pages.upb.ro). Do not forget to change the Merge Request Description template to **project**.
 
+![Merge Request Template](../../../static/img/MR_template.webp)
+
+:::info Merge Request contents
+The merge requests should contain only the Markdown page, and additional images in `svg` or `webp` format that must not exceed **1024x768** pixels.
+:::
 
 ## Hardware Rules
 

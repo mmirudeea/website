@@ -19,4 +19,4 @@ Please make sure that you have done all these actions:
 
 ## Author
 
-Signed-off-by: Your Name <Your Email@example.com>
+Signed-off-by: Your Name <username@stud.acs/fils.upb.ro>

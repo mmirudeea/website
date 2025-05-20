@@ -88,7 +88,7 @@ The device is built around the Raspberry Pi Pico 2W microcontroller, which serve
 A tactile push button allows the user to manually start each detection session. All components are connected using a breadboard, jumper wires, and pin headers for prototyping. Basic electronic components like resistors are used for signal conditioning and LED current limiting.
 
 ### Schematics
-![](scheme.webp)
+![](scheme.svg)
 
 
 ### Bill of Materials

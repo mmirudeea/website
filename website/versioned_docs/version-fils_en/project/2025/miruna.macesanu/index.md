@@ -82,7 +82,7 @@ Connected all hardware components and started initial code development
 I placed all the hardware components in a box so that it looks like a project and it's perfectly clear what it does without me having to explain. I also finished implementing the code with the logic to convert the data received from the pulse sensor into beats per minute.
 
 
-    ![](done.webp)
+![](done.webp)
 
 
 ## Hardware
